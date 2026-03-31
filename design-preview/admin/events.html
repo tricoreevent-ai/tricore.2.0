@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriCore Admin — Events Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <a href="index.html" class="back-to-hub"><i data-lucide="arrow-left"></i> ADMIN HUB</a>
+
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div>
+        <span class="sidebar-logo-text">TRICORE</span>
+        <span class="sidebar-logo-tag">ADMIN</span>
+      </div>
+      <div class="sidebar-divider"></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <a href="page-editor-hero.html" class="nav-item"><i data-lucide="file-text"></i> Pages</a>
+        <a href="events.html" class="nav-item active"><i data-lucide="calendar"></i> Events</a>
+        <a href="testimonials.html" class="nav-item"><i data-lucide="message-square"></i> Testimonials</a>
+        <a href="media.html" class="nav-item"><i data-lucide="image"></i> Media Library</a>
+        <a href="settings.html" class="nav-item"><i data-lucide="settings"></i> Site Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-avatar"><i data-lucide="user"></i></div>
+        <div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="top-bar">
+        <span class="top-bar-title">Events Manager</span>
+        <div class="top-bar-actions">
+          <div style="display:flex;align-items:center;gap:8px;width:240px;height:36px;padding:0 12px;background:var(--card);border:1px solid var(--border)">
+            <i data-lucide="search" style="width:14px;height:14px;color:var(--dim)"></i>
+            <span style="font-size:12px;color:var(--dim)">Search events...</span>
+          </div>
+          <button class="btn-gold"><i data-lucide="plus" style="width:14px;height:14px"></i> Create Event</button>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <div class="filters">
+          <button class="chip active">ALL</button>
+          <button class="chip">SPORTS</button>
+          <button class="chip">CORPORATE</button>
+          <button class="chip">COMMUNITY</button>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width:300px">EVENT</th>
+              <th style="width:110px">CATEGORY</th>
+              <th style="width:140px">DATE</th>
+              <th style="width:100px">STATUS</th>
+              <th style="width:80px">FEATURED</th>
+              <th>ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Premier Cricket League S4</strong><br><span style="font-size:11px;color:var(--dim)">Spark 7 Arena, Bangalore</span></td>
+              <td><span class="cat-badge">SPORTS</span></td>
+              <td style="font-size:12px;color:var(--muted)">Apr 15-20, 2026</td>
+              <td><span class="status status-upcoming">UPCOMING</span></td>
+              <td><div class="toggle"></div></td>
+              <td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td>
+            </tr>
+            <tr>
+              <td><strong>Corporate Champions Cup</strong><br><span style="font-size:11px;color:var(--dim)">Various Venues, Bangalore</span></td>
+              <td><span class="cat-badge">CORPORATE</span></td>
+              <td style="font-size:12px;color:var(--muted)">May 8-10, 2026</td>
+              <td><span class="status status-upcoming">UPCOMING</span></td>
+              <td><div class="toggle"></div></td>
+              <td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td>
+            </tr>
+            <tr>
+              <td><strong>Neighborhood Badminton Open</strong><br><span style="font-size:11px;color:var(--dim)">Community Center</span></td>
+              <td><span class="cat-badge">COMMUNITY</span></td>
+              <td style="font-size:12px;color:var(--muted)">Jun 1-3, 2026</td>
+              <td><span class="status status-draft">DRAFT</span></td>
+              <td><div class="toggle off"></div></td>
+              <td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td>
+            </tr>
+            <tr>
+              <td><strong>Weekend Football League</strong><br><span style="font-size:11px;color:var(--dim)">Spark 7 Arena</span></td>
+              <td><span class="cat-badge">SPORTS</span></td>
+              <td style="font-size:12px;color:var(--muted)">Mar 1-30, 2026</td>
+              <td><span class="status status-active">ACTIVE</span></td>
+              <td><div class="toggle"></div></td>
+              <td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td>
+            </tr>
+            <tr>
+              <td><strong>TechVista Team Building</strong><br><span style="font-size:11px;color:var(--dim)">Resort, Coorg</span></td>
+              <td><span class="cat-badge">CORPORATE</span></td>
+              <td style="font-size:12px;color:var(--muted)">Feb 14, 2026</td>
+              <td><span class="status status-completed">COMPLETED</span></td>
+              <td><div class="toggle off"></div></td>
+              <td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

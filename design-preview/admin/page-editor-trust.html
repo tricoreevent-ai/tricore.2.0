@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriCore Admin — Trust &amp; Partners Editor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <a href="index.html" class="back-to-hub"><i data-lucide="arrow-left"></i> ADMIN HUB</a>
+
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div>
+        <span class="sidebar-logo-text">TRICORE</span>
+        <span class="sidebar-logo-tag">ADMIN</span>
+      </div>
+      <div class="sidebar-divider"></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <a href="page-editor-hero.html" class="nav-item active"><i data-lucide="file-text"></i> Pages</a>
+        <a href="events.html" class="nav-item"><i data-lucide="calendar"></i> Events</a>
+        <a href="testimonials.html" class="nav-item"><i data-lucide="message-square"></i> Testimonials</a>
+        <a href="media.html" class="nav-item"><i data-lucide="image"></i> Media Library</a>
+        <a href="settings.html" class="nav-item"><i data-lucide="settings"></i> Site Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-avatar"><i data-lucide="user"></i></div>
+        <div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="top-bar">
+        <div class="breadcrumb">
+          <span class="bc-dim">Pages / Homepage /</span>
+          <span class="bc-active">Trust &amp; Partners</span>
+        </div>
+        <div class="top-bar-actions">
+          <button class="btn-ghost"><i data-lucide="eye" style="width:14px;height:14px"></i> Preview</button>
+          <button class="btn-gold">Save Changes</button>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <div class="editor-header">
+          <div class="editor-title"><i data-lucide="shield" style="width:20px;height:20px"></i> TRUST &amp; PARTNERS EDITOR</div>
+          <a href="page-editor-hero.html" class="btn-ghost"><i data-lucide="arrow-left" style="width:14px;height:14px"></i> Back to Sections</a>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div class="form-row">
+            <div><label class="form-label">HEADING</label><input class="form-input" value="BUILT ON EXPERIENCE. DRIVEN BY EXCELLENCE."></div>
+            <div><label class="form-label">DESCRIPTION</label><input class="form-input" value="TriCore is a growing brand backed by seasoned organizers..."></div>
+          </div>
+
+          <label class="form-label" style="color:var(--gold);margin-bottom:-12px">PARTNER CARDS</label>
+
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--border)">
+              <span class="pillar-badge">01</span>
+              <div style="flex:1"><label class="form-label">NAME</label><input class="form-input form-input-sm" value="SPARK 7 SPORTS ARENA"></div>
+              <div style="flex:2"><label class="form-label">DESCRIPTION</label><input class="form-input form-input-sm" value="Our flagship venue partner providing world-class facilities."></div>
+              <div style="width:120px"><label class="form-label">ICON</label><input class="form-input form-input-sm" value="map-pin"></div>
+              <i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim);cursor:pointer"></i>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--border)">
+              <span class="pillar-badge">02</span>
+              <div style="flex:1"><label class="form-label">NAME</label><input class="form-input form-input-sm" value="SARVA HORIZON"></div>
+              <div style="flex:2"><label class="form-label">DESCRIPTION</label><input class="form-input form-input-sm" value="Strategic partnership bringing corporate event expertise."></div>
+              <div style="width:120px"><label class="form-label">ICON</label><input class="form-input form-input-sm" value="building-2"></div>
+              <i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim);cursor:pointer"></i>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--border)">
+              <span class="pillar-badge">03</span>
+              <div style="flex:1"><label class="form-label">NAME</label><input class="form-input form-input-sm" value="EXPERIENCED ORGANIZERS"></div>
+              <div style="flex:2"><label class="form-label">DESCRIPTION</label><input class="form-input form-input-sm" value="Seasoned professionals with deep domain expertise."></div>
+              <div style="width:120px"><label class="form-label">ICON</label><input class="form-input form-input-sm" value="shield-check"></div>
+              <i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim);cursor:pointer"></i>
+            </div>
+          </div>
+
+          <button class="add-item"><i data-lucide="plus" style="width:12px;height:12px"></i> Add Partner</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

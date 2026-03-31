@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriCore Admin — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <a href="index.html" class="back-to-hub"><i data-lucide="arrow-left"></i> ADMIN HUB</a>
+
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div>
+        <span class="sidebar-logo-text">TRICORE</span>
+        <span class="sidebar-logo-tag">ADMIN</span>
+      </div>
+      <div class="sidebar-divider"></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <a href="page-editor-hero.html" class="nav-item"><i data-lucide="file-text"></i> Pages</a>
+        <a href="events.html" class="nav-item"><i data-lucide="calendar"></i> Events</a>
+        <a href="testimonials.html" class="nav-item"><i data-lucide="message-square"></i> Testimonials</a>
+        <a href="media.html" class="nav-item"><i data-lucide="image"></i> Media Library</a>
+        <a href="settings.html" class="nav-item"><i data-lucide="settings"></i> Site Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-avatar"><i data-lucide="user"></i></div>
+        <div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="top-bar">
+        <span class="top-bar-title">Dashboard</span>
+        <div class="top-bar-actions">
+          <div class="sidebar-avatar"><i data-lucide="user"></i></div>
+          <span style="font-size:13px;color:var(--muted)">Admin</span>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <!-- 5 Stat Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-label">TOTAL EVENTS</div>
+            <div class="stat-card-row">
+              <span class="stat-card-value">24</span>
+              <i data-lucide="calendar" class="stat-card-icon" style="width:24px;height:24px"></i>
+            </div>
+            <div class="stat-card-trend" style="margin-top:8px">+3 this month</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">ACTIVE NOW</div>
+            <div class="stat-card-row">
+              <span class="stat-card-value gold">6</span>
+              <i data-lucide="zap" class="stat-card-icon" style="width:24px;height:24px"></i>
+            </div>
+            <div style="margin-top:8px"><span class="stat-card-badge" style="background:rgba(76,175,80,.15);color:var(--green)">LIVE</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">MANAGED PAGES</div>
+            <div class="stat-card-row">
+              <span class="stat-card-value">5</span>
+              <i data-lucide="file-text" class="stat-card-icon" style="width:24px;height:24px"></i>
+            </div>
+            <div class="stat-card-sub" style="margin-top:8px">18 sections</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">MEDIA ASSETS</div>
+            <div class="stat-card-row">
+              <span class="stat-card-value">48</span>
+              <i data-lucide="image" class="stat-card-icon" style="width:24px;height:24px"></i>
+            </div>
+            <div class="stat-card-sub" style="margin-top:8px">12.4 MB</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">TESTIMONIALS</div>
+            <div class="stat-card-row">
+              <span class="stat-card-value">8</span>
+              <i data-lucide="message-square" class="stat-card-icon" style="width:24px;height:24px"></i>
+            </div>
+            <div class="stat-card-sub" style="margin-top:8px">3 featured</div>
+          </div>
+        </div>
+
+        <!-- 5 Page Cards -->
+        <div style="margin-bottom:12px"><span class="panel-title">MANAGED PAGES</span></div>
+        <div class="page-cards-grid">
+
+          <div class="page-card">
+            <div class="page-card-title">Homepage</div>
+            <div class="page-card-sub">6 sections</div>
+            <div class="page-card-sections">
+              <div class="page-card-dot on"></div>
+              <div class="page-card-dot on"></div>
+              <div class="page-card-dot on"></div>
+              <div class="page-card-dot on"></div>
+              <div class="page-card-dot on"></div>
+              <div class="page-card-dot off"></div>
+            </div>
+            <div class="page-card-footer">
+              <span class="page-card-time">Updated 2h ago</span>
+              <a href="page-editor-hero.html" class="btn-gold" style="padding:4px 12px;font-size:10px">Edit</a>
+            </div>
+          </div>
+
+          <div class="page-card">
+            <div class="page-card-title">About Us</div>
+            <div class="page-card-sub">4 sections</div>
+            <div class="page-card-sections">
+              <div class="page-card-dot on"></div>
+              <div class="page-card-dot on"></div>
+              <div class="page-card-dot on"></div>
+              <div class="page-card-dot on"></div>
+            </div>
+            <div class="page-card-footer">
+              <span class="page-card-time">Updated 1d ago</span>
+              <a href="page-editor-content.html" class="btn-gold" style="padding:4px 12px;font-size:10px">Edit</a>
+            </div>
+          </div>
+
+          <div class="page-card">
+            <div class="page-card-title">Corporate</div>
+            <div class="page-card-sub">4 sections</div>
+            <div class="page-card-sections">
+              <div class="page-card-dot on"></div>
+              <div class="page-card-dot on"></div>
+              <div class="page-card-dot on"></div>
+              <div class="page-card-dot off"></div>
+            </div>
+            <div class="page-card-footer">
+              <span class="page-card-time">Updated 3d ago</span>
+              <a href="page-editor-pillars.html" class="btn-gold" style="padding:4px 12px;font-size:10px">Edit</a>
+            </div>
+          </div>
+
+          <div class="page-card">
+            <div class="page-card-title">Events</div>
+            <div class="page-card-sub">1 section</div>
+            <div class="page-card-sections">
+              <div class="page-card-dot on"></div>
+            </div>
+            <div class="page-card-footer">
+              <span class="page-card-time">Updated 5h ago</span>
+              <a href="events.html" class="btn-gold" style="padding:4px 12px;font-size:10px">Edit</a>
+            </div>
+          </div>
+
+          <div class="page-card">
+            <div class="page-card-title">Contact</div>
+            <div class="page-card-sub">3 sections</div>
+            <div class="page-card-sections">
+              <div class="page-card-dot on"></div>
+              <div class="page-card-dot on"></div>
+              <div class="page-card-dot on"></div>
+            </div>
+            <div class="page-card-footer">
+              <span class="page-card-time">Updated 1w ago</span>
+              <a href="page-editor-forms.html" class="btn-gold" style="padding:4px 12px;font-size:10px">Edit</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

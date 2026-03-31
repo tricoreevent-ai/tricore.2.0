@@ -1,0 +1,109 @@
+import { adminApi, cleanParams, publicApi, retryApiRequest } from './http.js';
+
+export const getUserDashboard = async () => {
+  const response = await publicApi.get('/dashboard/me');
+  return response.data.data;
+};
+
+export const getAdminDashboard = async () => {
+  const response = await retryApiRequest(() => adminApi.get('/admin/dashboard'));
+  return response.data.data;
+};
+
+export const getAccountingReport = async (params = {}) => {
+  const response = await adminApi.get('/admin/accounting', { params: cleanParams(params) });
+  return response.data.data;
+};
+
+export const downloadAccountingReport = async (params = {}) => {
+  const response = await adminApi.get('/admin/accounting', {
+    params: { ...cleanParams(params), format: 'csv' },
+    responseType: 'blob'
+  });
+
+  return response.data;
+};
+
+export const getReportsOverview = async (params = {}) => {
+  const response = await adminApi.get('/admin/reports/overview', { params: cleanParams(params) });
+  return response.data.data;
+};
+
+export const downloadReportsOverview = async () => {
+  const response = await adminApi.get('/admin/reports/overview', {
+    params: { format: 'csv' },
+    responseType: 'blob'
+  });
+
+  return response.data;
+};
+
+export const createMatch = async (payload) => {
+  const response = await adminApi.post('/matches', payload);
+  return response.data.data;
+};
+
+export const getMatchConfiguration = async (eventId) => {
+  const response = await adminApi.get(`/matches/event/${eventId}/configuration`);
+  return response.data.data;
+};
+
+export const saveMatchConfiguration = async (eventId, payload) => {
+  const response = await adminApi.put(`/matches/event/${eventId}/configuration`, payload);
+  return response.data.data;
+};
+
+export const getExperimentalFixturePlan = async (eventId) => {
+  const response = await adminApi.get(`/matches/event/${eventId}/experimental-ai-plan`);
+  return response.data.data;
+};
+
+export const generateExperimentalFixturePlan = async (eventId, payload) => {
+  const response = await adminApi.post(`/matches/event/${eventId}/experimental-ai-plan/generate`, payload);
+  return response.data.data;
+};
+
+export const saveExperimentalFixturePlanDraft = async (eventId, payload) => {
+  const response = await adminApi.put(`/matches/event/${eventId}/experimental-ai-plan`, payload);
+  return response.data.data;
+};
+
+export const approveExperimentalFixturePlan = async (eventId, payload = {}) => {
+  const response = await adminApi.post(`/matches/event/${eventId}/experimental-ai-plan/approve`, payload);
+  return response.data.data;
+};
+
+export const rejectExperimentalFixturePlan = async (eventId) => {
+  const response = await adminApi.post(`/matches/event/${eventId}/experimental-ai-plan/reject`, {});
+  return response.data.data;
+};
+
+export const generateKnockoutBracket = async (payload) => {
+  const response = await adminApi.post('/matches/generate-knockout', payload);
+  return response.data.data;
+};
+
+export const autoGenerateFixtures = async (payload) => {
+  const response = await adminApi.post('/matches/auto-generate', payload);
+  return response.data.data;
+};
+
+export const getConfirmedTeamsByEvent = async (eventId) => {
+  const response = await adminApi.get(`/matches/event/${eventId}/confirmed-teams`);
+  return response.data.data;
+};
+
+export const getAdminMatchesByEvent = async (eventId) => {
+  const response = await adminApi.get(`/matches/${eventId}`);
+  return response.data.data;
+};
+
+export const updateMatch = async (matchId, payload) => {
+  const response = await adminApi.put(`/matches/${matchId}`, payload);
+  return response.data.data;
+};
+
+export const getMatchesByEvent = async (eventId) => {
+  const response = await publicApi.get(`/matches/${eventId}`);
+  return response.data.data;
+};

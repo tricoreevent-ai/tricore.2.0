@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriCore Admin — Forms &amp; Data</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <a href="index.html" class="back-to-hub"><i data-lucide="arrow-left"></i> ADMIN HUB</a>
+
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div>
+        <span class="sidebar-logo-text">TRICORE</span>
+        <span class="sidebar-logo-tag">ADMIN</span>
+      </div>
+      <div class="sidebar-divider"></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <a href="page-editor-hero.html" class="nav-item active"><i data-lucide="file-text"></i> Pages</a>
+        <a href="events.html" class="nav-item"><i data-lucide="calendar"></i> Events</a>
+        <a href="testimonials.html" class="nav-item"><i data-lucide="message-square"></i> Testimonials</a>
+        <a href="media.html" class="nav-item"><i data-lucide="image"></i> Media Library</a>
+        <a href="settings.html" class="nav-item"><i data-lucide="settings"></i> Site Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-avatar"><i data-lucide="user"></i></div>
+        <div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="top-bar">
+        <span class="top-bar-title">Section Editors — Forms &amp; Data</span>
+        <div class="top-bar-actions"><button class="btn-gold">Save Changes</button></div>
+      </div>
+
+      <div class="content-area" style="display:flex;gap:20px">
+        <!-- Left column -->
+        <div style="flex:1;display:flex;flex-direction:column;gap:20px">
+          <!-- Contact Form Editor -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="editor-title" style="font-size:14px"><i data-lucide="mail" style="width:18px;height:18px"></i> CONTACT FORM EDITOR</div>
+            </div>
+            <div class="form-row" style="margin-bottom:14px">
+              <div><label class="form-label">HEADING</label><input class="form-input form-input-sm" value="Get In Touch"></div>
+              <div><label class="form-label">SUBHEADING</label><input class="form-input form-input-sm" value="We'd love to hear from you"></div>
+            </div>
+            <label class="form-label" style="color:var(--gold)">FORM FIELDS (toggle to show/hide)</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+              <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.18)">
+                <span style="font-size:11px;color:var(--gold)">Name</span><div class="toggle" style="width:24px;height:14px"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.18)">
+                <span style="font-size:11px;color:var(--gold)">Email</span><div class="toggle" style="width:24px;height:14px"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.18)">
+                <span style="font-size:11px;color:var(--gold)">Phone</span><div class="toggle" style="width:24px;height:14px"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(255,255,255,0.02);border:1px solid var(--border)">
+                <span style="font-size:11px;color:var(--dim)">Company</span><div class="toggle off" style="width:24px;height:14px"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.18)">
+                <span style="font-size:11px;color:var(--gold)">Message</span><div class="toggle" style="width:24px;height:14px"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.18)">
+                <span style="font-size:11px;color:var(--gold)">Event Type</span><div class="toggle" style="width:24px;height:14px"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats Grid Editor -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="editor-title" style="font-size:14px"><i data-lucide="bar-chart" style="width:18px;height:18px"></i> STATS GRID EDITOR</div>
+            </div>
+            <div><label class="form-label">HEADING</label><input class="form-input form-input-sm" value="By The Numbers" style="margin-bottom:12px"></div>
+            <label class="form-label" style="color:var(--gold)">STATS</label>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+              <div style="display:grid;grid-template-columns:100px 1fr 100px 32px;gap:8px;align-items:center">
+                <input class="form-input form-input-sm" value="150+">
+                <input class="form-input form-input-sm" value="Events Delivered">
+                <input class="form-input form-input-sm" value="trophy">
+                <button class="remove-btn"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button>
+              </div>
+              <div style="display:grid;grid-template-columns:100px 1fr 100px 32px;gap:8px;align-items:center">
+                <input class="form-input form-input-sm" value="50K+">
+                <input class="form-input form-input-sm" value="Participants Engaged">
+                <input class="form-input form-input-sm" value="users">
+                <button class="remove-btn"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button>
+              </div>
+              <button class="add-item" style="width:100%"><i data-lucide="plus" style="width:10px;height:10px"></i> Add Stat</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right column -->
+        <div style="flex:1;display:flex;flex-direction:column;gap:20px">
+          <!-- Create/Edit Event -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="editor-title" style="font-size:14px"><i data-lucide="calendar" style="width:18px;height:18px"></i> CREATE / EDIT EVENT</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div class="form-row">
+                <div><label class="form-label">TITLE</label><input class="form-input form-input-sm" value="Premier Cricket League S4"></div>
+                <div style="width:140px">
+                  <label class="form-label">CATEGORY</label>
+                  <div style="display:flex;align-items:center;justify-content:space-between;height:36px;padding:0 8px;background:var(--card);border:1px solid var(--border);font-size:11px">Sports <i data-lucide="chevron-down" style="width:12px;height:12px;color:var(--dim)"></i></div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 120px;gap:12px">
+                <div><label class="form-label">START DATE</label><input class="form-input form-input-sm" value="2026-04-15"></div>
+                <div><label class="form-label">END DATE</label><input class="form-input form-input-sm" value="2026-04-20"></div>
+                <div>
+                  <label class="form-label">STATUS</label>
+                  <div style="display:flex;align-items:center;justify-content:space-between;height:36px;padding:0 8px;background:var(--card);border:1px solid var(--border);font-size:11px">Upcoming <i data-lucide="chevron-down" style="width:12px;height:12px;color:var(--dim)"></i></div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div><label class="form-label">LOCATION</label><input class="form-input form-input-sm" value="Bangalore"></div>
+                <div><label class="form-label">VENUE</label><input class="form-input form-input-sm" value="Spark 7 Sports Arena"></div>
+              </div>
+              <div style="display:flex;gap:16px;align-items:end">
+                <div style="width:100px"><label class="form-label">PRICE</label><input class="form-input form-input-sm" value="500"></div>
+                <div style="display:flex;gap:16px">
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:var(--muted)">Featured</span><div class="toggle"></div></div>
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:var(--muted)">Registration</span><div class="toggle"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Create/Edit Testimonial -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="editor-title" style="font-size:14px"><i data-lucide="message-square" style="width:18px;height:18px"></i> CREATE / EDIT TESTIMONIAL</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+                <div><label class="form-label">NAME</label><input class="form-input form-input-sm" value="Rajesh Kumar"></div>
+                <div><label class="form-label">ROLE</label><input class="form-input form-input-sm" value="Team Captain"></div>
+                <div><label class="form-label">COMPANY</label><input class="form-input form-input-sm" value="PCL Season 3"></div>
+              </div>
+              <div><label class="form-label">QUOTE</label><textarea class="form-textarea" style="min-height:50px;font-size:11px">The tournament was flawlessly organized...</textarea></div>
+              <div style="display:flex;gap:16px;align-items:center">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span style="font-size:11px;color:var(--muted)">Rating:</span>
+                  <span style="font-size:16px;color:var(--gold)">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span style="font-size:11px;color:var(--muted)">Featured</span>
+                  <div class="toggle"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

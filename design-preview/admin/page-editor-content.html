@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriCore Admin — Content Types</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <a href="index.html" class="back-to-hub"><i data-lucide="arrow-left"></i> ADMIN HUB</a>
+
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div>
+        <span class="sidebar-logo-text">TRICORE</span>
+        <span class="sidebar-logo-tag">ADMIN</span>
+      </div>
+      <div class="sidebar-divider"></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <a href="page-editor-hero.html" class="nav-item active"><i data-lucide="file-text"></i> Pages</a>
+        <a href="events.html" class="nav-item"><i data-lucide="calendar"></i> Events</a>
+        <a href="testimonials.html" class="nav-item"><i data-lucide="message-square"></i> Testimonials</a>
+        <a href="media.html" class="nav-item"><i data-lucide="image"></i> Media Library</a>
+        <a href="settings.html" class="nav-item"><i data-lucide="settings"></i> Site Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-avatar"><i data-lucide="user"></i></div>
+        <div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="top-bar">
+        <span class="top-bar-title">Section Editors — Content Types</span>
+        <div class="top-bar-actions"><button class="btn-gold">Save Changes</button></div>
+      </div>
+
+      <div class="content-area" style="display:flex;gap:24px">
+        <!-- Left: Content Block Editor -->
+        <div class="panel" style="flex:1">
+          <div class="panel-header">
+            <div class="editor-title" style="font-size:14px"><i data-lucide="file-text" style="width:18px;height:18px"></i> CONTENT BLOCK EDITOR</div>
+          </div>
+          <p style="font-size:11px;color:var(--dim);margin-bottom:16px">Generic rich content section with heading, body text, image, and optional CTA.</p>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div><label class="form-label">HEADING</label><input class="form-input" value="Our Story"></div>
+            <div><label class="form-label">BODY CONTENT</label><textarea class="form-textarea">TriCore Events was founded with a simple mission: to transform how events are organized and experienced...</textarea></div>
+            <div class="form-row">
+              <div>
+                <label class="form-label">IMAGE</label>
+                <div class="upload-zone" style="height:60px"><i data-lucide="upload" style="width:14px;height:14px"></i><span style="font-size:10px">Upload</span></div>
+              </div>
+              <div style="width:160px">
+                <label class="form-label">IMAGE POSITION</label>
+                <div style="display:flex;align-items:center;justify-content:space-between;height:40px;padding:0 12px;background:var(--card);border:1px solid var(--border)">
+                  <span style="font-size:13px">Right</span>
+                  <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--dim)"></i>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div><label class="form-label">CTA LABEL (optional)</label><input class="form-input" value="Learn More"></div>
+              <div><label class="form-label">CTA LINK</label><input class="form-input" value="/about#story"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right column -->
+        <div style="flex:1;display:flex;flex-direction:column;gap:24px">
+          <!-- Team Editor -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="editor-title" style="font-size:14px"><i data-lucide="users" style="width:18px;height:18px"></i> TEAM EDITOR</div>
+            </div>
+            <div><label class="form-label">HEADING</label><input class="form-input form-input-sm" value="Our Team" style="margin-bottom:12px"></div>
+            <label class="form-label" style="color:var(--gold)">TEAM MEMBERS</label>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+              <div style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--card);border:1px solid var(--border)">
+                <div class="sidebar-avatar"><i data-lucide="user"></i></div>
+                <div style="flex:1"><div style="font-size:12px;font-weight:600">Vikram Patel</div><div style="font-size:10px;color:var(--dim)">Founder &amp; CEO</div></div>
+                <i data-lucide="pencil" style="width:12px;height:12px;color:var(--dim);cursor:pointer"></i>
+                <i data-lucide="trash-2" style="width:12px;height:12px;color:var(--dim);cursor:pointer"></i>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--card);border:1px solid var(--border)">
+                <div class="sidebar-avatar"><i data-lucide="user"></i></div>
+                <div style="flex:1"><div style="font-size:12px;font-weight:600">Ananya Reddy</div><div style="font-size:10px;color:var(--dim)">Operations Head</div></div>
+                <i data-lucide="pencil" style="width:12px;height:12px;color:var(--dim);cursor:pointer"></i>
+                <i data-lucide="trash-2" style="width:12px;height:12px;color:var(--dim);cursor:pointer"></i>
+              </div>
+              <button class="add-item" style="width:100%"><i data-lucide="plus" style="width:10px;height:10px"></i> Add Member</button>
+            </div>
+          </div>
+
+          <!-- FAQ Editor -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="editor-title" style="font-size:14px"><i data-lucide="circle-help" style="width:18px;height:18px"></i> FAQ EDITOR</div>
+            </div>
+            <div><label class="form-label">HEADING</label><input class="form-input form-input-sm" value="Frequently Asked Questions" style="margin-bottom:12px"></div>
+            <label class="form-label" style="color:var(--gold)">Q&amp;A ITEMS</label>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+              <div style="padding:12px;background:var(--card);border:1px solid var(--border)">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                  <span style="font-size:11px;font-weight:600">Q: How do I register for an event?</span>
+                  <i data-lucide="trash-2" style="width:12px;height:12px;color:var(--dim);cursor:pointer"></i>
+                </div>
+                <span style="font-size:10px;color:var(--muted)">A: Browse our events page, select an event, and click Register...</span>
+              </div>
+              <div style="padding:12px;background:var(--card);border:1px solid var(--border)">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                  <span style="font-size:11px;font-weight:600">Q: What sports do you cover?</span>
+                  <i data-lucide="trash-2" style="width:12px;height:12px;color:var(--dim);cursor:pointer"></i>
+                </div>
+                <span style="font-size:10px;color:var(--muted)">A: Cricket, football, badminton, and more across all formats...</span>
+              </div>
+              <button class="add-item" style="width:100%"><i data-lucide="plus" style="width:10px;height:10px"></i> Add Q&amp;A</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

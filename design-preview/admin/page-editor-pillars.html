@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriCore Admin — Pillars Editor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <a href="index.html" class="back-to-hub"><i data-lucide="arrow-left"></i> ADMIN HUB</a>
+
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div>
+        <span class="sidebar-logo-text">TRICORE</span>
+        <span class="sidebar-logo-tag">ADMIN</span>
+      </div>
+      <div class="sidebar-divider"></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <a href="page-editor-hero.html" class="nav-item active"><i data-lucide="file-text"></i> Pages</a>
+        <a href="events.html" class="nav-item"><i data-lucide="calendar"></i> Events</a>
+        <a href="testimonials.html" class="nav-item"><i data-lucide="message-square"></i> Testimonials</a>
+        <a href="media.html" class="nav-item"><i data-lucide="image"></i> Media Library</a>
+        <a href="settings.html" class="nav-item"><i data-lucide="settings"></i> Site Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-avatar"><i data-lucide="user"></i></div>
+        <div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="top-bar">
+        <div class="breadcrumb">
+          <span class="bc-dim">Pages</span><span class="bc-dim">/</span>
+          <span class="bc-dim">Homepage</span><span class="bc-dim">/</span>
+          <span class="bc-active">Service Pillars</span>
+        </div>
+        <div class="top-bar-actions">
+          <button class="btn-ghost"><i data-lucide="eye" style="width:14px;height:14px"></i> Preview</button>
+          <button class="btn-gold">Save Changes</button>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <div class="editor-header">
+          <div class="editor-title"><i data-lucide="layers" style="width:20px;height:20px"></i> SERVICE PILLARS EDITOR</div>
+          <a href="page-editor-hero.html" class="btn-ghost"><i data-lucide="arrow-left" style="width:14px;height:14px"></i> Back to Sections</a>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div class="form-row">
+            <div><label class="form-label">SECTION HEADING</label><input class="form-input" value="THREE PILLARS OF EXCELLENCE"></div>
+            <div><label class="form-label">SUBHEADING</label><input class="form-input" value="Every event category gets the same uncompromising standard of planning, execution, and experience."></div>
+          </div>
+
+          <label class="form-label" style="color:var(--gold);margin-bottom:-12px">PILLAR CARDS</label>
+
+          <div class="pillar-cards">
+            <div class="pillar-card">
+              <div class="pillar-card-header">
+                <span class="pillar-badge">PILLAR 01</span>
+                <i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim);cursor:pointer"></i>
+              </div>
+              <label class="form-label">TITLE</label>
+              <input class="form-input form-input-sm" value="SPORTS TOURNAMENTS">
+              <label class="form-label">DESCRIPTION</label>
+              <textarea class="form-textarea" style="min-height:60px;font-size:11px">Cricket, football, badminton, and more. Full tournament management from brackets to finals.</textarea>
+              <label class="form-label">IMAGE</label>
+              <div class="upload-zone" style="height:70px"><i data-lucide="upload" style="width:16px;height:16px"></i><span style="font-size:10px">Upload image</span></div>
+            </div>
+
+            <div class="pillar-card">
+              <div class="pillar-card-header">
+                <span class="pillar-badge">PILLAR 02</span>
+                <i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim);cursor:pointer"></i>
+              </div>
+              <label class="form-label">TITLE</label>
+              <input class="form-input form-input-sm" value="CORPORATE EXPERIENCES">
+              <label class="form-label">DESCRIPTION</label>
+              <textarea class="form-textarea" style="min-height:60px;font-size:11px">Team building, brand activations, and premium corporate gatherings that deliver results.</textarea>
+              <label class="form-label">IMAGE</label>
+              <div class="upload-zone" style="height:70px"><i data-lucide="upload" style="width:16px;height:16px"></i><span style="font-size:10px">Upload image</span></div>
+            </div>
+
+            <div class="pillar-card">
+              <div class="pillar-card-header">
+                <span class="pillar-badge">PILLAR 03</span>
+                <i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim);cursor:pointer"></i>
+              </div>
+              <label class="form-label">TITLE</label>
+              <input class="form-input form-input-sm" value="COMMUNITY COMPETITIONS">
+              <label class="form-label">DESCRIPTION</label>
+              <textarea class="form-textarea" style="min-height:60px;font-size:11px">Residential tournaments and local leagues that bring neighborhoods together through sport.</textarea>
+              <label class="form-label">IMAGE</label>
+              <div class="upload-zone" style="height:70px"><i data-lucide="upload" style="width:16px;height:16px"></i><span style="font-size:10px">Upload image</span></div>
+            </div>
+          </div>
+
+          <button class="add-item"><i data-lucide="plus" style="width:12px;height:12px"></i> Add Pillar</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriCore Admin — Media Library</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <a href="index.html" class="back-to-hub"><i data-lucide="arrow-left"></i> ADMIN HUB</a>
+
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div>
+        <span class="sidebar-logo-text">TRICORE</span>
+        <span class="sidebar-logo-tag">ADMIN</span>
+      </div>
+      <div class="sidebar-divider"></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <a href="page-editor-hero.html" class="nav-item"><i data-lucide="file-text"></i> Pages</a>
+        <a href="events.html" class="nav-item"><i data-lucide="calendar"></i> Events</a>
+        <a href="testimonials.html" class="nav-item"><i data-lucide="message-square"></i> Testimonials</a>
+        <a href="media.html" class="nav-item active"><i data-lucide="image"></i> Media Library</a>
+        <a href="settings.html" class="nav-item"><i data-lucide="settings"></i> Site Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-avatar"><i data-lucide="user"></i></div>
+        <div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="top-bar">
+        <span class="top-bar-title">Media Library</span>
+        <div class="top-bar-actions">
+          <span style="font-size:12px;color:var(--dim)">48 assets</span>
+          <button class="btn-gold"><i data-lucide="upload" style="width:14px;height:14px"></i> Upload</button>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <div class="upload-zone" style="height:100px;margin-bottom:24px">
+          <i data-lucide="upload" style="width:28px;height:28px"></i>
+          <span>Drop files here or click to upload</span>
+          <span class="upload-sub">PNG, JPG, WebP up to 5MB</span>
+        </div>
+
+        <div class="media-grid">
+          <div class="media-card"><img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">hero-bg.webp</div><div class="media-card-size">245 KB</div></div></div>
+          <div class="media-card"><img src="https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">cricket-match.webp</div><div class="media-card-size">189 KB</div></div></div>
+          <div class="media-card"><img src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">corporate-event.webp</div><div class="media-card-size">210 KB</div></div></div>
+          <div class="media-card"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">community.webp</div><div class="media-card-size">178 KB</div></div></div>
+          <div class="media-card"><img src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">badminton.webp</div><div class="media-card-size">156 KB</div></div></div>
+          <div class="media-card"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">stadium-lights.webp</div><div class="media-card-size">198 KB</div></div></div>
+          <div class="media-card"><img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">football-field.webp</div><div class="media-card-size">220 KB</div></div></div>
+          <div class="media-card"><img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">team-celebrate.webp</div><div class="media-card-size">175 KB</div></div></div>
+          <div class="media-card"><img src="https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">trophy.webp</div><div class="media-card-size">132 KB</div></div></div>
+          <div class="media-placeholder"><i data-lucide="plus" style="width:24px;height:24px;color:var(--dim)"></i><span style="font-size:11px;color:var(--dim)">Upload</span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

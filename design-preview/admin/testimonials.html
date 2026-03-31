@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriCore Admin — Testimonials</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <a href="index.html" class="back-to-hub"><i data-lucide="arrow-left"></i> ADMIN HUB</a>
+
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div>
+        <span class="sidebar-logo-text">TRICORE</span>
+        <span class="sidebar-logo-tag">ADMIN</span>
+      </div>
+      <div class="sidebar-divider"></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <a href="page-editor-hero.html" class="nav-item"><i data-lucide="file-text"></i> Pages</a>
+        <a href="events.html" class="nav-item"><i data-lucide="calendar"></i> Events</a>
+        <a href="testimonials.html" class="nav-item active"><i data-lucide="message-square"></i> Testimonials</a>
+        <a href="media.html" class="nav-item"><i data-lucide="image"></i> Media Library</a>
+        <a href="settings.html" class="nav-item"><i data-lucide="settings"></i> Site Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-avatar"><i data-lucide="user"></i></div>
+        <div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="top-bar">
+        <span class="top-bar-title">Testimonials Manager</span>
+        <div class="top-bar-actions">
+          <div style="display:flex;align-items:center;gap:8px;width:240px;height:36px;padding:0 12px;background:var(--card);border:1px solid var(--border)">
+            <i data-lucide="search" style="width:14px;height:14px;color:var(--dim)"></i>
+            <span style="font-size:12px;color:var(--dim)">Search testimonials...</span>
+          </div>
+          <button class="btn-gold"><i data-lucide="plus" style="width:14px;height:14px"></i> Add Testimonial</button>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <!-- Summary stats -->
+        <div class="summary-stats">
+          <div class="summary-stat">
+            <span class="summary-stat-value">8</span>
+            <span class="summary-stat-label">Total</span>
+          </div>
+          <div class="summary-stat" style="border-color:var(--gold-border)">
+            <span class="summary-stat-value" style="color:var(--gold)">3</span>
+            <span class="summary-stat-label">Featured</span>
+          </div>
+          <div class="summary-stat" style="border-color:rgba(76,175,80,.3)">
+            <span class="summary-stat-value" style="color:var(--green)">7</span>
+            <span class="summary-stat-label">Enabled</span>
+          </div>
+          <div class="summary-stat">
+            <span class="summary-stat-value" style="color:var(--dim)">1</span>
+            <span class="summary-stat-label">Disabled</span>
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>PERSON</th>
+              <th style="max-width:400px">QUOTE</th>
+              <th>RATING</th>
+              <th>FEATURED</th>
+              <th>ENABLED</th>
+              <th>ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="sidebar-avatar"><i data-lucide="user"></i></div>
+                  <div><strong>Rajesh Kumar</strong><br><span style="font-size:11px;color:var(--dim)">Team Captain, PCL S3</span></div>
+                </div>
+              </td>
+              <td style="max-width:400px;font-size:12px;color:var(--muted)">"The tournament was flawlessly organized. From scheduling to live scoring, everything was handled with precision."</td>
+              <td><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></td>
+              <td><div class="toggle"></div></td>
+              <td><div class="toggle"></div></td>
+              <td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="sidebar-avatar"><i data-lucide="user"></i></div>
+                  <div><strong>Priya Menon</strong><br><span style="font-size:11px;color:var(--dim)">HR Director, TechVista</span></div>
+                </div>
+              </td>
+              <td style="max-width:400px;font-size:12px;color:var(--muted)">"TriCore handled our entire corporate sports day — 400 employees, 8 activities, zero hiccups."</td>
+              <td><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></td>
+              <td><div class="toggle"></div></td>
+              <td><div class="toggle"></div></td>
+              <td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="sidebar-avatar"><i data-lucide="user"></i></div>
+                  <div><strong>Ankit Sharma</strong><br><span style="font-size:11px;color:var(--dim)">Resident, Palm Meadows</span></div>
+                </div>
+              </td>
+              <td style="max-width:400px;font-size:12px;color:var(--muted)">"Our community tournament was the highlight of the year. Professional and fun."</td>
+              <td><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span></td>
+              <td><div class="toggle off"></div></td>
+              <td><div class="toggle"></div></td>
+              <td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="sidebar-avatar"><i data-lucide="user"></i></div>
+                  <div><strong>Deepika Nair</strong><br><span style="font-size:11px;color:var(--dim)">Event Coordinator, Infosys</span></div>
+                </div>
+              </td>
+              <td style="max-width:400px;font-size:12px;color:var(--muted)">"Exceptional attention to detail. Our annual sports meet has never been better organized."</td>
+              <td><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></td>
+              <td><div class="toggle"></div></td>
+              <td><div class="toggle off"></div></td>
+              <td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

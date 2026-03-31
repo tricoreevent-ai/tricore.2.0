@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriCore Admin — Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 40px">
+
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+      <div class="logo-mark" style="width:40px;height:40px">
+        <svg width="22" height="20" viewBox="0 0 22 20" fill="currentColor"><polygon points="11,0 22,20 0,20"/></svg>
+      </div>
+      <span style="font-size:28px;font-weight:800;letter-spacing:4px">TRICORE</span>
+      <span style="font-size:10px;font-weight:600;letter-spacing:2px;color:var(--gold)">ADMIN</span>
+    </div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:48px">Select a screen to preview</p>
+
+    <div class="hub-grid" style="width:100%;max-width:1000px">
+
+      <a href="login.html" class="hub-card">
+        <i data-lucide="log-in" style="width:28px;height:28px"></i>
+        <div class="hub-card-title">LOGIN</div>
+        <div class="hub-card-desc">Admin sign-in screen</div>
+      </a>
+
+      <a href="dashboard.html" class="hub-card">
+        <i data-lucide="layout-dashboard" style="width:28px;height:28px"></i>
+        <div class="hub-card-title">DASHBOARD</div>
+        <div class="hub-card-desc">Stats, pages, quick actions</div>
+      </a>
+
+      <a href="page-editor-hero.html" class="hub-card">
+        <i data-lucide="layout-template" style="width:28px;height:28px"></i>
+        <div class="hub-card-title">HERO EDITOR</div>
+        <div class="hub-card-desc">Hero section with stats bar</div>
+      </a>
+
+      <a href="page-editor-pillars.html" class="hub-card">
+        <i data-lucide="layers" style="width:28px;height:28px"></i>
+        <div class="hub-card-title">PILLARS EDITOR</div>
+        <div class="hub-card-desc">Service pillar cards</div>
+      </a>
+
+      <a href="page-editor-trust.html" class="hub-card">
+        <i data-lucide="shield" style="width:28px;height:28px"></i>
+        <div class="hub-card-title">TRUST &amp; PARTNERS</div>
+        <div class="hub-card-desc">Partner rows editor</div>
+      </a>
+
+      <a href="page-editor-config.html" class="hub-card">
+        <i data-lucide="sliders" style="width:28px;height:28px"></i>
+        <div class="hub-card-title">CONFIG PANELS</div>
+        <div class="hub-card-desc">CTA, Events, Testimonials config</div>
+      </a>
+
+      <a href="page-editor-content.html" class="hub-card">
+        <i data-lucide="file-text" style="width:28px;height:28px"></i>
+        <div class="hub-card-title">CONTENT TYPES</div>
+        <div class="hub-card-desc">Block, Team, FAQ editors</div>
+      </a>
+
+      <a href="page-editor-forms.html" class="hub-card">
+        <i data-lucide="clipboard-list" style="width:28px;height:28px"></i>
+        <div class="hub-card-title">FORMS &amp; DATA</div>
+        <div class="hub-card-desc">Contact form, stats, create panels</div>
+      </a>
+
+      <a href="events.html" class="hub-card">
+        <i data-lucide="calendar" style="width:28px;height:28px"></i>
+        <div class="hub-card-title">EVENTS MANAGER</div>
+        <div class="hub-card-desc">Event list, filters, CRUD</div>
+      </a>
+
+      <a href="testimonials.html" class="hub-card">
+        <i data-lucide="message-square" style="width:28px;height:28px"></i>
+        <div class="hub-card-title">TESTIMONIALS</div>
+        <div class="hub-card-desc">Manage reviews &amp; ratings</div>
+      </a>
+
+      <a href="settings.html" class="hub-card">
+        <i data-lucide="settings" style="width:28px;height:28px"></i>
+        <div class="hub-card-title">SITE SETTINGS</div>
+        <div class="hub-card-desc">Branding, theme, nav, footer</div>
+      </a>
+
+      <a href="media.html" class="hub-card">
+        <i data-lucide="image" style="width:28px;height:28px"></i>
+        <div class="hub-card-title">MEDIA LIBRARY</div>
+        <div class="hub-card-desc">Upload &amp; manage assets</div>
+      </a>
+
+    </div>
+  </div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

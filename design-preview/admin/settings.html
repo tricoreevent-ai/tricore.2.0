@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriCore Admin — Site Settings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <a href="index.html" class="back-to-hub"><i data-lucide="arrow-left"></i> ADMIN HUB</a>
+
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div>
+        <span class="sidebar-logo-text">TRICORE</span>
+        <span class="sidebar-logo-tag">ADMIN</span>
+      </div>
+      <div class="sidebar-divider"></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <a href="page-editor-hero.html" class="nav-item"><i data-lucide="file-text"></i> Pages</a>
+        <a href="events.html" class="nav-item"><i data-lucide="calendar"></i> Events</a>
+        <a href="testimonials.html" class="nav-item"><i data-lucide="message-square"></i> Testimonials</a>
+        <a href="media.html" class="nav-item"><i data-lucide="image"></i> Media Library</a>
+        <a href="settings.html" class="nav-item active"><i data-lucide="settings"></i> Site Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-avatar"><i data-lucide="user"></i></div>
+        <div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="top-bar">
+        <span class="top-bar-title">Site Settings</span>
+        <div class="top-bar-actions"><button class="btn-gold">Save Settings</button></div>
+      </div>
+
+      <div class="content-area">
+        <div class="tabs">
+          <div class="tab active" data-tab="branding">Branding</div>
+          <div class="tab" data-tab="theme">Theme</div>
+          <div class="tab" data-tab="navigation">Navigation</div>
+          <div class="tab" data-tab="footer">Footer</div>
+          <div class="tab" data-tab="contact">Contact</div>
+        </div>
+
+        <!-- TAB: BRANDING -->
+        <div class="tab-panel active" id="tab-branding">
+          <div class="settings-section">
+            <div class="settings-section-title">BRANDING</div>
+            <div class="form-row" style="margin-bottom:20px">
+              <div><label class="form-label">SITE NAME</label><input class="form-input" value="TriCore Events"></div>
+              <div><label class="form-label">TAGLINE</label><input class="form-input" value="Where every event becomes an experience"></div>
+            </div>
+            <div class="form-row">
+              <div>
+                <label class="form-label">LOGO</label>
+                <div class="upload-zone" style="height:80px"><i data-lucide="upload" style="width:20px;height:20px"></i><span>Upload logo</span></div>
+              </div>
+              <div>
+                <label class="form-label">FAVICON</label>
+                <div class="upload-zone" style="height:80px"><i data-lucide="upload" style="width:20px;height:20px"></i><span>Upload favicon</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: THEME -->
+        <div class="tab-panel" id="tab-theme">
+          <div class="settings-section">
+            <div class="settings-section-title">THEME COLORS</div>
+            <div class="color-grid">
+              <div class="color-field"><label>PRIMARY</label><div class="color-preview"><div class="color-swatch" style="background:#D4AF37"></div><span class="color-hex">#D4AF37</span></div></div>
+              <div class="color-field"><label>ACCENT</label><div class="color-preview"><div class="color-swatch" style="background:#C8A961"></div><span class="color-hex">#C8A961</span></div></div>
+              <div class="color-field"><label>BACKGROUND</label><div class="color-preview"><div class="color-swatch" style="background:#0A0A0A"></div><span class="color-hex">#0A0A0A</span></div></div>
+              <div class="color-field"><label>SURFACE</label><div class="color-preview"><div class="color-swatch" style="background:#141414"></div><span class="color-hex">#141414</span></div></div>
+            </div>
+            <div class="color-grid">
+              <div class="color-field"><label>TEXT</label><div class="color-preview"><div class="color-swatch" style="background:#F5F5F5"></div><span class="color-hex">#F5F5F5</span></div></div>
+              <div class="color-field"><label>TEXT MUTED</label><div class="color-preview"><div class="color-swatch" style="background:#9CA3AF"></div><span class="color-hex">#9CA3AF</span></div></div>
+              <div class="color-field"><label>BORDER</label><div class="color-preview"><div class="color-swatch" style="background:#262626"></div><span class="color-hex">#262626</span></div></div>
+              <div class="color-field"><label>SURFACE ALT</label><div class="color-preview"><div class="color-swatch" style="background:#1A1A1A"></div><span class="color-hex">#1A1A1A</span></div></div>
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-title">FONTS</div>
+            <div class="form-row">
+              <div><label class="form-label">HEADING FONT</label><input class="form-input" value="Space Grotesk"></div>
+              <div><label class="form-label">BODY FONT</label><input class="form-input" value="Space Grotesk"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: NAVIGATION -->
+        <div class="tab-panel" id="tab-navigation">
+          <div class="settings-section">
+            <div class="settings-section-title">NAVIGATION LINKS</div>
+            <p style="font-size:12px;color:var(--dim);margin-bottom:16px">Configure the main navigation links shown in the header. Toggle to enable/disable individual links.</p>
+            <div class="nav-editor-row">
+              <input class="form-input form-input-sm" value="HOME" placeholder="Label">
+              <input class="form-input form-input-sm" value="/" placeholder="URL">
+              <div class="toggle" style="width:28px;height:16px"></div>
+              <button class="remove-btn" style="width:36px;height:36px"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button>
+            </div>
+            <div class="nav-editor-row">
+              <input class="form-input form-input-sm" value="EVENTS">
+              <input class="form-input form-input-sm" value="/events">
+              <div class="toggle" style="width:28px;height:16px"></div>
+              <button class="remove-btn" style="width:36px;height:36px"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button>
+            </div>
+            <div class="nav-editor-row">
+              <input class="form-input form-input-sm" value="CORPORATE">
+              <input class="form-input form-input-sm" value="/corporate-events">
+              <div class="toggle" style="width:28px;height:16px"></div>
+              <button class="remove-btn" style="width:36px;height:36px"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button>
+            </div>
+            <div class="nav-editor-row">
+              <input class="form-input form-input-sm" value="ABOUT">
+              <input class="form-input form-input-sm" value="/about">
+              <div class="toggle" style="width:28px;height:16px"></div>
+              <button class="remove-btn" style="width:36px;height:36px"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button>
+            </div>
+            <div class="nav-editor-row">
+              <input class="form-input form-input-sm" value="CONTACT">
+              <input class="form-input form-input-sm" value="/contact">
+              <div class="toggle" style="width:28px;height:16px"></div>
+              <button class="remove-btn" style="width:36px;height:36px"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button>
+            </div>
+            <button class="add-item"><i data-lucide="plus" style="width:12px;height:12px"></i> Add Link</button>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-title">HEADER CTA BUTTON</div>
+            <div class="form-row" style="margin-bottom:16px">
+              <div><label class="form-label">LABEL</label><input class="form-input" value="REGISTER NOW"></div>
+              <div><label class="form-label">LINK</label><input class="form-input" value="/events"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-size:12px;color:var(--muted)">Enabled</span>
+              <div class="toggle"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: FOOTER -->
+        <div class="tab-panel" id="tab-footer">
+          <div class="settings-section">
+            <div class="settings-section-title">FOOTER COLUMNS</div>
+            <p style="font-size:12px;color:var(--dim);margin-bottom:16px">Configure footer link columns. Each column has a title and a list of links.</p>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px">
+
+              <!-- Column 1: Company -->
+              <div class="footer-col-editor">
+                <div class="footer-col-editor-header"><span class="footer-col-editor-title">COLUMN 1</span><i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim);cursor:pointer"></i></div>
+                <label class="form-label">COLUMN TITLE</label><input class="form-input form-input-sm" value="COMPANY">
+                <label class="form-label">LINKS</label>
+                <div class="footer-link-row"><input class="form-input form-input-sm" value="About Us"><input class="form-input form-input-sm" value="/about"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+                <div class="footer-link-row"><input class="form-input form-input-sm" value="Our Partners"><input class="form-input form-input-sm" value="/about#partners"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+                <div class="footer-link-row"><input class="form-input form-input-sm" value="Contact"><input class="form-input form-input-sm" value="/contact"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+                <div class="footer-link-row"><input class="form-input form-input-sm" value="Careers"><input class="form-input form-input-sm" value="/careers"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+                <button class="add-item" style="width:100%"><i data-lucide="plus" style="width:12px;height:12px"></i> Add Link</button>
+              </div>
+
+              <!-- Column 2: Services -->
+              <div class="footer-col-editor">
+                <div class="footer-col-editor-header"><span class="footer-col-editor-title">COLUMN 2</span><i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim);cursor:pointer"></i></div>
+                <label class="form-label">COLUMN TITLE</label><input class="form-input form-input-sm" value="SERVICES">
+                <label class="form-label">LINKS</label>
+                <div class="footer-link-row"><input class="form-input form-input-sm" value="Sports Tournaments"><input class="form-input form-input-sm" value="/events?cat=sports"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+                <div class="footer-link-row"><input class="form-input form-input-sm" value="Corporate Events"><input class="form-input form-input-sm" value="/corporate-events"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+                <div class="footer-link-row"><input class="form-input form-input-sm" value="Community Events"><input class="form-input form-input-sm" value="/events?cat=community"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+                <button class="add-item" style="width:100%"><i data-lucide="plus" style="width:12px;height:12px"></i> Add Link</button>
+              </div>
+
+              <!-- Column 3: Connect -->
+              <div class="footer-col-editor">
+                <div class="footer-col-editor-header"><span class="footer-col-editor-title">COLUMN 3</span><i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim);cursor:pointer"></i></div>
+                <label class="form-label">COLUMN TITLE</label><input class="form-input form-input-sm" value="CONNECT">
+                <label class="form-label">LINKS</label>
+                <div class="footer-link-row"><input class="form-input form-input-sm" value="WhatsApp"><input class="form-input form-input-sm" value="https://wa.me/919876543210"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+                <div class="footer-link-row"><input class="form-input form-input-sm" value="Instagram"><input class="form-input form-input-sm" value="https://instagram.com/tricore"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+                <div class="footer-link-row"><input class="form-input form-input-sm" value="LinkedIn"><input class="form-input form-input-sm" value="https://linkedin.com/company/tricore"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+                <div class="footer-link-row"><input class="form-input form-input-sm" value="Email Us"><input class="form-input form-input-sm" value="mailto:hello@tricore.com"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+                <button class="add-item" style="width:100%"><i data-lucide="plus" style="width:12px;height:12px"></i> Add Link</button>
+              </div>
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-title">FOOTER BOTTOM TEXT</div>
+            <label class="form-label">COPYRIGHT TEXT</label>
+            <input class="form-input" value="&copy; 2026 TriCore Events. All rights reserved.">
+          </div>
+        </div>
+
+        <!-- TAB: CONTACT -->
+        <div class="tab-panel" id="tab-contact">
+          <div class="settings-section">
+            <div class="settings-section-title">CONTACT INFORMATION</div>
+            <p style="font-size:12px;color:var(--dim);margin-bottom:20px">This information is used across the website — footer, contact page, and meta tags.</p>
+            <div class="form-row" style="margin-bottom:20px">
+              <div><label class="form-label">EMAIL ADDRESS</label><input class="form-input" value="hello@tricoreevents.com"></div>
+              <div><label class="form-label">PHONE NUMBER</label><input class="form-input" value="+91 98765 43210"></div>
+            </div>
+            <div class="form-row" style="margin-bottom:20px">
+              <div><label class="form-label">WHATSAPP NUMBER</label><input class="form-input" value="+91 98765 43210"></div>
+              <div><label class="form-label">WHATSAPP MESSAGE</label><input class="form-input" value="Hi! I'd like to know more about TriCore Events."></div>
+            </div>
+            <div style="margin-bottom:20px">
+              <label class="form-label">ADDRESS</label>
+              <textarea class="form-textarea" style="min-height:60px">Spark 7 Sports Arena, Sarjapur Road, Bangalore, Karnataka 560035, India</textarea>
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-title">CONTACT FORM SETTINGS</div>
+            <div class="form-row" style="margin-bottom:16px">
+              <div><label class="form-label">FORM RECIPIENT EMAIL</label><input class="form-input" value="inquiries@tricoreevents.com"></div>
+              <div><label class="form-label">AUTO-REPLY SUBJECT</label><input class="form-input" value="Thanks for contacting TriCore Events!"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+              <span style="font-size:12px;color:var(--muted)">Enable auto-reply emails</span>
+              <div class="toggle"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-size:12px;color:var(--muted)">Send copy to admin</span>
+              <div class="toggle"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+<script>
+  document.addEventListener('click', function(e) {
+    var tabBtn = e.target.closest('[data-tab]');
+    if (tabBtn) {
+      var tabs = tabBtn.parentElement.querySelectorAll('.tab');
+      for (var i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove('active');
+      }
+      tabBtn.classList.add('active');
+
+      var contentArea = tabBtn.closest('.content-area');
+      var panels = contentArea.querySelectorAll('.tab-panel');
+      for (var j = 0; j < panels.length; j++) {
+        panels[j].classList.remove('active');
+      }
+      var target = document.getElementById('tab-' + tabBtn.dataset.tab);
+      if (target) {
+        target.classList.add('active');
+      }
+      lucide.createIcons();
+    }
+  });
+
+  lucide.createIcons();
+</script>
+</body>
+</html>

@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriCore Events — Where Every Event Becomes an Experience</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --color-primary: #D4AF37;
+      --color-primary-dim: #D4AF3715;
+      --color-primary-30: #D4AF3730;
+      --color-bg: #0A0A0A;
+      --color-bg-alt: #111111;
+      --color-surface: #161616;
+      --color-surface-card: #1A1A1A;
+      --color-text: #FFFFFF;
+      --color-text-muted: #A0A0A0;
+      --color-text-dim: #666666;
+      --color-border: #2A2A2A;
+      --font: 'Space Grotesk', sans-serif;
+
+      /* Animation custom properties */
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+      --anim-duration: 0.6s;
+      --hover-speed: 0.4s;
+      --hover-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--color-bg);
+      color: var(--color-text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 64px;
+      transition: background 0.3s, backdrop-filter 0.3s, border-color 0.3s;
+      border-bottom: 1px solid transparent;
+      /* Hero entrance: slide down */
+      opacity: 0;
+      transform: translateY(-30px);
+      animation: headerSlideDown 0.7s var(--ease-out-expo) 0.6s forwards;
+    }
+
+    .header.scrolled {
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom-color: var(--color-border);
+    }
+
+    @keyframes headerSlideDown {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(180deg, #D4AF37, #B8962E);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-mark svg { color: var(--color-bg); }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 4px;
+    }
+
+    .logo-tag {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      color: var(--color-primary);
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .header-nav a {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      color: var(--color-text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .header-nav a:hover, .header-nav a.active {
+      color: var(--color-primary);
+    }
+
+    .header-cta {
+      display: inline-flex;
+      padding: 12px 28px;
+      background: var(--color-primary);
+      color: var(--color-bg);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.3s;
+    }
+
+    .header-cta:hover { opacity: 0.9; }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      height: 720px;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=1440&q=80') center/cover;
+      opacity: 0.4;
+      will-change: transform;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, #0A0A0AFF 0%, #0A0A0A00 50%, #0A0A0ACC 100%);
+    }
+
+    /* Hero SVG decorative shapes */
+    .hero-geo {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .hero-geo-triangle {
+      position: absolute;
+      top: 80px;
+      right: 120px;
+      width: 200px;
+      height: 200px;
+      opacity: 0.08;
+      animation: geoRotate 20s linear infinite;
+    }
+
+    .hero-geo-circle {
+      position: absolute;
+      bottom: 140px;
+      left: 60px;
+      width: 80px;
+      height: 80px;
+      opacity: 0.06;
+      animation: geoPulse 4s ease-in-out infinite;
+    }
+
+    .hero-geo-lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.04;
+    }
+
+    @keyframes geoRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes geoPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    /* Cursor glow for hero */
+    .hero-cursor-glow {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      transform: translate(-50%, -50%);
+      will-change: transform;
+      transition: transform 0.15s ease-out;
+      display: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 160px 120px 80px;
+      gap: 28px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--color-primary-dim);
+      width: fit-content;
+      /* Entrance animation */
+      opacity: 0;
+      transform: translateX(-20px);
+      animation: badgeFadeIn 0.6s var(--ease-out-expo) 0.8s forwards, badgeFloat 3s ease-in-out 2.5s infinite;
+    }
+
+    @keyframes badgeFadeIn {
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes badgeFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .hero-badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-primary);
+    }
+
+    .hero-badge-text {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--color-primary);
+    }
+
+    .hero h1 {
+      font-size: 72px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 0.95;
+      max-width: 800px;
+    }
+
+    /* Each line of the headline animated separately */
+    .hero-line {
+      display: block;
+      overflow: hidden;
+    }
+
+    .hero-line-inner {
+      display: block;
+      opacity: 0;
+      clip-path: inset(0 100% 0 0);
+      will-change: clip-path, opacity;
+    }
+
+    .hero-line:nth-child(1) .hero-line-inner {
+      animation: lineReveal 0.8s var(--ease-out-expo) 0.4s forwards;
+    }
+    .hero-line:nth-child(2) .hero-line-inner {
+      animation: lineReveal 0.8s var(--ease-out-expo) 0.7s forwards;
+    }
+    .hero-line:nth-child(3) .hero-line-inner {
+      animation: lineReveal 0.8s var(--ease-out-expo) 1.0s forwards;
+    }
+
+    @keyframes lineReveal {
+      to {
+        opacity: 1;
+        clip-path: inset(0 0% 0 0);
+      }
+    }
+
+    /* Text gradient shimmer */
+    .hero h1.shimmer-active .hero-line-inner {
+      background: linear-gradient(
+        90deg,
+        var(--color-text) 0%,
+        var(--color-text) 40%,
+        var(--color-primary) 50%,
+        var(--color-text) 60%,
+        var(--color-text) 100%
+      );
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: lineReveal 0.8s var(--ease-out-expo) forwards, shimmerSweep 1.2s ease-in-out forwards;
+    }
+    .hero-line:nth-child(1) .hero-line-inner {
+      animation-delay: 0.4s, 2.0s;
+    }
+    .hero-line:nth-child(2) .hero-line-inner {
+      animation-delay: 0.7s, 2.0s;
+    }
+    .hero-line:nth-child(3) .hero-line-inner {
+      animation-delay: 1.0s, 2.0s;
+    }
+
+    @keyframes shimmerSweep {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .hero-accent {
+      width: 0;
+      height: 4px;
+      background: var(--color-primary);
+      animation: accentGrow 0.6s var(--ease-out-expo) 1.2s forwards;
+    }
+
+    @keyframes accentGrow {
+      to { width: 80px; }
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--color-text-muted);
+      max-width: 620px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.6s var(--ease-out-expo) 1.4s forwards;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .hero-ctas .btn-primary {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.6s var(--ease-out-expo) 1.6s forwards;
+    }
+
+    .hero-ctas .btn-outline {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.6s var(--ease-out-expo) 1.8s forwards;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: var(--color-primary);
+      color: var(--color-bg);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-decoration: none;
+      font-family: var(--font);
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.3s, background 0.3s;
+      will-change: transform;
+    }
+
+    .btn-primary:hover {
+      background: #e0bf45;
+      transform: scale(1.02);
+      box-shadow: 0 0 24px rgba(212, 175, 55, 0.3);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      padding: 16px 36px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--color-text);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-decoration: none;
+      font-family: var(--font);
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+      will-change: transform;
+    }
+
+    .btn-outline:hover {
+      border-color: rgba(255,255,255,1);
+      color: #ffffff;
+    }
+
+    .btn-outline:active {
+      transform: scale(0.98);
+    }
+
+    .stats-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: rgba(17,17,17,0.8);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 120px;
+      z-index: 2;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 0.7s var(--ease-out-expo) 2.0s forwards;
+    }
+
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--color-primary);
+      letter-spacing: -1px;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+
+    /* ===== SECTION COMMON ===== */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      color: var(--color-primary);
+    }
+
+    .section-title {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .section-sub {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--color-text-muted);
+      max-width: 600px;
+    }
+
+    /* ===== SCROLL REVEAL ===== */
+    .reveal-section {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
+    }
+
+    .reveal-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-child {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo);
+    }
+
+    .reveal-child.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== SVG SECTION DIVIDERS ===== */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .section-divider-line {
+      display: block;
+    }
+
+    .section-divider-line line {
+      stroke: var(--color-primary);
+      stroke-width: 1;
+      opacity: 0.2;
+      stroke-dasharray: 600;
+      stroke-dashoffset: 600;
+      transition: stroke-dashoffset 1.2s var(--ease-out-expo);
+    }
+
+    .section-divider-line.visible line {
+      stroke-dashoffset: 0;
+    }
+
+    .section-divider-diamond {
+      display: block;
+    }
+
+    .section-divider-diamond rect {
+      fill: var(--color-primary);
+      opacity: 0.15;
+      transform: scale(0) rotate(45deg);
+      transform-origin: center;
+      transition: transform 0.6s var(--ease-out-expo);
+    }
+
+    .section-divider-diamond.visible rect {
+      transform: scale(1) rotate(45deg);
+    }
+
+    /* ===== PILLARS ===== */
+    .pillars {
+      background: var(--color-bg-alt);
+      padding: 100px 120px;
+    }
+
+    .pillars-header {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 60px;
+    }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .pillar-card {
+      position: relative;
+      height: 480px;
+      overflow: hidden;
+      transition: transform var(--hover-speed) var(--hover-ease), box-shadow var(--hover-speed) var(--hover-ease);
+      will-change: transform;
+    }
+
+    .pillar-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 48px rgba(212, 175, 55, 0.1);
+    }
+
+    .pillar-card-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.35;
+      transition: transform var(--hover-speed) var(--hover-ease);
+      will-change: transform;
+    }
+
+    .pillar-card:hover .pillar-card-bg {
+      transform: scale(1.05);
+    }
+
+    .pillar-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 0%, #111111 70%);
+    }
+
+    .pillar-card-content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 32px 40px;
+      gap: 16px;
+    }
+
+    .pillar-num {
+      font-size: 64px;
+      font-weight: 800;
+      color: var(--color-primary-30);
+      letter-spacing: -2px;
+      transition: color var(--hover-speed) var(--hover-ease);
+    }
+
+    .pillar-card:hover .pillar-num {
+      color: rgba(212, 175, 55, 0.5);
+    }
+
+    .pillar-title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      line-height: 1.1;
+    }
+
+    .pillar-desc {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--color-text-muted);
+      max-width: 320px;
+    }
+
+    .pillar-line {
+      width: 40px;
+      height: 3px;
+      background: var(--color-primary);
+      transition: width var(--hover-speed) var(--hover-ease);
+    }
+
+    .pillar-card:hover .pillar-line {
+      width: 80px;
+    }
+
+    /* ===== TRUST ===== */
+    .trust {
+      background: var(--color-bg);
+      padding: 100px 120px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+    }
+
+    .trust-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 32px;
+    }
+
+    .trust-title {
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.05;
+    }
+
+    .trust-accent {
+      width: 60px;
+      height: 4px;
+      background: var(--color-primary);
+    }
+
+    .trust-desc {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--color-text-muted);
+      max-width: 500px;
+    }
+
+    .trust-right {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .partner-card {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 28px 32px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-left: 3px solid transparent;
+      transition: border-color 0.3s var(--hover-ease), transform 0.3s var(--hover-ease);
+    }
+
+    .partner-card:hover {
+      border-left-color: var(--color-primary);
+      transform: translateX(4px);
+    }
+
+    .partner-icon {
+      width: 56px;
+      height: 56px;
+      min-width: 56px;
+      background: var(--color-primary-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s;
+    }
+
+    .partner-card:hover .partner-icon {
+      background: rgba(212, 175, 55, 0.15);
+    }
+
+    .partner-icon i { color: var(--color-primary); }
+
+    .partner-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .partner-desc {
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--color-text-muted);
+    }
+
+    /* ===== EVENTS ===== */
+    .events {
+      background: var(--color-bg-alt);
+      padding: 100px 120px;
+    }
+
+    .events-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 48px;
+    }
+
+    .events-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .events-view-all {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border: 1px solid rgba(212,175,55,0.3);
+      color: var(--color-primary);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-decoration: none;
+      font-family: var(--font);
+      transition: border-color 0.2s;
+    }
+
+    .events-view-all:hover { border-color: var(--color-primary); }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .event-card {
+      background: var(--color-surface-card);
+      overflow: hidden;
+      border: 1px solid transparent;
+      transition: border-color 0.3s var(--hover-ease);
+    }
+
+    .event-card:hover {
+      border-color: rgba(212, 175, 55, 0.25);
+    }
+
+    .event-card-img-wrapper {
+      overflow: hidden;
+      height: 220px;
+    }
+
+    .event-card-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      transition: transform 0.3s var(--hover-ease);
+      will-change: transform;
+    }
+
+    .event-card:hover .event-card-img {
+      transform: scale(1.08);
+    }
+
+    .event-card-content {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .event-tag {
+      display: inline-flex;
+      padding: 4px 10px;
+      background: rgba(212,175,55,0.12);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--color-primary);
+      width: fit-content;
+      transition: background 0.3s;
+    }
+
+    .event-card:hover .event-tag {
+      background: rgba(212, 175, 55, 0.2);
+    }
+
+    .event-title {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .event-meta {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      color: var(--color-text-muted);
+    }
+
+    .event-meta-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--color-text-dim);
+    }
+
+    /* ===== TESTIMONIALS ===== */
+    .testimonials {
+      background: var(--color-bg);
+      padding: 100px 120px;
+    }
+
+    .testimonials-header {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 60px;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .testimonial-card {
+      padding: 36px 32px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .testimonial-card:hover {
+      border-color: rgba(212, 175, 55, 0.2);
+      box-shadow: 0 0 24px rgba(212, 175, 55, 0.05);
+    }
+
+    .testimonial-quote {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--color-primary);
+      line-height: 0.5;
+      transition: transform 0.3s var(--hover-ease);
+    }
+
+    .testimonial-card:hover .testimonial-quote {
+      transform: scale(1.15);
+    }
+
+    .testimonial-text {
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--color-text-muted);
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testimonial-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .testimonial-avatar i { color: var(--color-primary); }
+
+    .testimonial-name {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .testimonial-role {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--color-text-dim);
+    }
+
+    /* ===== FINAL CTA ===== */
+    .final-cta {
+      position: relative;
+      height: 400px;
+      overflow: hidden;
+    }
+
+    .final-cta-bg {
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1514306191717-452ec28c7814?w=1440&q=80') center/cover;
+      opacity: 0.25;
+      will-change: transform;
+    }
+
+    .final-cta-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle, rgba(10,10,10,0.5) 0%, rgba(10,10,10,0.93) 100%);
+    }
+
+    .final-cta-content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      text-align: center;
+      padding: 0 120px;
+    }
+
+    .final-cta h2 {
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.1;
+    }
+
+    .final-cta-sub {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--color-text-muted);
+      max-width: 600px;
+    }
+
+    .final-cta-btns {
+      display: flex;
+      gap: 16px;
+    }
+
+    /* Gold particle dots in CTA */
+    .cta-particle {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--color-primary);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .cta-particle:nth-child(1) { width: 4px; height: 4px; top: 15%; left: 10%; opacity: 0.15; animation: particleFloat 5s ease-in-out infinite; }
+    .cta-particle:nth-child(2) { width: 6px; height: 6px; top: 25%; right: 15%; opacity: 0.1; animation: particleFloat 7s ease-in-out infinite 1s; }
+    .cta-particle:nth-child(3) { width: 4px; height: 4px; bottom: 30%; left: 20%; opacity: 0.2; animation: particleFloat 4s ease-in-out infinite 0.5s; }
+    .cta-particle:nth-child(4) { width: 5px; height: 5px; top: 40%; right: 25%; opacity: 0.12; animation: particleFloat 6s ease-in-out infinite 2s; }
+    .cta-particle:nth-child(5) { width: 4px; height: 4px; bottom: 20%; right: 10%; opacity: 0.25; animation: particleFloat 3.5s ease-in-out infinite 1.5s; }
+    .cta-particle:nth-child(6) { width: 6px; height: 6px; top: 60%; left: 8%; opacity: 0.1; animation: particleFloat 5.5s ease-in-out infinite 0.8s; }
+    .cta-particle:nth-child(7) { width: 4px; height: 4px; top: 20%; left: 40%; opacity: 0.3; animation: particleFloat 4.5s ease-in-out infinite 2.5s; }
+    .cta-particle:nth-child(8) { width: 5px; height: 5px; bottom: 40%; right: 35%; opacity: 0.15; animation: particleFloat 6.5s ease-in-out infinite 0.3s; }
+
+    @keyframes particleFloat {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      25% { transform: translateY(-12px) translateX(6px); }
+      50% { transform: translateY(-6px) translateX(-4px); }
+      75% { transform: translateY(-18px) translateX(2px); }
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--color-bg-alt);
+      border-top: 1px solid var(--color-border);
+      padding: 60px 120px 40px;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 320px repeat(3, 1fr);
+      gap: 80px;
+      margin-bottom: 48px;
+    }
+
+    .footer-tagline {
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--color-text-dim);
+      margin-top: 16px;
+    }
+
+    .footer-col-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--color-primary);
+      margin-bottom: 16px;
+    }
+
+    .footer-col a {
+      display: block;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--color-text-muted);
+      text-decoration: none;
+      margin-bottom: 12px;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover { color: var(--color-text); }
+
+    .footer-divider {
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 24px;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-copy {
+      font-size: 12px;
+      color: var(--color-text-dim);
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-legal a {
+      font-size: 12px;
+      color: var(--color-text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-legal a:hover { color: var(--color-text-muted); }
+
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .header {
+        padding: 16px 20px;
+      }
+      .header-nav { display: none; }
+      .logo-text { font-size: 16px; letter-spacing: 3px; }
+      .logo-mark { width: 28px; height: 28px; }
+      .header-cta { padding: 8px 16px; font-size: 10px; letter-spacing: 1.5px; }
+
+      .hero { height: 620px; }
+      .hero h1 { font-size: 38px; }
+      .hero-content { padding: 100px 24px 24px; gap: 20px; }
+      .hero-sub { font-size: 14px; max-width: 320px; }
+      .hero-ctas { flex-direction: column; width: 100%; }
+      .btn-primary, .btn-outline { width: 100%; justify-content: center; padding: 14px 24px; font-size: 13px; }
+      .stats-bar { padding: 20px 24px; height: auto; flex-wrap: wrap; justify-content: space-between; }
+      .stat { flex-direction: column; text-align: center; gap: 4px; }
+      .stat-value { font-size: 22px; }
+      .stat-label { font-size: 8px; text-align: center; }
+
+      .pillars { padding: 60px 24px; }
+      .section-title { font-size: 28px; }
+      .section-sub { font-size: 13px; }
+      .pillars-grid { grid-template-columns: 1fr; }
+      .pillar-card { height: 320px; }
+      .pillar-num { font-size: 48px; }
+      .pillar-title { font-size: 20px; }
+      .pillar-desc { font-size: 13px; }
+
+      .trust { grid-template-columns: 1fr; padding: 60px 24px; gap: 36px; }
+      .trust-title { font-size: 32px; }
+      .trust-desc { font-size: 14px; }
+      .partner-card { padding: 20px; gap: 16px; }
+      .partner-icon { width: 44px; height: 44px; min-width: 44px; }
+      .partner-title { font-size: 13px; }
+      .partner-desc { font-size: 12px; }
+
+      .events { padding: 60px 24px; }
+      .events-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+      .events-grid { grid-template-columns: 1fr; }
+      .events-view-all { width: 100%; justify-content: center; margin-top: 20px; }
+      .event-card-img-wrapper { height: 200px; }
+      .event-card-img { height: 200px; }
+      .event-title { font-size: 17px; }
+
+      .testimonials { padding: 60px 24px; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .testimonial-card { padding: 28px 24px; }
+      .testimonial-text { font-size: 13px; }
+
+      .final-cta { height: 360px; }
+      .final-cta h2 { font-size: 28px; }
+      .final-cta-sub { font-size: 13px; }
+      .final-cta-content { padding: 0 24px; gap: 20px; }
+      .final-cta-btns { flex-direction: column; width: 320px; max-width: 100%; }
+
+      .footer { padding: 40px 24px 24px; }
+      .footer-top { grid-template-columns: 1fr; gap: 32px; }
+      .footer-top > div:first-child { max-width: 100%; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+      .footer-legal { gap: 16px; }
+
+      /* Hide decorative elements on mobile */
+      .hero-geo { display: none; }
+      .hero-cursor-glow { display: none !important; }
+      .cta-particle { display: none; }
+    }
+
+    /* ===== REDUCED MOTION ===== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+
+      .header {
+        opacity: 1;
+        transform: none;
+      }
+
+      .hero-badge {
+        opacity: 1;
+        transform: none;
+      }
+
+      .hero-line-inner {
+        opacity: 1;
+        clip-path: none;
+      }
+
+      .hero-accent {
+        width: 80px;
+      }
+
+      .hero-sub {
+        opacity: 1;
+        transform: none;
+      }
+
+      .hero-ctas .btn-primary,
+      .hero-ctas .btn-outline {
+        opacity: 1;
+        transform: none;
+      }
+
+      .stats-bar {
+        opacity: 1;
+        transform: none;
+      }
+
+      .reveal-section {
+        opacity: 1;
+        transform: none;
+      }
+
+      .reveal-child {
+        opacity: 1;
+        transform: none;
+      }
+
+      .hero-geo { display: none; }
+      .hero-cursor-glow { display: none !important; }
+      .cta-particle { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header" id="header">
+    <div class="header-logo">
+      <div class="logo-mark">
+        <svg width="20" height="18" viewBox="0 0 20 18" fill="currentColor"><polygon points="10,0 20,18 0,18"/></svg>
+      </div>
+      <span class="logo-text">TRICORE</span>
+      <span class="logo-tag">EVENTS</span>
+    </div>
+    <nav class="header-nav">
+      <a href="public-landing-animated.html" class="active">HOME</a>
+      <a href="public-events.html">EVENTS</a>
+      <a href="public-corporate.html">CORPORATE</a>
+      <a href="public-about.html">ABOUT</a>
+      <a href="public-contact.html">CONTACT</a>
+    </nav>
+    <a href="public-events.html" class="header-cta">REGISTER NOW</a>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg" id="hero-bg"></div>
+    <div class="hero-overlay"></div>
+
+    <!-- Decorative SVG shapes -->
+    <div class="hero-geo">
+      <!-- Rotating triangle -->
+      <svg class="hero-geo-triangle" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="100,10 190,180 10,180" stroke="#D4AF37" stroke-width="1.5" fill="none"/>
+      </svg>
+      <!-- Pulsing circle -->
+      <svg class="hero-geo-circle" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="40" r="38" stroke="#D4AF37" stroke-width="1.5" fill="none"/>
+      </svg>
+      <!-- Diagonal lines -->
+      <svg class="hero-geo-lines" viewBox="0 0 1440 720" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <line x1="0" y1="720" x2="1440" y2="0" stroke="#D4AF37" stroke-width="1"/>
+        <line x1="200" y1="720" x2="1440" y2="100" stroke="#D4AF37" stroke-width="0.5"/>
+      </svg>
+    </div>
+
+    <!-- Cursor glow -->
+    <div class="hero-cursor-glow" id="hero-cursor-glow"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        <span class="hero-badge-text">SPORTS &nbsp;&middot;&nbsp; CORPORATE &nbsp;&middot;&nbsp; COMMUNITY</span>
+      </div>
+      <h1 id="hero-headline"><span class="hero-line"><span class="hero-line-inner">WHERE EVERY</span></span><span class="hero-line"><span class="hero-line-inner">EVENT BECOMES</span></span><span class="hero-line"><span class="hero-line-inner">AN EXPERIENCE</span></span></h1>
+      <div class="hero-accent"></div>
+      <p class="hero-sub">From high-stakes sports tournaments to premium corporate experiences,<br>TriCore delivers events that set the standard.</p>
+      <div class="hero-ctas">
+        <a href="public-events.html" class="btn-primary">EXPLORE EVENTS <i data-lucide="arrow-right" style="width:18px;height:18px;"></i></a>
+        <a href="public-corporate.html" class="btn-outline">CORPORATE INQUIRY</a>
+      </div>
+    </div>
+    <div class="stats-bar" id="stats-bar">
+      <div class="stat">
+        <span class="stat-value" data-target="150" data-suffix="+">0</span>
+        <span class="stat-label">EVENTS<br>DELIVERED</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" data-target="50" data-suffix="K+">0</span>
+        <span class="stat-label">PARTICIPANTS<br>ENGAGED</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" data-target="25" data-suffix="+">0</span>
+        <span class="stat-label">CORPORATE<br>PARTNERS</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" data-target="3" data-suffix="">0</span>
+        <span class="stat-label">SERVICE<br>VERTICALS</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- THREE PILLARS -->
+  <section class="pillars reveal-section" id="pillars">
+    <div class="pillars-header">
+      <span class="section-label reveal-child">WHAT WE DO</span>
+      <h2 class="section-title reveal-child">THREE PILLARS OF EXCELLENCE</h2>
+      <p class="section-sub reveal-child">Every event category gets the same uncompromising standard of planning, execution, and experience.</p>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar-card reveal-child">
+        <div class="pillar-card-bg" style="background-image:url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=600&q=80')"></div>
+        <div class="pillar-card-overlay"></div>
+        <div class="pillar-card-content">
+          <span class="pillar-num">01</span>
+          <h3 class="pillar-title">SPORTS<br>TOURNAMENTS</h3>
+          <p class="pillar-desc">Cricket, football, badminton, and more. Full tournament management from brackets to finals.</p>
+          <div class="pillar-line"></div>
+        </div>
+      </div>
+      <div class="pillar-card reveal-child">
+        <div class="pillar-card-bg" style="background-image:url('https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&q=80')"></div>
+        <div class="pillar-card-overlay"></div>
+        <div class="pillar-card-content">
+          <span class="pillar-num">02</span>
+          <h3 class="pillar-title">CORPORATE<br>EXPERIENCES</h3>
+          <p class="pillar-desc">Team building, brand activations, and premium corporate gatherings that deliver results.</p>
+          <div class="pillar-line"></div>
+        </div>
+      </div>
+      <div class="pillar-card reveal-child">
+        <div class="pillar-card-bg" style="background-image:url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80')"></div>
+        <div class="pillar-card-overlay"></div>
+        <div class="pillar-card-content">
+          <span class="pillar-num">03</span>
+          <h3 class="pillar-title">COMMUNITY<br>COMPETITIONS</h3>
+          <p class="pillar-desc">Residential tournaments and local leagues that bring neighborhoods together through sport.</p>
+          <div class="pillar-line"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Divider: line drawing from center -->
+  <div class="section-divider">
+    <svg class="section-divider-line" width="600" height="2" viewBox="0 0 600 2">
+      <line x1="300" y1="1" x2="0" y2="1" />
+      <line x1="300" y1="1" x2="600" y2="1" />
+    </svg>
+  </div>
+
+  <!-- WHY TRICORE -->
+  <section class="trust reveal-section" id="trust">
+    <div class="trust-left">
+      <span class="section-label reveal-child">WHY TRICORE</span>
+      <h2 class="trust-title reveal-child">BUILT ON<br>EXPERIENCE.<br>DRIVEN BY<br>EXCELLENCE.</h2>
+      <div class="trust-accent reveal-child"></div>
+      <p class="trust-desc reveal-child">TriCore is a growing brand backed by seasoned organizers, venue partners, and a delivery network that has executed events across formats and scales. Our credibility comes from who stands behind us.</p>
+    </div>
+    <div class="trust-right">
+      <div class="partner-card reveal-child">
+        <div class="partner-icon"><i data-lucide="map-pin" style="width:24px;height:24px;"></i></div>
+        <div>
+          <div class="partner-title">SPARK 7 SPORTS ARENA</div>
+          <p class="partner-desc">Our flagship venue partner providing world-class facilities for tournaments and events.</p>
+        </div>
+      </div>
+      <div class="partner-card reveal-child">
+        <div class="partner-icon"><i data-lucide="building-2" style="width:24px;height:24px;"></i></div>
+        <div>
+          <div class="partner-title">SARVA HORIZON</div>
+          <p class="partner-desc">Strategic partnership bringing corporate event expertise and an extensive business network.</p>
+        </div>
+      </div>
+      <div class="partner-card reveal-child">
+        <div class="partner-icon"><i data-lucide="shield-check" style="width:24px;height:24px;"></i></div>
+        <div>
+          <div class="partner-title">EXPERIENCED ORGANIZERS</div>
+          <p class="partner-desc">A team of seasoned event professionals with deep domain expertise across sports and corporate formats.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED EVENTS -->
+  <section class="events reveal-section" id="events">
+    <div class="events-header">
+      <div class="events-header-left">
+        <span class="section-label reveal-child">UPCOMING</span>
+        <h2 class="section-title reveal-child">FEATURED EVENTS</h2>
+      </div>
+      <a href="public-events.html" class="events-view-all reveal-child">VIEW ALL EVENTS <i data-lucide="arrow-right" style="width:16px;height:16px;"></i></a>
+    </div>
+    <div class="events-grid">
+      <a href="public-event-detail.html" class="event-card reveal-child" style="text-decoration:none;color:inherit;">
+        <div class="event-card-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=500&q=80" alt="Cricket" class="event-card-img">
+        </div>
+        <div class="event-card-content">
+          <span class="event-tag">SPORTS</span>
+          <h3 class="event-title">Premier Cricket League<br>Season 4</h3>
+          <div class="event-meta">
+            <span>APR 15-20, 2026</span>
+            <span class="event-meta-dot"></span>
+            <span>SPARK 7 ARENA</span>
+          </div>
+        </div>
+      </a>
+      <a href="public-event-detail.html" class="event-card reveal-child" style="text-decoration:none;color:inherit;">
+        <div class="event-card-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=500&q=80" alt="Corporate" class="event-card-img">
+        </div>
+        <div class="event-card-content">
+          <span class="event-tag">CORPORATE</span>
+          <h3 class="event-title">Corporate Champions<br>Cup 2026</h3>
+          <div class="event-meta">
+            <span>MAY 8-10, 2026</span>
+            <span class="event-meta-dot"></span>
+            <span>BANGALORE</span>
+          </div>
+        </div>
+      </a>
+      <a href="public-event-detail.html" class="event-card reveal-child" style="text-decoration:none;color:inherit;">
+        <div class="event-card-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=500&q=80" alt="Badminton" class="event-card-img">
+        </div>
+        <div class="event-card-content">
+          <span class="event-tag">COMMUNITY</span>
+          <h3 class="event-title">Neighborhood<br>Badminton Open</h3>
+          <div class="event-meta">
+            <span>JUN 1-3, 2026</span>
+            <span class="event-meta-dot"></span>
+            <span>COMMUNITY CENTER</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Divider: diamond shape -->
+  <div class="section-divider">
+    <svg class="section-divider-diamond" width="24" height="24" viewBox="0 0 24 24">
+      <rect x="4" y="4" width="12" height="12" rx="1" />
+    </svg>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials reveal-section" id="testimonials">
+    <div class="testimonials-header">
+      <span class="section-label reveal-child">TESTIMONIALS</span>
+      <h2 class="section-title reveal-child">WHAT PEOPLE SAY</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal-child">
+        <span class="testimonial-quote">&ldquo;</span>
+        <p class="testimonial-text">The tournament was flawlessly organized. From scheduling to live scoring, everything was handled with precision. We'll definitely be back next season.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar"><i data-lucide="user" style="width:20px;height:20px;"></i></div>
+          <div>
+            <div class="testimonial-name">RAJESH KUMAR</div>
+            <div class="testimonial-role">Team Captain, PCL Season 3</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal-child">
+        <span class="testimonial-quote">&ldquo;</span>
+        <p class="testimonial-text">TriCore handled our entire corporate sports day — 400 employees, 8 different activities, zero hiccups. Their team made us look good in front of our leadership.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar"><i data-lucide="user" style="width:20px;height:20px;"></i></div>
+          <div>
+            <div class="testimonial-name">PRIYA MENON</div>
+            <div class="testimonial-role">HR Director, TechVista Inc.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final-cta reveal-section" id="final-cta">
+    <!-- Gold particle dots -->
+    <div class="cta-particle"></div>
+    <div class="cta-particle"></div>
+    <div class="cta-particle"></div>
+    <div class="cta-particle"></div>
+    <div class="cta-particle"></div>
+    <div class="cta-particle"></div>
+    <div class="cta-particle"></div>
+    <div class="cta-particle"></div>
+
+    <div class="final-cta-bg" id="final-cta-bg"></div>
+    <div class="final-cta-overlay"></div>
+    <div class="final-cta-content">
+      <h2 class="reveal-child">READY TO CREATE<br>SOMETHING EXTRAORDINARY?</h2>
+      <p class="final-cta-sub reveal-child">Whether it's a tournament, a corporate event, or a community competition — let's make it happen.</p>
+      <div class="final-cta-btns reveal-child">
+        <a href="public-contact.html" class="btn-primary">GET IN TOUCH <i data-lucide="arrow-right" style="width:18px;height:18px;"></i></a>
+        <a href="public-events.html" class="btn-outline">BROWSE EVENTS</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer reveal-section" id="footer">
+    <div class="footer-top">
+      <div class="reveal-child">
+        <div class="header-logo" style="margin-bottom:0;">
+          <div class="logo-mark" style="width:28px;height:28px;">
+            <svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg>
+          </div>
+          <span class="logo-text" style="font-size:18px;letter-spacing:3px;">TRICORE</span>
+        </div>
+        <p class="footer-tagline">Where every event becomes an experience. Sports tournaments, corporate events, and community competitions delivered with excellence.</p>
+      </div>
+      <div class="footer-col reveal-child">
+        <div class="footer-col-title">COMPANY</div>
+        <a href="public-about.html">About Us</a>
+        <a href="public-about.html#partners">Our Partners</a>
+        <a href="public-contact.html">Contact</a>
+        <a href="#">Careers</a>
+      </div>
+      <div class="footer-col reveal-child">
+        <div class="footer-col-title">SERVICES</div>
+        <a href="public-events.html">Sports Tournaments</a>
+        <a href="public-corporate.html">Corporate Events</a>
+        <a href="public-events.html">Community Events</a>
+        <a href="#">Partner Access</a>
+      </div>
+      <div class="footer-col reveal-child">
+        <div class="footer-col-title">CONNECT</div>
+        <a href="#">WhatsApp</a>
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">Email Us</a>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; 2026 TriCore Events. All rights reserved.</span>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // ===== DETECT MOBILE & REDUCED MOTION =====
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ===== HEADER SCROLL EFFECT =====
+    const header = document.getElementById('header');
+    let headerScrolled = false;
+
+    function handleHeaderScroll() {
+      const scrollY = window.scrollY || window.pageYOffset;
+      if (scrollY > 100 && !headerScrolled) {
+        header.classList.add('scrolled');
+        headerScrolled = true;
+      } else if (scrollY <= 100 && headerScrolled) {
+        header.classList.remove('scrolled');
+        headerScrolled = false;
+      }
+    }
+
+    window.addEventListener('scroll', handleHeaderScroll, { passive: true });
+
+    // ===== SHIMMER ON HERO HEADLINE =====
+    if (!prefersReducedMotion) {
+      setTimeout(() => {
+        document.getElementById('hero-headline').classList.add('shimmer-active');
+      }, 1800);
+    }
+
+    // ===== INTERSECTION OBSERVER — SCROLL REVEALS =====
+    if (!prefersReducedMotion) {
+      const revealSectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+
+            // Stagger children
+            const children = entry.target.querySelectorAll('.reveal-child');
+            children.forEach((child, i) => {
+              child.style.transitionDelay = `${i * 0.1}s`;
+              // Use a tiny timeout so the delay is applied before the class
+              requestAnimationFrame(() => {
+                child.classList.add('visible');
+              });
+            });
+
+            revealSectionObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+
+      document.querySelectorAll('.reveal-section').forEach(section => {
+        revealSectionObserver.observe(section);
+      });
+
+      // SVG divider observer
+      const dividerObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            dividerObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      document.querySelectorAll('.section-divider-line, .section-divider-diamond').forEach(el => {
+        dividerObserver.observe(el);
+      });
+    } else {
+      // Immediately show everything if reduced motion
+      document.querySelectorAll('.reveal-section, .reveal-child').forEach(el => {
+        el.classList.add('visible');
+      });
+      document.querySelectorAll('.section-divider-line, .section-divider-diamond').forEach(el => {
+        el.classList.add('visible');
+      });
+    }
+
+    // ===== STATS COUNTER ANIMATION =====
+    let statsAnimated = false;
+
+    function animateCounter(element, target, suffix, duration, delay) {
+      setTimeout(() => {
+        const start = performance.now();
+        function update(now) {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          // Ease out quad
+          const eased = 1 - (1 - progress) * (1 - progress);
+          const current = Math.floor(eased * target);
+          element.textContent = current + suffix;
+          if (progress < 1) {
+            requestAnimationFrame(update);
+          } else {
+            element.textContent = target + suffix;
+          }
+        }
+        requestAnimationFrame(update);
+      }, delay);
+    }
+
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !statsAnimated) {
+          statsAnimated = true;
+          const statValues = entry.target.querySelectorAll('.stat-value');
+          statValues.forEach((el, i) => {
+            const target = parseInt(el.dataset.target);
+            const suffix = el.dataset.suffix;
+            animateCounter(el, target, suffix, 2000, i * 200);
+          });
+          statsObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    statsObserver.observe(document.getElementById('stats-bar'));
+
+    // ===== PARALLAX EFFECTS =====
+    if (!isMobile && !prefersReducedMotion) {
+      const heroBg = document.getElementById('hero-bg');
+      const finalCtaBg = document.getElementById('final-cta-bg');
+      let ticking = false;
+
+      function handleParallax() {
+        const scrollY = window.scrollY || window.pageYOffset;
+
+        // Hero parallax
+        if (heroBg) {
+          heroBg.style.transform = `translateY(${scrollY * 0.5}px)`;
+        }
+
+        // Final CTA parallax
+        if (finalCtaBg) {
+          const ctaSection = finalCtaBg.closest('.final-cta');
+          const ctaRect = ctaSection.getBoundingClientRect();
+          if (ctaRect.top < window.innerHeight && ctaRect.bottom > 0) {
+            const offset = (ctaRect.top - window.innerHeight) * 0.3;
+            finalCtaBg.style.transform = `translateY(${offset}px)`;
+          }
+        }
+
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(handleParallax);
+          ticking = true;
+        }
+      }, { passive: true });
+    }
+
+    // ===== HERO CURSOR GLOW =====
+    if (!isMobile && !prefersReducedMotion) {
+      const heroSection = document.querySelector('.hero');
+      const cursorGlow = document.getElementById('hero-cursor-glow');
+
+      if (cursorGlow) {
+        cursorGlow.style.display = 'block';
+
+        heroSection.addEventListener('mousemove', (e) => {
+          const rect = heroSection.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          cursorGlow.style.transform = `translate(${x - 200}px, ${y - 200}px)`;
+        });
+
+        heroSection.addEventListener('mouseleave', () => {
+          cursorGlow.style.opacity = '0';
+        });
+
+        heroSection.addEventListener('mouseenter', () => {
+          cursorGlow.style.opacity = '1';
+        });
+      }
+    }
+
+    // ===== SMOOTH SCROLL FOR NAV LINKS =====
+    document.querySelectorAll('.header-nav a, .header-cta, .hero-ctas a').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#') && href.length > 1) {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

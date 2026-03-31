@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriCore Events — Where Every Event Becomes an Experience</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --color-primary: #D4AF37;
+      --color-primary-dim: #D4AF3715;
+      --color-primary-30: #D4AF3730;
+      --color-bg: #0A0A0A;
+      --color-bg-alt: #111111;
+      --color-surface: #161616;
+      --color-surface-card: #1A1A1A;
+      --color-text: #FFFFFF;
+      --color-text-muted: #A0A0A0;
+      --color-text-dim: #666666;
+      --color-border: #2A2A2A;
+      --font: 'Space Grotesk', sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--color-bg);
+      color: var(--color-text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 64px;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(180deg, #D4AF37, #B8962E);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-mark svg { color: var(--color-bg); }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 4px;
+    }
+
+    .logo-tag {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      color: var(--color-primary);
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .header-nav a {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      color: var(--color-text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .header-nav a:hover, .header-nav a.active {
+      color: var(--color-primary);
+    }
+
+    .header-cta {
+      display: inline-flex;
+      padding: 12px 28px;
+      background: var(--color-primary);
+      color: var(--color-bg);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .header-cta:hover { opacity: 0.9; }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      height: 720px;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=1440&q=80') center/cover;
+      opacity: 0.4;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, #0A0A0AFF 0%, #0A0A0A00 50%, #0A0A0ACC 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 160px 120px 80px;
+      gap: 28px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--color-primary-dim);
+      width: fit-content;
+    }
+
+    .hero-badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-primary);
+    }
+
+    .hero-badge-text {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--color-primary);
+    }
+
+    .hero h1 {
+      font-size: 72px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 0.95;
+      max-width: 800px;
+    }
+
+    .hero-accent {
+      width: 80px;
+      height: 4px;
+      background: var(--color-primary);
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--color-text-muted);
+      max-width: 620px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: var(--color-primary);
+      color: var(--color-bg);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-decoration: none;
+      font-family: var(--font);
+      transition: opacity 0.2s;
+    }
+
+    .btn-primary:hover { opacity: 0.9; }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      padding: 16px 36px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--color-text);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-decoration: none;
+      font-family: var(--font);
+      transition: border-color 0.2s;
+    }
+
+    .btn-outline:hover { border-color: rgba(255,255,255,0.4); }
+
+    .stats-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: rgba(17,17,17,0.8);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 120px;
+      z-index: 2;
+    }
+
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--color-primary);
+      letter-spacing: -1px;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+
+    /* ===== SECTION COMMON ===== */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      color: var(--color-primary);
+    }
+
+    .section-title {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .section-sub {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--color-text-muted);
+      max-width: 600px;
+    }
+
+    /* ===== PILLARS ===== */
+    .pillars {
+      background: var(--color-bg-alt);
+      padding: 100px 120px;
+    }
+
+    .pillars-header {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 60px;
+    }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .pillar-card {
+      position: relative;
+      height: 480px;
+      overflow: hidden;
+    }
+
+    .pillar-card-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.35;
+    }
+
+    .pillar-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 0%, #111111 70%);
+    }
+
+    .pillar-card-content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 32px 40px;
+      gap: 16px;
+    }
+
+    .pillar-num {
+      font-size: 64px;
+      font-weight: 800;
+      color: var(--color-primary-30);
+      letter-spacing: -2px;
+    }
+
+    .pillar-title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      line-height: 1.1;
+    }
+
+    .pillar-desc {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--color-text-muted);
+      max-width: 320px;
+    }
+
+    .pillar-line {
+      width: 40px;
+      height: 3px;
+      background: var(--color-primary);
+    }
+
+    /* ===== TRUST ===== */
+    .trust {
+      background: var(--color-bg);
+      padding: 100px 120px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+    }
+
+    .trust-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 32px;
+    }
+
+    .trust-title {
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.05;
+    }
+
+    .trust-accent {
+      width: 60px;
+      height: 4px;
+      background: var(--color-primary);
+    }
+
+    .trust-desc {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--color-text-muted);
+      max-width: 500px;
+    }
+
+    .trust-right {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .partner-card {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 28px 32px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+    }
+
+    .partner-icon {
+      width: 56px;
+      height: 56px;
+      min-width: 56px;
+      background: var(--color-primary-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .partner-icon i { color: var(--color-primary); }
+
+    .partner-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .partner-desc {
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--color-text-muted);
+    }
+
+    /* ===== EVENTS ===== */
+    .events {
+      background: var(--color-bg-alt);
+      padding: 100px 120px;
+    }
+
+    .events-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 48px;
+    }
+
+    .events-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .events-view-all {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border: 1px solid rgba(212,175,55,0.3);
+      color: var(--color-primary);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-decoration: none;
+      font-family: var(--font);
+      transition: border-color 0.2s;
+    }
+
+    .events-view-all:hover { border-color: var(--color-primary); }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .event-card {
+      background: var(--color-surface-card);
+      overflow: hidden;
+    }
+
+    .event-card-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+
+    .event-card-content {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .event-tag {
+      display: inline-flex;
+      padding: 4px 10px;
+      background: rgba(212,175,55,0.12);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--color-primary);
+      width: fit-content;
+    }
+
+    .event-title {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .event-meta {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      color: var(--color-text-muted);
+    }
+
+    .event-meta-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--color-text-dim);
+    }
+
+    /* ===== TESTIMONIALS ===== */
+    .testimonials {
+      background: var(--color-bg);
+      padding: 100px 120px;
+    }
+
+    .testimonials-header {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 60px;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .testimonial-card {
+      padding: 36px 32px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .testimonial-quote {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--color-primary);
+      line-height: 0.5;
+    }
+
+    .testimonial-text {
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--color-text-muted);
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testimonial-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .testimonial-avatar i { color: var(--color-primary); }
+
+    .testimonial-name {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .testimonial-role {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--color-text-dim);
+    }
+
+    /* ===== FINAL CTA ===== */
+    .final-cta {
+      position: relative;
+      height: 400px;
+      overflow: hidden;
+    }
+
+    .final-cta-bg {
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1514306191717-452ec28c7814?w=1440&q=80') center/cover;
+      opacity: 0.25;
+    }
+
+    .final-cta-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle, rgba(10,10,10,0.5) 0%, rgba(10,10,10,0.93) 100%);
+    }
+
+    .final-cta-content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      text-align: center;
+      padding: 0 120px;
+    }
+
+    .final-cta h2 {
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.1;
+    }
+
+    .final-cta-sub {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--color-text-muted);
+      max-width: 600px;
+    }
+
+    .final-cta-btns {
+      display: flex;
+      gap: 16px;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--color-bg-alt);
+      border-top: 1px solid var(--color-border);
+      padding: 60px 120px 40px;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 320px repeat(3, 1fr);
+      gap: 80px;
+      margin-bottom: 48px;
+    }
+
+    .footer-tagline {
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--color-text-dim);
+      margin-top: 16px;
+    }
+
+    .footer-col-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--color-primary);
+      margin-bottom: 16px;
+    }
+
+    .footer-col a {
+      display: block;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--color-text-muted);
+      text-decoration: none;
+      margin-bottom: 12px;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover { color: var(--color-text); }
+
+    .footer-divider {
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 24px;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-copy {
+      font-size: 12px;
+      color: var(--color-text-dim);
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-legal a {
+      font-size: 12px;
+      color: var(--color-text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-legal a:hover { color: var(--color-text-muted); }
+
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .header {
+        padding: 16px 20px;
+      }
+      .header-nav { display: none; }
+      .logo-text { font-size: 16px; letter-spacing: 3px; }
+      .logo-mark { width: 28px; height: 28px; }
+      .header-cta { padding: 8px 16px; font-size: 10px; letter-spacing: 1.5px; }
+
+      .hero { height: 620px; }
+      .hero h1 { font-size: 38px; }
+      .hero-content { padding: 100px 24px 24px; gap: 20px; }
+      .hero-sub { font-size: 14px; max-width: 320px; }
+      .hero-ctas { flex-direction: column; width: 100%; }
+      .btn-primary, .btn-outline { width: 100%; justify-content: center; padding: 14px 24px; font-size: 13px; }
+      .stats-bar { padding: 20px 24px; height: auto; flex-wrap: wrap; justify-content: space-between; }
+      .stat { flex-direction: column; text-align: center; gap: 4px; }
+      .stat-value { font-size: 22px; }
+      .stat-label { font-size: 8px; text-align: center; }
+
+      .pillars { padding: 60px 24px; }
+      .section-title { font-size: 28px; }
+      .section-sub { font-size: 13px; }
+      .pillars-grid { grid-template-columns: 1fr; }
+      .pillar-card { height: 320px; }
+      .pillar-num { font-size: 48px; }
+      .pillar-title { font-size: 20px; }
+      .pillar-desc { font-size: 13px; }
+
+      .trust { grid-template-columns: 1fr; padding: 60px 24px; gap: 36px; }
+      .trust-title { font-size: 32px; }
+      .trust-desc { font-size: 14px; }
+      .partner-card { padding: 20px; gap: 16px; }
+      .partner-icon { width: 44px; height: 44px; min-width: 44px; }
+      .partner-title { font-size: 13px; }
+      .partner-desc { font-size: 12px; }
+
+      .events { padding: 60px 24px; }
+      .events-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+      .events-grid { grid-template-columns: 1fr; }
+      .events-view-all { width: 100%; justify-content: center; margin-top: 20px; }
+      .event-card-img { height: 200px; }
+      .event-title { font-size: 17px; }
+
+      .testimonials { padding: 60px 24px; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .testimonial-card { padding: 28px 24px; }
+      .testimonial-text { font-size: 13px; }
+
+      .final-cta { height: 360px; }
+      .final-cta h2 { font-size: 28px; }
+      .final-cta-sub { font-size: 13px; }
+      .final-cta-content { padding: 0 24px; gap: 20px; }
+      .final-cta-btns { flex-direction: column; width: 320px; max-width: 100%; }
+
+      .footer { padding: 40px 24px 24px; }
+      .footer-top { grid-template-columns: 1fr; gap: 32px; }
+      .footer-top > div:first-child { max-width: 100%; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+      .footer-legal { gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-logo">
+      <div class="logo-mark">
+        <svg width="20" height="18" viewBox="0 0 20 18" fill="currentColor"><polygon points="10,0 20,18 0,18"/></svg>
+      </div>
+      <span class="logo-text">TRICORE</span>
+      <span class="logo-tag">EVENTS</span>
+    </div>
+    <nav class="header-nav">
+      <a href="public-landing-animated.html" class="active">HOME</a>
+      <a href="public-events.html">EVENTS</a>
+      <a href="public-corporate.html">CORPORATE</a>
+      <a href="public-about.html">ABOUT</a>
+      <a href="public-contact.html">CONTACT</a>
+    </nav>
+    <a href="public-events.html" class="header-cta">REGISTER NOW</a>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        <span class="hero-badge-text">SPORTS &nbsp;&middot;&nbsp; CORPORATE &nbsp;&middot;&nbsp; COMMUNITY</span>
+      </div>
+      <h1>WHERE EVERY<br>EVENT BECOMES<br>AN EXPERIENCE</h1>
+      <div class="hero-accent"></div>
+      <p class="hero-sub">From high-stakes sports tournaments to premium corporate experiences,<br>TriCore delivers events that set the standard.</p>
+      <div class="hero-ctas">
+        <a href="public-events.html" class="btn-primary">EXPLORE EVENTS <i data-lucide="arrow-right" style="width:18px;height:18px;"></i></a>
+        <a href="public-corporate.html" class="btn-outline">CORPORATE INQUIRY</a>
+      </div>
+    </div>
+    <div class="stats-bar">
+      <div class="stat">
+        <span class="stat-value">150+</span>
+        <span class="stat-label">EVENTS<br>DELIVERED</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">50K+</span>
+        <span class="stat-label">PARTICIPANTS<br>ENGAGED</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">25+</span>
+        <span class="stat-label">CORPORATE<br>PARTNERS</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">3</span>
+        <span class="stat-label">SERVICE<br>VERTICALS</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- THREE PILLARS -->
+  <section class="pillars">
+    <div class="pillars-header">
+      <span class="section-label">WHAT WE DO</span>
+      <h2 class="section-title">THREE PILLARS OF EXCELLENCE</h2>
+      <p class="section-sub">Every event category gets the same uncompromising standard of planning, execution, and experience.</p>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <div class="pillar-card-bg" style="background-image:url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=600&q=80')"></div>
+        <div class="pillar-card-overlay"></div>
+        <div class="pillar-card-content">
+          <span class="pillar-num">01</span>
+          <h3 class="pillar-title">SPORTS<br>TOURNAMENTS</h3>
+          <p class="pillar-desc">Cricket, football, badminton, and more. Full tournament management from brackets to finals.</p>
+          <div class="pillar-line"></div>
+        </div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-card-bg" style="background-image:url('https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&q=80')"></div>
+        <div class="pillar-card-overlay"></div>
+        <div class="pillar-card-content">
+          <span class="pillar-num">02</span>
+          <h3 class="pillar-title">CORPORATE<br>EXPERIENCES</h3>
+          <p class="pillar-desc">Team building, brand activations, and premium corporate gatherings that deliver results.</p>
+          <div class="pillar-line"></div>
+        </div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-card-bg" style="background-image:url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80')"></div>
+        <div class="pillar-card-overlay"></div>
+        <div class="pillar-card-content">
+          <span class="pillar-num">03</span>
+          <h3 class="pillar-title">COMMUNITY<br>COMPETITIONS</h3>
+          <p class="pillar-desc">Residential tournaments and local leagues that bring neighborhoods together through sport.</p>
+          <div class="pillar-line"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY TRICORE -->
+  <section class="trust">
+    <div class="trust-left">
+      <span class="section-label">WHY TRICORE</span>
+      <h2 class="trust-title">BUILT ON<br>EXPERIENCE.<br>DRIVEN BY<br>EXCELLENCE.</h2>
+      <div class="trust-accent"></div>
+      <p class="trust-desc">TriCore is a growing brand backed by seasoned organizers, venue partners, and a delivery network that has executed events across formats and scales. Our credibility comes from who stands behind us.</p>
+    </div>
+    <div class="trust-right">
+      <div class="partner-card">
+        <div class="partner-icon"><i data-lucide="map-pin" style="width:24px;height:24px;"></i></div>
+        <div>
+          <div class="partner-title">SPARK 7 SPORTS ARENA</div>
+          <p class="partner-desc">Our flagship venue partner providing world-class facilities for tournaments and events.</p>
+        </div>
+      </div>
+      <div class="partner-card">
+        <div class="partner-icon"><i data-lucide="building-2" style="width:24px;height:24px;"></i></div>
+        <div>
+          <div class="partner-title">SARVA HORIZON</div>
+          <p class="partner-desc">Strategic partnership bringing corporate event expertise and an extensive business network.</p>
+        </div>
+      </div>
+      <div class="partner-card">
+        <div class="partner-icon"><i data-lucide="shield-check" style="width:24px;height:24px;"></i></div>
+        <div>
+          <div class="partner-title">EXPERIENCED ORGANIZERS</div>
+          <p class="partner-desc">A team of seasoned event professionals with deep domain expertise across sports and corporate formats.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED EVENTS -->
+  <section class="events">
+    <div class="events-header">
+      <div class="events-header-left">
+        <span class="section-label">UPCOMING</span>
+        <h2 class="section-title">FEATURED EVENTS</h2>
+      </div>
+      <a href="public-events.html" class="events-view-all">VIEW ALL EVENTS <i data-lucide="arrow-right" style="width:16px;height:16px;"></i></a>
+    </div>
+    <div class="events-grid">
+      <a href="public-event-detail.html" class="event-card" style="text-decoration:none;color:inherit;">
+        <img src="https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=500&q=80" alt="Cricket" class="event-card-img">
+        <div class="event-card-content">
+          <span class="event-tag">SPORTS</span>
+          <h3 class="event-title">Premier Cricket League<br>Season 4</h3>
+          <div class="event-meta">
+            <span>APR 15–20, 2026</span>
+            <span class="event-meta-dot"></span>
+            <span>SPARK 7 ARENA</span>
+          </div>
+        </div>
+      </a>
+      <a href="public-event-detail.html" class="event-card" style="text-decoration:none;color:inherit;">
+        <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=500&q=80" alt="Corporate" class="event-card-img">
+        <div class="event-card-content">
+          <span class="event-tag">CORPORATE</span>
+          <h3 class="event-title">Corporate Champions<br>Cup 2026</h3>
+          <div class="event-meta">
+            <span>MAY 8–10, 2026</span>
+            <span class="event-meta-dot"></span>
+            <span>BANGALORE</span>
+          </div>
+        </div>
+      </a>
+      <a href="public-event-detail.html" class="event-card" style="text-decoration:none;color:inherit;">
+        <img src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=500&q=80" alt="Badminton" class="event-card-img">
+        <div class="event-card-content">
+          <span class="event-tag">COMMUNITY</span>
+          <h3 class="event-title">Neighborhood<br>Badminton Open</h3>
+          <div class="event-meta">
+            <span>JUN 1–3, 2026</span>
+            <span class="event-meta-dot"></span>
+            <span>COMMUNITY CENTER</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="testimonials-header">
+      <span class="section-label">TESTIMONIALS</span>
+      <h2 class="section-title">WHAT PEOPLE SAY</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <span class="testimonial-quote">&ldquo;</span>
+        <p class="testimonial-text">The tournament was flawlessly organized. From scheduling to live scoring, everything was handled with precision. We'll definitely be back next season.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar"><i data-lucide="user" style="width:20px;height:20px;"></i></div>
+          <div>
+            <div class="testimonial-name">RAJESH KUMAR</div>
+            <div class="testimonial-role">Team Captain, PCL Season 3</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <span class="testimonial-quote">&ldquo;</span>
+        <p class="testimonial-text">TriCore handled our entire corporate sports day — 400 employees, 8 different activities, zero hiccups. Their team made us look good in front of our leadership.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar"><i data-lucide="user" style="width:20px;height:20px;"></i></div>
+          <div>
+            <div class="testimonial-name">PRIYA MENON</div>
+            <div class="testimonial-role">HR Director, TechVista Inc.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final-cta">
+    <div class="final-cta-bg"></div>
+    <div class="final-cta-overlay"></div>
+    <div class="final-cta-content">
+      <h2>READY TO CREATE<br>SOMETHING EXTRAORDINARY?</h2>
+      <p class="final-cta-sub">Whether it's a tournament, a corporate event, or a community competition — let's make it happen.</p>
+      <div class="final-cta-btns">
+        <a href="public-contact.html" class="btn-primary">GET IN TOUCH <i data-lucide="arrow-right" style="width:18px;height:18px;"></i></a>
+        <a href="public-events.html" class="btn-outline">BROWSE EVENTS</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div>
+        <div class="header-logo" style="margin-bottom:0;">
+          <div class="logo-mark" style="width:28px;height:28px;">
+            <svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg>
+          </div>
+          <span class="logo-text" style="font-size:18px;letter-spacing:3px;">TRICORE</span>
+        </div>
+        <p class="footer-tagline">Where every event becomes an experience. Sports tournaments, corporate events, and community competitions delivered with excellence.</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">COMPANY</div>
+        <a href="public-about.html">About Us</a>
+        <a href="public-about.html#partners">Our Partners</a>
+        <a href="public-contact.html">Contact</a>
+        <a href="#">Careers</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">SERVICES</div>
+        <a href="public-events.html">Sports Tournaments</a>
+        <a href="public-corporate.html">Corporate Events</a>
+        <a href="public-events.html">Community Events</a>
+        <a href="#">Partner Access</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">CONNECT</div>
+        <a href="#">WhatsApp</a>
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">Email Us</a>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; 2026 TriCore Events. All rights reserved.</span>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

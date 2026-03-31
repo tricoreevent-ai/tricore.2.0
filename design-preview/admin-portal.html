@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriCore Admin Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --gold:#D4AF37;--gold-dim:rgba(212,175,55,0.08);--gold-border:rgba(212,175,55,0.2);--gold-20:rgba(212,175,55,0.12);
+      --bg:#0A0A0A;--bg-alt:#111111;--surface:#141414;--card:#1A1A1A;
+      --text:#FFFFFF;--muted:#A0A0A0;--dim:#666666;--border:#2A2A2A;--border-light:rgba(42,42,42,0.5);
+      --green:#4CAF50;--blue:#2196F3;--red:#F44336;
+      --font:'Space Grotesk',sans-serif;
+    }
+    body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+    a{text-decoration:none;color:inherit}
+    input,textarea,button{font-family:var(--font);outline:none}
+    .admin-layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+    .sidebar{background:var(--bg-alt);border-right:1px solid var(--border);padding:24px 0;display:flex;flex-direction:column}
+    .sidebar-logo{display:flex;align-items:center;gap:8px;padding:0 24px 24px}
+    .logo-mark{width:28px;height:28px;background:linear-gradient(180deg,#D4AF37,#B8962E);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .logo-mark svg{color:var(--bg)}
+    .sidebar-logo-text{font-size:16px;font-weight:800;letter-spacing:3px}
+    .sidebar-logo-tag{font-size:9px;font-weight:600;letter-spacing:2px;color:var(--gold)}
+    .sidebar-divider{height:1px;background:var(--border)}
+    .sidebar-nav{padding:16px 12px;flex:1}
+    .nav-item{display:flex;align-items:center;gap:12px;padding:0 12px;height:40px;border-radius:4px;margin-bottom:2px;cursor:pointer;transition:background .15s;font-size:13px;color:var(--muted)}
+    .nav-item:hover{background:rgba(255,255,255,.03)}
+    .nav-item.active{background:var(--gold-dim);color:var(--gold);font-weight:600}
+    .nav-item i{width:18px;height:18px;color:var(--dim)}
+    .nav-item.active i{color:var(--gold)}
+    .sidebar-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
+    .sidebar-avatar{width:32px;height:32px;border-radius:50%;background:var(--gold-dim);display:flex;align-items:center;justify-content:center}
+    .sidebar-avatar i{width:16px;height:16px;color:var(--gold)}
+    .sidebar-user-name{font-size:13px;font-weight:500}
+    .sidebar-user-role{font-size:11px;color:var(--dim)}
+    .main-content{display:flex;flex-direction:column;overflow:hidden}
+    .top-bar{display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:64px;border-bottom:1px solid var(--border);flex-shrink:0}
+    .top-bar-title{font-size:20px;font-weight:700}
+    .breadcrumb{display:flex;align-items:center;gap:8px}
+    .bc-dim{font-size:14px;color:var(--dim)}
+    .bc-active{font-size:14px;font-weight:600;color:var(--text)}
+    .top-bar-actions{display:flex;align-items:center;gap:12px}
+    .content-area{flex:1;overflow-y:auto;padding:32px}
+    .btn-gold{display:inline-flex;align-items:center;gap:6px;padding:8px 20px;background:var(--gold);color:var(--bg);font-size:12px;font-weight:700;border:none;cursor:pointer}
+    .btn-gold:hover{opacity:.9}
+    .btn-ghost{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid var(--border);background:none;color:var(--muted);font-size:12px;font-weight:500;cursor:pointer}
+    .btn-gold-lg{width:100%;height:52px;background:var(--gold);color:var(--bg);font-size:14px;font-weight:700;letter-spacing:2px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+    .form-label{display:block;font-size:10px;font-weight:600;letter-spacing:2px;color:var(--muted);margin-bottom:6px}
+    .form-input{width:100%;height:40px;padding:0 12px;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:13px}
+    .form-input:focus{border-color:var(--gold)}
+    .form-input::placeholder{color:var(--dim)}
+    .form-input-sm{height:36px;font-size:12px}
+    .form-textarea{width:100%;min-height:80px;padding:10px 12px;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:13px;line-height:1.5;resize:vertical}
+    .form-textarea:focus{border-color:var(--gold)}
+    .form-group{margin-bottom:20px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .panel{background:var(--surface);border:1px solid var(--border);padding:24px}
+    .panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .panel-title{font-size:12px;font-weight:700;letter-spacing:2px}
+    .panel-link{font-size:12px;font-weight:500;color:var(--gold);cursor:pointer}
+    .toggle{width:32px;height:18px;border-radius:9px;background:var(--gold);position:relative;cursor:pointer;flex-shrink:0}
+    .toggle::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:var(--bg);top:2px;right:2px;transition:transform .2s}
+    .toggle.off{background:var(--dim)}
+    .toggle.off::after{transform:translateX(-14px)}
+    .toggle-sm{width:24px;height:14px;border-radius:7px}
+    .toggle-sm::after{width:10px;height:10px;top:2px;right:2px}
+    .toggle-sm.off::after{transform:translateX(-10px)}
+    .upload-zone{width:100%;border:1px dashed var(--border);background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+    .upload-zone:hover{border-color:var(--gold)}
+    .upload-zone i{color:var(--dim)}
+    .upload-zone span{font-size:12px;color:var(--dim)}
+    .upload-sub{font-size:10px!important}
+    .data-table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border)}
+    .data-table th{text-align:left;padding:12px 20px;font-size:10px;font-weight:600;letter-spacing:2px;color:var(--dim);border-bottom:1px solid var(--border)}
+    .data-table td{padding:16px 20px;font-size:13px;border-bottom:1px solid var(--border-light);vertical-align:middle}
+    .data-table tr:hover td{background:rgba(255,255,255,.02)}
+    .status{display:inline-flex;padding:4px 10px;font-size:10px;font-weight:600;letter-spacing:1px;border-radius:2px}
+    .status-upcoming{background:rgba(212,175,55,.1);color:var(--gold)}
+    .status-active{background:rgba(76,175,80,.1);color:var(--green)}
+    .status-draft{background:rgba(255,255,255,.05);color:var(--dim)}
+    .status-completed{background:rgba(33,150,243,.1);color:var(--blue)}
+    .cat-badge{display:inline-flex;padding:3px 8px;font-size:10px;font-weight:500;letter-spacing:1px;background:rgba(255,255,255,.05);color:var(--muted)}
+    .table-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);background:none;color:var(--dim);cursor:pointer;transition:all .15s}
+    .table-btn:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
+    .chip{transition:all .15s}
+    .chip:hover{border-color:var(--gold-border);color:var(--gold)}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:28px}
+    .stat-card{background:var(--surface);border:1px solid var(--border);padding:24px}
+    .stat-card-label{font-size:10px;font-weight:600;letter-spacing:2px;color:var(--muted);margin-bottom:12px}
+    .stat-card-row{display:flex;justify-content:space-between;align-items:flex-end}
+    .stat-card-value{font-size:36px;font-weight:800;letter-spacing:-1px}
+    .stat-card-value.gold{color:var(--gold)}
+    .stat-card-icon{color:rgba(212,175,55,.25)}
+    .filters{display:flex;gap:8px;margin-bottom:20px}
+    .chip{padding:6px 14px;font-size:11px;font-weight:500;letter-spacing:1px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-family:var(--font)}
+    .chip.active{background:var(--gold-dim);border-color:var(--gold-border);color:var(--gold);font-weight:600}
+    .tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:32px}
+    .tab{padding:12px 24px;font-size:13px;font-weight:500;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent}
+    .tab.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:600}
+    .settings-section{margin-bottom:36px}
+    .settings-section-title{font-size:14px;font-weight:700;letter-spacing:1px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+    .color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}
+    .color-field label{font-size:9px;font-weight:600;letter-spacing:2px;color:var(--muted);margin-bottom:6px;display:block}
+    .color-preview{display:flex;align-items:center;gap:8px;height:36px;padding:0 10px;background:var(--card);border:1px solid var(--border)}
+    .color-swatch{width:18px;height:18px;border-radius:2px;border:1px solid rgba(255,255,255,.08);flex-shrink:0}
+    .color-hex{font-size:11px;color:var(--muted);font-family:monospace}
+    .nav-editor-row{display:grid;grid-template-columns:1fr 1fr 40px 36px;gap:8px;align-items:center;margin-bottom:8px}
+    .page-row{display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:44px;background:var(--card);border:1px solid var(--border-light);margin-bottom:8px}
+    .page-row-left{display:flex;align-items:center;gap:12px}
+    .page-row-left i{width:16px;height:16px;color:var(--gold)}
+    .page-row-name{font-size:13px;font-weight:500}
+    .page-row-count{font-size:11px;color:var(--dim)}
+    .action-item{display:flex;align-items:center;gap:12px;padding:0 16px;height:44px;background:var(--card);border:1px solid var(--border-light);margin-bottom:8px;cursor:pointer;font-size:13px;font-weight:500;color:var(--muted)}
+    .action-item i{width:16px;height:16px}
+    .action-item.hl{background:var(--gold-dim);border-color:var(--gold-border);color:var(--gold)}
+    .action-item.hl i{color:var(--gold)}
+    .section-list{background:var(--bg-alt);border-right:1px solid var(--border);padding:24px 20px;overflow-y:auto;width:380px}
+    .section-list-title{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--muted);margin-bottom:4px}
+    .section-list-sub{font-size:11px;color:var(--dim);margin-bottom:16px}
+    .section-item{display:flex;align-items:center;gap:12px;padding:0 12px;height:48px;background:var(--card);border:1px solid var(--border);border-radius:4px;margin-bottom:8px;cursor:pointer}
+    .section-item:hover{border-color:var(--dim)}
+    .section-item.active{background:var(--gold-dim);border-color:var(--gold-border)}
+    .section-item .drag{color:var(--dim);flex-shrink:0}
+    .section-item .s-icon{color:var(--muted);flex-shrink:0}
+    .section-item.active .s-icon{color:var(--gold)}
+    .section-item-name{flex:1;font-size:13px;font-weight:500;color:var(--muted)}
+    .section-item.active .section-item-name{color:var(--gold);font-weight:600}
+    .add-section{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border:1px dashed var(--border);color:var(--dim);font-size:12px;cursor:pointer;margin-top:8px}
+    .add-section:hover{border-color:var(--gold);color:var(--gold)}
+    .editor-panel{padding:24px 32px;overflow-y:auto;flex:1}
+    .editor-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+    .editor-title{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;letter-spacing:1px}
+    .editor-title i{color:var(--gold)}
+    .pillar-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .pillar-card{background:var(--surface);border:1px solid var(--border);padding:20px;display:flex;flex-direction:column;gap:14px}
+    .pillar-card-header{display:flex;justify-content:space-between;align-items:center}
+    .pillar-badge{padding:4px 10px;background:var(--gold-20);font-size:9px;font-weight:700;letter-spacing:2px;color:var(--gold)}
+    .media-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+    .media-card{position:relative;aspect-ratio:1;background:var(--card);border:1px solid var(--border);overflow:hidden;cursor:pointer}
+    .media-card img{width:100%;height:100%;object-fit:cover}
+    .media-card-info{position:absolute;bottom:0;left:0;right:0;padding:8px 10px;background:rgba(0,0,0,.8)}
+    .media-card-name{font-size:11px;font-weight:500}
+    .media-card-size{font-size:9px;color:var(--dim)}
+    .media-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;aspect-ratio:1;background:var(--surface);border:1px solid var(--border);cursor:pointer}
+    .stat-editor-row{display:grid;grid-template-columns:100px 1fr 32px;gap:8px;align-items:center;margin-bottom:8px}
+    .remove-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);background:none;color:var(--red);cursor:pointer}
+    .add-item{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px dashed var(--border);background:none;color:var(--gold);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font);margin-top:4px}
+    .add-item:hover{border-color:var(--gold)}
+    .screen{display:none}
+    .screen.active{display:flex;flex-direction:column;min-height:100vh}
+
+    /* FLOATING SCREEN NAV */
+    .screen-nav{position:fixed;top:16px;right:16px;z-index:9999;width:220px}
+    .screen-nav-toggle{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px 16px;background:var(--gold);color:var(--bg);font-family:var(--font);font-size:12px;font-weight:700;letter-spacing:1px;border:none;cursor:pointer;border-radius:4px}
+    .screen-nav-toggle:hover{opacity:.9}
+    .screen-nav-panel{display:none;background:var(--bg-alt);border:1px solid var(--border);border-radius:4px;margin-top:4px;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+    .screen-nav.open .screen-nav-panel{display:block}
+    .sn-group{padding:8px 0}
+    .sn-group+.sn-group{border-top:1px solid var(--border)}
+    .sn-group-label{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:4px 16px 6px}
+    .sn-item{display:flex;align-items:center;gap:8px;padding:8px 16px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .1s;font-family:var(--font);border:none;background:none;width:100%;text-align:left}
+    .sn-item:hover{background:rgba(255,255,255,.03);color:var(--text)}
+    .sn-item.active{color:var(--gold);background:var(--gold-dim);font-weight:600}
+    .sn-dot{width:6px;height:6px;border-radius:50%;background:var(--dim);flex-shrink:0}
+    .sn-item.active .sn-dot{background:var(--gold)}
+    .login-page{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
+    .login-left{position:relative;overflow:hidden;display:flex;align-items:center;padding:0 80px}
+    .login-left-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=800&q=80') center/cover;opacity:.3}
+    .login-left-overlay{position:absolute;inset:0;background:linear-gradient(90deg,#0A0A0AFF 0%,#0A0A0A88 50%,#0A0A0AFF 100%)}
+    .login-left-content{position:relative;z-index:1;display:flex;flex-direction:column;gap:24px}
+    .login-left h1{font-size:42px;font-weight:800;letter-spacing:-1px;line-height:1.05}
+    .login-right{background:var(--bg-alt);display:flex;align-items:center;justify-content:center;padding:0 120px}
+    .login-form{width:100%;max-width:480px}
+    .login-form h2{font-size:28px;font-weight:800;letter-spacing:2px;margin-bottom:8px}
+    .login-form .subtitle{font-size:14px;color:var(--muted);margin-bottom:40px}
+    .input-wrapper{position:relative}
+    .input-wrapper .eye{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--dim);cursor:pointer}
+    .forgot{display:block;margin-top:16px;font-size:13px;color:var(--gold)}
+    .accent-line{width:60px;height:4px;background:var(--gold)}
+    .stars{color:var(--gold);font-size:14px;letter-spacing:2px}
+    .dash-bottom{display:grid;grid-template-columns:1fr 360px;gap:24px}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+    .footer-col-editor{background:var(--surface);border:1px solid var(--border);padding:20px;display:flex;flex-direction:column;gap:12px}
+    .footer-col-editor-header{display:flex;justify-content:space-between;align-items:center}
+    .footer-col-editor-title{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--gold)}
+    .footer-link-row{display:grid;grid-template-columns:1fr 1fr 32px;gap:8px;align-items:center}
+    .field-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;font-family:var(--font);border:none}
+    .field-chip.on{background:var(--gold-dim);border:1px solid var(--gold-border);color:var(--gold)}
+    .field-chip.off{background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--dim)}
+    .field-chip:hover{border-color:var(--gold)}
+    .field-chip .chip-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .field-chip.on .chip-dot{background:var(--gold)}
+    .field-chip.off .chip-dot{background:var(--dim)}
+    .section-item:hover{border-color:var(--dim)}
+    .add-item:hover{border-color:var(--gold);color:var(--gold)}
+    .action-item:hover{background:#1f1f1f}
+  </style>
+</head>
+<body>
+
+<!-- FLOATING SCREEN NAV -->
+<div class="screen-nav" id="screenNav">
+  <button class="screen-nav-toggle" id="navToggle">NAVIGATE SCREENS ▾</button>
+  <div class="screen-nav-panel">
+    <div class="sn-group">
+      <div class="sn-group-label">AUTH</div>
+      <button class="sn-item active" data-screen="login"><span class="sn-dot"></span> Login</button>
+    </div>
+    <div class="sn-group">
+      <div class="sn-group-label">OVERVIEW</div>
+      <button class="sn-item" data-screen="dashboard"><span class="sn-dot"></span> Dashboard</button>
+    </div>
+    <div class="sn-group">
+      <div class="sn-group-label">PAGE SECTION EDITORS</div>
+      <button class="sn-item" data-screen="hero-editor"><span class="sn-dot"></span> Hero Section</button>
+      <button class="sn-item" data-screen="pillars-editor"><span class="sn-dot"></span> Service Pillars</button>
+      <button class="sn-item" data-screen="trust-editor"><span class="sn-dot"></span> Trust &amp; Partners</button>
+      <button class="sn-item" data-screen="config-editors"><span class="sn-dot"></span> CTA / Events / Testimonials Config</button>
+      <button class="sn-item" data-screen="content-editors"><span class="sn-dot"></span> Content Block / Team / FAQ</button>
+      <button class="sn-item" data-screen="form-editors"><span class="sn-dot"></span> Contact Form / Stats / Create Forms</button>
+    </div>
+    <div class="sn-group">
+      <div class="sn-group-label">DATA MANAGERS</div>
+      <button class="sn-item" data-screen="events"><span class="sn-dot"></span> Events Manager</button>
+      <button class="sn-item" data-screen="testimonials"><span class="sn-dot"></span> Testimonials Manager</button>
+    </div>
+    <div class="sn-group">
+      <div class="sn-group-label">EVENT MANAGEMENT</div>
+      <button class="sn-item" data-screen="event-editor"><span class="sn-dot"></span> Event Editor (Enhanced)</button>
+      <button class="sn-item" data-screen="sport-items"><span class="sn-dot"></span> Sport Items Manager</button>
+      <button class="sn-item" data-screen="registrations"><span class="sn-dot"></span> Registrations Manager</button>
+      <button class="sn-item" data-screen="reg-detail"><span class="sn-dot"></span> Registration Detail</button>
+    </div>
+    <div class="sn-group">
+      <div class="sn-group-label">EXPANSION</div>
+      <button class="sn-item" data-screen="ceo-dashboard"><span class="sn-dot"></span> CEO Dashboard</button>
+      <button class="sn-item" data-screen="calendar"><span class="sn-dot"></span> Calendar View</button>
+      <button class="sn-item" data-screen="payments"><span class="sn-dot"></span> Payments</button>
+      <button class="sn-item" data-screen="notif-settings"><span class="sn-dot"></span> Notification Settings</button>
+      <button class="sn-item" data-screen="backup"><span class="sn-dot"></span> DB Backup</button>
+      <button class="sn-item" data-screen="users-roles"><span class="sn-dot"></span> Users &amp; Roles</button>
+    </div>
+    <div class="sn-group">
+      <div class="sn-group-label">CONFIGURATION</div>
+      <button class="sn-item" data-screen="settings"><span class="sn-dot"></span> Site Settings (5 tabs)</button>
+      <button class="sn-item" data-screen="media"><span class="sn-dot"></span> Media Library</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== LOGIN ========== -->
+<div id="s-login" class="screen active">
+  <div class="login-page">
+    <div class="login-left">
+      <div class="login-left-bg"></div>
+      <div class="login-left-overlay"></div>
+      <div class="login-left-content">
+        <div style="display:flex;align-items:center;gap:10px"><div class="logo-mark" style="width:40px;height:40px"><svg width="22" height="20" viewBox="0 0 22 20" fill="currentColor"><polygon points="11,0 22,20 0,20"/></svg></div><span style="font-size:28px;font-weight:800;letter-spacing:4px">TRICORE</span></div>
+        <h1>MANAGE YOUR<br>EVENTS PLATFORM</h1>
+        <div class="accent-line"></div>
+        <p style="font-size:16px;line-height:1.6;color:var(--muted)">Control every aspect of your public website,<br>events, and content from one powerful dashboard.</p>
+      </div>
+    </div>
+    <div class="login-right">
+      <div class="login-form">
+        <h2>ADMIN LOGIN</h2>
+        <p class="subtitle">Sign in to access the admin portal</p>
+        <div class="form-group"><label class="form-label">EMAIL</label><input class="form-input" placeholder="admin@tricoreevents.com"></div>
+        <div class="form-group"><label class="form-label">PASSWORD</label><div class="input-wrapper"><input type="password" class="form-input" placeholder="••••••••••"><i data-lucide="eye-off" class="eye" style="width:18px;height:18px"></i></div></div>
+        <button class="btn-gold-lg" data-nav="dashboard">SIGN IN <i data-lucide="arrow-right" style="width:18px;height:18px"></i></button>
+        <a href="#" class="forgot">Forgot your password?</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== DASHBOARD ========== -->
+<div id="s-dashboard" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav"><div class="nav-item active"><i data-lucide="layout-dashboard"></i> Dashboard</div><div class="nav-item" data-nav="hero-editor"><i data-lucide="file-text"></i> Pages</div><div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div><div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div><div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div><div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div><div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div></nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><span class="top-bar-title">Dashboard</span><div class="top-bar-actions"><div class="sidebar-avatar"><i data-lucide="user"></i></div><span style="font-size:13px;color:var(--muted)">Admin</span></div></div><div class="content-area">
+    <div class="stats-grid"><div class="stat-card"><div class="stat-card-label">TOTAL EVENTS</div><div class="stat-card-row"><span class="stat-card-value">24</span><i data-lucide="calendar" class="stat-card-icon" style="width:24px;height:24px"></i></div></div><div class="stat-card"><div class="stat-card-label">ACTIVE EVENTS</div><div class="stat-card-row"><span class="stat-card-value gold">6</span><i data-lucide="zap" class="stat-card-icon" style="width:24px;height:24px"></i></div></div><div class="stat-card"><div class="stat-card-label">MANAGED PAGES</div><div class="stat-card-row"><span class="stat-card-value">5</span><i data-lucide="file-text" class="stat-card-icon" style="width:24px;height:24px"></i></div></div><div class="stat-card"><div class="stat-card-label">MEDIA ASSETS</div><div class="stat-card-row"><span class="stat-card-value">48</span><i data-lucide="image" class="stat-card-icon" style="width:24px;height:24px"></i></div></div></div>
+    <div class="dash-bottom"><div class="panel"><div class="panel-header"><span class="panel-title">MANAGED PAGES</span><span class="panel-link" data-nav="hero-editor">Edit All</span></div><div class="page-row"><div class="page-row-left"><i data-lucide="layout-dashboard"></i><span class="page-row-name">Homepage</span></div><span class="page-row-count">6 sections</span></div><div class="page-row"><div class="page-row-left"><i data-lucide="info"></i><span class="page-row-name">About Us</span></div><span class="page-row-count">4 sections</span></div><div class="page-row"><div class="page-row-left"><i data-lucide="briefcase"></i><span class="page-row-name">Corporate Events</span></div><span class="page-row-count">4 sections</span></div><div class="page-row"><div class="page-row-left"><i data-lucide="calendar"></i><span class="page-row-name">Events</span></div><span class="page-row-count">1 section</span></div><div class="page-row"><div class="page-row-left"><i data-lucide="mail"></i><span class="page-row-name">Contact</span></div><span class="page-row-count">3 sections</span></div></div>
+    <div class="panel"><div class="panel-header"><span class="panel-title">QUICK ACTIONS</span></div><div class="action-item hl"><i data-lucide="plus"></i> Create New Event</div><div class="action-item" data-nav="hero-editor"><i data-lucide="pencil"></i> Edit Homepage</div><div class="action-item" data-nav="media"><i data-lucide="upload"></i> Upload Media</div><div class="action-item" data-nav="settings"><i data-lucide="palette"></i> Update Theme</div></div></div>
+  </div></main>
+</div></div>
+
+<!-- ========== HERO EDITOR ========== -->
+<div id="s-hero-editor" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav"><div class="nav-item" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div><div class="nav-item active"><i data-lucide="file-text"></i> Pages</div><div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div><div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div><div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div><div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div><div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div></nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><div class="breadcrumb"><span class="bc-dim">Pages</span><span class="bc-dim">/</span><span class="bc-dim">Homepage</span><span class="bc-dim">/</span><span class="bc-active">Hero</span></div><div class="top-bar-actions"><button class="btn-ghost"><i data-lucide="eye" style="width:14px;height:14px"></i> Preview</button><button class="btn-gold">Save Changes</button></div></div>
+    <div style="display:flex;flex:1;overflow:hidden">
+      <div class="section-list">
+        <div class="section-list-title">PAGE SECTIONS</div><div class="section-list-sub">Drag to reorder. Toggle to show/hide.</div>
+        <div class="section-item active"><i data-lucide="grip-vertical" class="drag" style="width:14px;height:14px"></i><i data-lucide="layout-template" class="s-icon" style="width:16px;height:16px"></i><span class="section-item-name">Hero</span><div class="toggle"></div></div>
+        <div class="section-item" data-nav="pillars-editor"><i data-lucide="grip-vertical" class="drag" style="width:14px;height:14px"></i><i data-lucide="layers" class="s-icon" style="width:16px;height:16px"></i><span class="section-item-name">Service Pillars</span><div class="toggle"></div></div>
+        <div class="section-item" data-nav="trust-editor"><i data-lucide="grip-vertical" class="drag" style="width:14px;height:14px"></i><i data-lucide="shield" class="s-icon" style="width:16px;height:16px"></i><span class="section-item-name">Trust &amp; Partners</span><div class="toggle"></div></div>
+        <div class="section-item" data-nav="config-editors"><i data-lucide="grip-vertical" class="drag" style="width:14px;height:14px"></i><i data-lucide="calendar" class="s-icon" style="width:16px;height:16px"></i><span class="section-item-name">Featured Events</span><div class="toggle"></div></div>
+        <div class="section-item" data-nav="config-editors"><i data-lucide="grip-vertical" class="drag" style="width:14px;height:14px"></i><i data-lucide="message-square" class="s-icon" style="width:16px;height:16px"></i><span class="section-item-name">Testimonials</span><div class="toggle"></div></div>
+        <div class="section-item" data-nav="config-editors"><i data-lucide="grip-vertical" class="drag" style="width:14px;height:14px"></i><i data-lucide="megaphone" class="s-icon" style="width:16px;height:16px"></i><span class="section-item-name">Final CTA</span><div class="toggle off"></div></div>
+        <div class="add-section"><i data-lucide="plus" style="width:14px;height:14px"></i> Add Section</div>
+      </div>
+      <div class="editor-panel">
+        <div class="editor-header"><div class="editor-title"><i data-lucide="layout-template" style="width:20px;height:20px"></i> HERO SECTION EDITOR</div><i data-lucide="x" style="width:20px;height:20px;color:var(--dim);cursor:pointer"></i></div>
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div><label class="form-label">BADGE TEXT</label><input class="form-input" value="SPORTS · CORPORATE · COMMUNITY"></div>
+          <div><label class="form-label">HEADLINE</label><textarea class="form-textarea" rows="3">WHERE EVERY
+EVENT BECOMES
+AN EXPERIENCE</textarea></div>
+          <div><label class="form-label">SUBHEADLINE</label><input class="form-input" value="From high-stakes sports tournaments to premium corporate experiences, TriCore delivers events that set the standard."></div>
+          <div><label class="form-label">BACKGROUND IMAGE</label><div class="upload-zone" style="height:100px"><i data-lucide="upload" style="width:24px;height:24px"></i><span>Click to upload or drag &amp; drop</span><span class="upload-sub">PNG, JPG, WebP up to 5MB</span></div></div>
+          <div><label class="form-label">CTA BUTTONS</label><div class="form-row"><input class="form-input" value="EXPLORE EVENTS"><input class="form-input" value="CORPORATE INQUIRY"></div></div>
+          <div><label class="form-label">STATS BAR</label>
+            <div class="stat-editor-row"><input class="form-input form-input-sm" value="150+"><input class="form-input form-input-sm" value="EVENTS DELIVERED"><button class="remove-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div>
+            <div class="stat-editor-row"><input class="form-input form-input-sm" value="50K+"><input class="form-input form-input-sm" value="PARTICIPANTS ENGAGED"><button class="remove-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div>
+            <div class="stat-editor-row"><input class="form-input form-input-sm" value="25+"><input class="form-input form-input-sm" value="CORPORATE PARTNERS"><button class="remove-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div>
+            <div class="stat-editor-row"><input class="form-input form-input-sm" value="3"><input class="form-input form-input-sm" value="SERVICE VERTICALS"><button class="remove-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div>
+            <button class="add-item"><i data-lucide="plus" style="width:12px;height:12px"></i> Add Stat</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== PILLARS EDITOR ========== -->
+<div id="s-pillars-editor" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav"><div class="nav-item" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div><div class="nav-item active"><i data-lucide="file-text"></i> Pages</div><div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div><div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div><div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div><div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div><div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div></nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><div class="breadcrumb"><span class="bc-dim">Pages</span><span class="bc-dim">/</span><span class="bc-dim">Homepage</span><span class="bc-dim">/</span><span class="bc-active">Service Pillars</span></div><div class="top-bar-actions"><button class="btn-ghost"><i data-lucide="eye" style="width:14px;height:14px"></i> Preview</button><button class="btn-gold">Save Changes</button></div></div>
+    <div class="content-area">
+      <div class="editor-header"><div class="editor-title"><i data-lucide="layers" style="width:20px;height:20px"></i> SERVICE PILLARS EDITOR</div><button class="btn-ghost" data-nav="hero-editor"><i data-lucide="arrow-left" style="width:14px;height:14px"></i> Back to Sections</button></div>
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div class="form-row"><div><label class="form-label">SECTION HEADING</label><input class="form-input" value="THREE PILLARS OF EXCELLENCE"></div><div><label class="form-label">SUBHEADING</label><input class="form-input" value="Every event category gets the same uncompromising standard of planning, execution, and experience."></div></div>
+        <label class="form-label" style="color:var(--gold);margin-bottom:-12px">PILLAR CARDS</label>
+        <div class="pillar-cards">
+          <div class="pillar-card"><div class="pillar-card-header"><span class="pillar-badge">PILLAR 01</span><i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim);cursor:pointer"></i></div><label class="form-label">TITLE</label><input class="form-input form-input-sm" value="SPORTS TOURNAMENTS"><label class="form-label">DESCRIPTION</label><textarea class="form-textarea" style="min-height:60px;font-size:11px">Cricket, football, badminton, and more. Full tournament management from brackets to finals.</textarea><label class="form-label">IMAGE</label><div class="upload-zone" style="height:70px"><i data-lucide="upload" style="width:16px;height:16px"></i><span style="font-size:10px">Upload image</span></div></div>
+          <div class="pillar-card"><div class="pillar-card-header"><span class="pillar-badge">PILLAR 02</span><i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim);cursor:pointer"></i></div><label class="form-label">TITLE</label><input class="form-input form-input-sm" value="CORPORATE EXPERIENCES"><label class="form-label">DESCRIPTION</label><textarea class="form-textarea" style="min-height:60px;font-size:11px">Team building, brand activations, and premium corporate gatherings that deliver results.</textarea><label class="form-label">IMAGE</label><div class="upload-zone" style="height:70px"><i data-lucide="upload" style="width:16px;height:16px"></i><span style="font-size:10px">Upload image</span></div></div>
+          <div class="pillar-card"><div class="pillar-card-header"><span class="pillar-badge">PILLAR 03</span><i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim);cursor:pointer"></i></div><label class="form-label">TITLE</label><input class="form-input form-input-sm" value="COMMUNITY COMPETITIONS"><label class="form-label">DESCRIPTION</label><textarea class="form-textarea" style="min-height:60px;font-size:11px">Residential tournaments and local leagues that bring neighborhoods together through sport.</textarea><label class="form-label">IMAGE</label><div class="upload-zone" style="height:70px"><i data-lucide="upload" style="width:16px;height:16px"></i><span style="font-size:10px">Upload image</span></div></div>
+        </div>
+        <button class="add-item"><i data-lucide="plus" style="width:12px;height:12px"></i> Add Pillar</button>
+      </div>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== EVENTS MANAGER ========== -->
+<div id="s-events" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav"><div class="nav-item" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div><div class="nav-item" data-nav="hero-editor"><i data-lucide="file-text"></i> Pages</div><div class="nav-item active"><i data-lucide="calendar"></i> Events</div><div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div><div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div><div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div><div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div></nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><span class="top-bar-title">Events Manager</span><div class="top-bar-actions"><input class="form-input" placeholder="Search events..." style="width:240px;height:36px;font-size:12px"><button class="btn-gold"><i data-lucide="plus" style="width:14px;height:14px"></i> Create Event</button></div></div>
+    <div class="content-area">
+      <div class="filters"><button class="chip active">ALL</button><button class="chip">SPORTS</button><button class="chip">CORPORATE</button><button class="chip">COMMUNITY</button></div>
+      <table class="data-table"><thead><tr><th style="width:300px">EVENT</th><th style="width:110px">CATEGORY</th><th style="width:140px">DATE</th><th style="width:100px">STATUS</th><th style="width:80px">FEATURED</th><th>ACTIONS</th></tr></thead><tbody>
+        <tr><td><strong>Premier Cricket League S4</strong><br><span style="font-size:11px;color:var(--dim)">Spark 7 Arena, Bangalore</span></td><td><span class="cat-badge">SPORTS</span></td><td style="font-size:12px;color:var(--muted)">Apr 15–20, 2026</td><td><span class="status status-upcoming">UPCOMING</span></td><td><div class="toggle"></div></td><td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td></tr>
+        <tr><td><strong>Corporate Champions Cup</strong><br><span style="font-size:11px;color:var(--dim)">Various Venues, Bangalore</span></td><td><span class="cat-badge">CORPORATE</span></td><td style="font-size:12px;color:var(--muted)">May 8–10, 2026</td><td><span class="status status-upcoming">UPCOMING</span></td><td><div class="toggle"></div></td><td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td></tr>
+        <tr><td><strong>Neighborhood Badminton Open</strong><br><span style="font-size:11px;color:var(--dim)">Community Center</span></td><td><span class="cat-badge">COMMUNITY</span></td><td style="font-size:12px;color:var(--muted)">Jun 1–3, 2026</td><td><span class="status status-draft">DRAFT</span></td><td><div class="toggle off"></div></td><td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td></tr>
+        <tr><td><strong>Weekend Football League</strong><br><span style="font-size:11px;color:var(--dim)">Spark 7 Arena</span></td><td><span class="cat-badge">SPORTS</span></td><td style="font-size:12px;color:var(--muted)">Mar 1–30, 2026</td><td><span class="status status-active">ACTIVE</span></td><td><div class="toggle"></div></td><td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td></tr>
+        <tr><td><strong>TechVista Team Building</strong><br><span style="font-size:11px;color:var(--dim)">Resort, Coorg</span></td><td><span class="cat-badge">CORPORATE</span></td><td style="font-size:12px;color:var(--muted)">Feb 14, 2026</td><td><span class="status status-completed">COMPLETED</span></td><td><div class="toggle off"></div></td><td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td></tr>
+      </tbody></table>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== TESTIMONIALS ========== -->
+<div id="s-testimonials" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav"><div class="nav-item" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div><div class="nav-item" data-nav="hero-editor"><i data-lucide="file-text"></i> Pages</div><div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div><div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div><div class="nav-item active"><i data-lucide="message-square"></i> Testimonials</div><div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div><div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div></nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><span class="top-bar-title">Testimonials</span><div class="top-bar-actions"><button class="btn-gold"><i data-lucide="plus" style="width:14px;height:14px"></i> Add Testimonial</button></div></div>
+    <div class="content-area"><table class="data-table"><thead><tr><th>PERSON</th><th style="max-width:400px">QUOTE</th><th>RATING</th><th>FEATURED</th><th>ENABLED</th><th>ACTIONS</th></tr></thead><tbody>
+      <tr><td><strong>Rajesh Kumar</strong><br><span style="font-size:11px;color:var(--dim)">Team Captain, PCL S3</span></td><td style="max-width:400px;font-size:12px;color:var(--muted)">"The tournament was flawlessly organized. From scheduling to live scoring, everything was handled with precision."</td><td><span class="stars">★★★★★</span></td><td><div class="toggle"></div></td><td><div class="toggle"></div></td><td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td></tr>
+      <tr><td><strong>Priya Menon</strong><br><span style="font-size:11px;color:var(--dim)">HR Director, TechVista</span></td><td style="max-width:400px;font-size:12px;color:var(--muted)">"TriCore handled our entire corporate sports day — 400 employees, 8 activities, zero hiccups."</td><td><span class="stars">★★★★★</span></td><td><div class="toggle"></div></td><td><div class="toggle"></div></td><td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td></tr>
+      <tr><td><strong>Ankit Sharma</strong><br><span style="font-size:11px;color:var(--dim)">Resident, Palm Meadows</span></td><td style="max-width:400px;font-size:12px;color:var(--muted)">"Our community tournament was the highlight of the year. Professional and fun."</td><td><span class="stars">★★★★☆</span></td><td><div class="toggle off"></div></td><td><div class="toggle"></div></td><td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td></tr>
+    </tbody></table></div>
+  </main>
+</div></div>
+
+<!-- ========== SITE SETTINGS ========== -->
+<div id="s-settings" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav"><div class="nav-item" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div><div class="nav-item" data-nav="hero-editor"><i data-lucide="file-text"></i> Pages</div><div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div><div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div><div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div><div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div><div class="nav-item active"><i data-lucide="settings"></i> Site Settings</div></nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><span class="top-bar-title">Site Settings</span><div class="top-bar-actions"><button class="btn-gold">Save Settings</button></div></div>
+    <div class="content-area">
+      <div class="tabs">
+        <div class="tab active" data-tab="branding">Branding</div>
+        <div class="tab" data-tab="theme">Theme</div>
+        <div class="tab" data-tab="navigation">Navigation</div>
+        <div class="tab" data-tab="footer">Footer</div>
+        <div class="tab" data-tab="contact">Contact</div>
+      </div>
+
+      <!-- TAB: BRANDING -->
+      <div class="tab-panel active" id="tab-branding">
+        <div class="settings-section"><div class="settings-section-title">BRANDING</div>
+          <div class="form-row" style="margin-bottom:20px"><div><label class="form-label">SITE NAME</label><input class="form-input" value="TriCore Events"></div><div><label class="form-label">TAGLINE</label><input class="form-input" value="Where every event becomes an experience"></div></div>
+          <div class="form-row"><div><label class="form-label">LOGO</label><div class="upload-zone" style="height:80px"><i data-lucide="upload" style="width:20px;height:20px"></i><span>Upload logo</span></div></div><div><label class="form-label">FAVICON</label><div class="upload-zone" style="height:80px"><i data-lucide="upload" style="width:20px;height:20px"></i><span>Upload favicon</span></div></div></div>
+        </div>
+      </div>
+
+      <!-- TAB: THEME -->
+      <div class="tab-panel" id="tab-theme">
+        <div class="settings-section"><div class="settings-section-title">THEME COLORS</div>
+          <div class="color-grid"><div class="color-field"><label>PRIMARY</label><div class="color-preview"><div class="color-swatch" style="background:#D4AF37"></div><span class="color-hex">#D4AF37</span></div></div><div class="color-field"><label>ACCENT</label><div class="color-preview"><div class="color-swatch" style="background:#C8A961"></div><span class="color-hex">#C8A961</span></div></div><div class="color-field"><label>BACKGROUND</label><div class="color-preview"><div class="color-swatch" style="background:#0A0A0A"></div><span class="color-hex">#0A0A0A</span></div></div><div class="color-field"><label>SURFACE</label><div class="color-preview"><div class="color-swatch" style="background:#141414"></div><span class="color-hex">#141414</span></div></div></div>
+          <div class="color-grid"><div class="color-field"><label>TEXT</label><div class="color-preview"><div class="color-swatch" style="background:#F5F5F5"></div><span class="color-hex">#F5F5F5</span></div></div><div class="color-field"><label>TEXT MUTED</label><div class="color-preview"><div class="color-swatch" style="background:#9CA3AF"></div><span class="color-hex">#9CA3AF</span></div></div><div class="color-field"><label>BORDER</label><div class="color-preview"><div class="color-swatch" style="background:#262626"></div><span class="color-hex">#262626</span></div></div><div class="color-field"><label>SURFACE ALT</label><div class="color-preview"><div class="color-swatch" style="background:#1A1A1A"></div><span class="color-hex">#1A1A1A</span></div></div></div>
+        </div>
+        <div class="settings-section"><div class="settings-section-title">FONTS</div>
+          <div class="form-row"><div><label class="form-label">HEADING FONT</label><input class="form-input" value="Space Grotesk"></div><div><label class="form-label">BODY FONT</label><input class="form-input" value="Space Grotesk"></div></div>
+        </div>
+      </div>
+
+      <!-- TAB: NAVIGATION -->
+      <div class="tab-panel" id="tab-navigation">
+        <div class="settings-section"><div class="settings-section-title">NAVIGATION LINKS</div>
+          <p style="font-size:12px;color:var(--dim);margin-bottom:16px">Configure the main navigation links shown in the header. Toggle to enable/disable individual links.</p>
+          <div class="nav-editor-row"><input class="form-input form-input-sm" value="HOME" placeholder="Label"><input class="form-input form-input-sm" value="/" placeholder="URL"><div class="toggle" style="width:28px;height:16px"></div><button class="remove-btn" style="width:36px;height:36px"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button></div>
+          <div class="nav-editor-row"><input class="form-input form-input-sm" value="EVENTS"><input class="form-input form-input-sm" value="/events"><div class="toggle" style="width:28px;height:16px"></div><button class="remove-btn" style="width:36px;height:36px"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button></div>
+          <div class="nav-editor-row"><input class="form-input form-input-sm" value="CORPORATE"><input class="form-input form-input-sm" value="/corporate-events"><div class="toggle" style="width:28px;height:16px"></div><button class="remove-btn" style="width:36px;height:36px"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button></div>
+          <div class="nav-editor-row"><input class="form-input form-input-sm" value="ABOUT"><input class="form-input form-input-sm" value="/about"><div class="toggle" style="width:28px;height:16px"></div><button class="remove-btn" style="width:36px;height:36px"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button></div>
+          <div class="nav-editor-row"><input class="form-input form-input-sm" value="CONTACT"><input class="form-input form-input-sm" value="/contact"><div class="toggle" style="width:28px;height:16px"></div><button class="remove-btn" style="width:36px;height:36px"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button></div>
+          <button class="add-item"><i data-lucide="plus" style="width:12px;height:12px"></i> Add Link</button>
+        </div>
+        <div class="settings-section"><div class="settings-section-title">HEADER CTA BUTTON</div>
+          <div class="form-row" style="margin-bottom:16px"><div><label class="form-label">LABEL</label><input class="form-input" value="REGISTER NOW"></div><div><label class="form-label">LINK</label><input class="form-input" value="/events"></div></div>
+          <div style="display:flex;align-items:center;gap:12px"><span style="font-size:12px;color:var(--muted)">Enabled</span><div class="toggle"></div></div>
+        </div>
+      </div>
+
+      <!-- TAB: FOOTER -->
+      <div class="tab-panel" id="tab-footer">
+        <div class="settings-section"><div class="settings-section-title">FOOTER COLUMNS</div>
+          <p style="font-size:12px;color:var(--dim);margin-bottom:16px">Configure footer link columns. Each column has a title and a list of links.</p>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px">
+            <div class="footer-col-editor">
+              <div class="footer-col-editor-header"><span class="footer-col-editor-title">COLUMN 1</span><i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim);cursor:pointer"></i></div>
+              <label class="form-label">COLUMN TITLE</label><input class="form-input form-input-sm" value="COMPANY">
+              <label class="form-label">LINKS</label>
+              <div class="footer-link-row"><input class="form-input form-input-sm" value="About Us"><input class="form-input form-input-sm" value="/about"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+              <div class="footer-link-row"><input class="form-input form-input-sm" value="Our Partners"><input class="form-input form-input-sm" value="/about#partners"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+              <div class="footer-link-row"><input class="form-input form-input-sm" value="Contact"><input class="form-input form-input-sm" value="/contact"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+              <div class="footer-link-row"><input class="form-input form-input-sm" value="Careers"><input class="form-input form-input-sm" value="/careers"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+              <button class="add-item" style="width:100%"><i data-lucide="plus" style="width:12px;height:12px"></i> Add Link</button>
+            </div>
+            <div class="footer-col-editor">
+              <div class="footer-col-editor-header"><span class="footer-col-editor-title">COLUMN 2</span><i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim);cursor:pointer"></i></div>
+              <label class="form-label">COLUMN TITLE</label><input class="form-input form-input-sm" value="SERVICES">
+              <label class="form-label">LINKS</label>
+              <div class="footer-link-row"><input class="form-input form-input-sm" value="Sports Tournaments"><input class="form-input form-input-sm" value="/events?cat=sports"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+              <div class="footer-link-row"><input class="form-input form-input-sm" value="Corporate Events"><input class="form-input form-input-sm" value="/corporate-events"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+              <div class="footer-link-row"><input class="form-input form-input-sm" value="Community Events"><input class="form-input form-input-sm" value="/events?cat=community"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+              <div class="footer-link-row"><input class="form-input form-input-sm" value="Partner Access"><input class="form-input form-input-sm" value="/partner-access"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+              <button class="add-item" style="width:100%"><i data-lucide="plus" style="width:12px;height:12px"></i> Add Link</button>
+            </div>
+            <div class="footer-col-editor">
+              <div class="footer-col-editor-header"><span class="footer-col-editor-title">COLUMN 3</span><i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim);cursor:pointer"></i></div>
+              <label class="form-label">COLUMN TITLE</label><input class="form-input form-input-sm" value="CONNECT">
+              <label class="form-label">LINKS</label>
+              <div class="footer-link-row"><input class="form-input form-input-sm" value="WhatsApp"><input class="form-input form-input-sm" value="https://wa.me/919876543210"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+              <div class="footer-link-row"><input class="form-input form-input-sm" value="Instagram"><input class="form-input form-input-sm" value="https://instagram.com/tricore"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+              <div class="footer-link-row"><input class="form-input form-input-sm" value="LinkedIn"><input class="form-input form-input-sm" value="https://linkedin.com/company/tricore"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+              <div class="footer-link-row"><input class="form-input form-input-sm" value="Email Us"><input class="form-input form-input-sm" value="mailto:hello@tricore.com"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="x" style="width:12px;height:12px"></i></button></div>
+              <button class="add-item" style="width:100%"><i data-lucide="plus" style="width:12px;height:12px"></i> Add Link</button>
+            </div>
+          </div>
+          <button class="add-item"><i data-lucide="plus" style="width:12px;height:12px"></i> Add Column</button>
+        </div>
+        <div class="settings-section"><div class="settings-section-title">SOCIAL LINKS</div>
+          <div style="display:grid;grid-template-columns:140px 1fr 32px;gap:8px;margin-bottom:8px"><input class="form-input form-input-sm" value="Instagram"><input class="form-input form-input-sm" value="https://instagram.com/tricoreevents"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button></div>
+          <div style="display:grid;grid-template-columns:140px 1fr 32px;gap:8px;margin-bottom:8px"><input class="form-input form-input-sm" value="LinkedIn"><input class="form-input form-input-sm" value="https://linkedin.com/company/tricore"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button></div>
+          <div style="display:grid;grid-template-columns:140px 1fr 32px;gap:8px;margin-bottom:8px"><input class="form-input form-input-sm" value="WhatsApp"><input class="form-input form-input-sm" value="+91 98765 43210"><button class="remove-btn" style="width:32px;height:32px"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button></div>
+          <button class="add-item"><i data-lucide="plus" style="width:12px;height:12px"></i> Add Social Link</button>
+        </div>
+        <div class="settings-section"><div class="settings-section-title">FOOTER BOTTOM TEXT</div>
+          <label class="form-label">COPYRIGHT TEXT</label><input class="form-input" value="© 2026 TriCore Events. All rights reserved.">
+        </div>
+      </div>
+
+      <!-- TAB: CONTACT -->
+      <div class="tab-panel" id="tab-contact">
+        <div class="settings-section"><div class="settings-section-title">CONTACT INFORMATION</div>
+          <p style="font-size:12px;color:var(--dim);margin-bottom:20px">This information is used across the website — footer, contact page, and meta tags.</p>
+          <div class="form-row" style="margin-bottom:20px">
+            <div><label class="form-label">EMAIL ADDRESS</label><input class="form-input" value="hello@tricoreevents.com"></div>
+            <div><label class="form-label">PHONE NUMBER</label><input class="form-input" value="+91 98765 43210"></div>
+          </div>
+          <div class="form-row" style="margin-bottom:20px">
+            <div><label class="form-label">WHATSAPP NUMBER</label><input class="form-input" value="+91 98765 43210"></div>
+            <div><label class="form-label">WHATSAPP MESSAGE</label><input class="form-input" value="Hi! I'd like to know more about TriCore Events."></div>
+          </div>
+          <div style="margin-bottom:20px"><label class="form-label">ADDRESS</label><textarea class="form-textarea" style="min-height:60px">Spark 7 Sports Arena, Sarjapur Road, Bangalore, Karnataka 560035, India</textarea></div>
+        </div>
+        <div class="settings-section"><div class="settings-section-title">GOOGLE MAPS</div>
+          <div><label class="form-label">EMBED URL</label><input class="form-input" value="https://maps.google.com/maps?q=Spark+7+Sports+Arena" placeholder="Google Maps embed URL"></div>
+        </div>
+        <div class="settings-section"><div class="settings-section-title">CONTACT FORM SETTINGS</div>
+          <div class="form-row" style="margin-bottom:16px">
+            <div><label class="form-label">FORM RECIPIENT EMAIL</label><input class="form-input" value="inquiries@tricoreevents.com"></div>
+            <div><label class="form-label">AUTO-REPLY SUBJECT</label><input class="form-input" value="Thanks for contacting TriCore Events!"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="font-size:12px;color:var(--muted)">Enable auto-reply emails</span><div class="toggle"></div></div>
+          <div style="display:flex;align-items:center;gap:12px"><span style="font-size:12px;color:var(--muted)">Send copy to admin</span><div class="toggle"></div></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== TRUST PARTNERS EDITOR ========== -->
+<div id="s-trust-editor" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav"><div class="nav-item" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div><div class="nav-item active"><i data-lucide="file-text"></i> Pages</div><div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div><div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div><div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div><div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div><div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div></nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><div class="breadcrumb"><span class="bc-dim">Pages / Homepage /</span><span class="bc-active">Trust &amp; Partners</span></div><div class="top-bar-actions"><button class="btn-ghost"><i data-lucide="eye" style="width:14px;height:14px"></i> Preview</button><button class="btn-gold">Save Changes</button></div></div>
+    <div class="content-area">
+      <div class="editor-header"><div class="editor-title"><i data-lucide="shield" style="width:20px;height:20px"></i> TRUST &amp; PARTNERS EDITOR</div><button class="btn-ghost" data-nav="hero-editor"><i data-lucide="arrow-left" style="width:14px;height:14px"></i> Back to Sections</button></div>
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div class="form-row"><div><label class="form-label">HEADING</label><input class="form-input" value="BUILT ON EXPERIENCE. DRIVEN BY EXCELLENCE."></div><div><label class="form-label">DESCRIPTION</label><input class="form-input" value="TriCore is a growing brand backed by seasoned organizers..."></div></div>
+        <label class="form-label" style="color:var(--gold);margin-bottom:-12px">PARTNER CARDS</label>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--border)"><span class="pillar-badge">01</span><div style="flex:1"><label class="form-label">NAME</label><input class="form-input form-input-sm" value="SPARK 7 SPORTS ARENA"></div><div style="flex:2"><label class="form-label">DESCRIPTION</label><input class="form-input form-input-sm" value="Our flagship venue partner providing world-class facilities."></div><div style="width:120px"><label class="form-label">ICON</label><input class="form-input form-input-sm" value="map-pin"></div><i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim)"></i></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--border)"><span class="pillar-badge">02</span><div style="flex:1"><label class="form-label">NAME</label><input class="form-input form-input-sm" value="SARVA HORIZON"></div><div style="flex:2"><label class="form-label">DESCRIPTION</label><input class="form-input form-input-sm" value="Strategic partnership bringing corporate event expertise."></div><div style="width:120px"><label class="form-label">ICON</label><input class="form-input form-input-sm" value="building-2"></div><i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim)"></i></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--border)"><span class="pillar-badge">03</span><div style="flex:1"><label class="form-label">NAME</label><input class="form-input form-input-sm" value="EXPERIENCED ORGANIZERS"></div><div style="flex:2"><label class="form-label">DESCRIPTION</label><input class="form-input form-input-sm" value="Seasoned professionals with deep domain expertise."></div><div style="width:120px"><label class="form-label">ICON</label><input class="form-input form-input-sm" value="shield-check"></div><i data-lucide="trash-2" style="width:14px;height:14px;color:var(--dim)"></i></div>
+        </div>
+        <button class="add-item"><i data-lucide="plus" style="width:12px;height:12px"></i> Add Partner</button>
+      </div>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== CONFIG EDITORS (CTA + Events Config + Testimonials Config) ========== -->
+<div id="s-config-editors" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav"><div class="nav-item" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div><div class="nav-item active"><i data-lucide="file-text"></i> Pages</div><div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div><div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div><div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div><div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div><div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div></nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><span class="top-bar-title">Section Editors — Config Panels</span><div class="top-bar-actions"><button class="btn-gold">Save Changes</button></div></div>
+    <div class="content-area" style="display:flex;gap:24px">
+      <div class="panel" style="flex:1"><div class="panel-header"><div class="editor-title" style="font-size:14px"><i data-lucide="megaphone" style="width:18px;height:18px"></i> FINAL CTA EDITOR</div></div><div style="display:flex;flex-direction:column;gap:16px"><div><label class="form-label">HEADING</label><textarea class="form-textarea" style="min-height:56px;font-size:12px">READY TO CREATE
+SOMETHING EXTRAORDINARY?</textarea></div><div><label class="form-label">SUBHEADING</label><input class="form-input" value="Whether it's a tournament, a corporate event..."></div><div><label class="form-label">BACKGROUND IMAGE</label><div class="upload-zone" style="height:70px"><i data-lucide="upload" style="width:16px;height:16px"></i><span style="font-size:10px">Upload image</span></div></div><div><label class="form-label">CTA BUTTONS</label><div class="form-row"><input class="form-input" value="GET IN TOUCH"><input class="form-input" value="BROWSE EVENTS"></div></div></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:24px">
+        <div class="panel"><div class="panel-header"><div class="editor-title" style="font-size:14px"><i data-lucide="calendar" style="width:18px;height:18px"></i> FEATURED EVENTS CONFIG</div></div><p style="font-size:11px;color:var(--dim);margin-bottom:16px">Auto-populates from Events collection. Configure display options.</p><div class="form-row"><div><label class="form-label">HEADING</label><input class="form-input form-input-sm" value="FEATURED EVENTS"></div><div style="width:120px"><label class="form-label">SHOW COUNT</label><input class="form-input form-input-sm" value="3"></div></div><div style="display:flex;align-items:center;gap:12px;margin-top:12px"><span style="font-size:12px;color:var(--muted)">Show 'View All Events' link</span><div class="toggle"></div></div><div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:rgba(212,175,55,0.03);border:1px solid rgba(212,175,55,0.12);margin-top:12px"><i data-lucide="info" style="width:14px;height:14px;color:var(--gold)"></i><span style="font-size:11px;color:var(--gold)">Events marked as 'featured' in Events Manager will appear here automatically.</span></div></div>
+        <div class="panel"><div class="panel-header"><div class="editor-title" style="font-size:14px"><i data-lucide="message-square" style="width:18px;height:18px"></i> TESTIMONIALS CONFIG</div></div><p style="font-size:11px;color:var(--dim);margin-bottom:16px">Auto-populates from Testimonials collection.</p><div class="form-row"><div><label class="form-label">HEADING</label><input class="form-input form-input-sm" value="WHAT PEOPLE SAY"></div><div style="width:120px"><label class="form-label">SHOW COUNT</label><input class="form-input form-input-sm" value="2"></div></div><div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:rgba(212,175,55,0.03);border:1px solid rgba(212,175,55,0.12);margin-top:12px"><i data-lucide="info" style="width:14px;height:14px;color:var(--gold)"></i><span style="font-size:11px;color:var(--gold)">Testimonials marked as 'featured' will appear here.</span></div></div>
+      </div>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== CONTENT EDITORS (ContentBlock + Team + FAQ) ========== -->
+<div id="s-content-editors" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav"><div class="nav-item" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div><div class="nav-item active"><i data-lucide="file-text"></i> Pages</div><div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div><div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div><div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div><div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div><div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div></nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><span class="top-bar-title">Section Editors — Content Types</span><div class="top-bar-actions"><button class="btn-gold">Save Changes</button></div></div>
+    <div class="content-area" style="display:flex;gap:24px">
+      <div class="panel" style="flex:1"><div class="panel-header"><div class="editor-title" style="font-size:14px"><i data-lucide="file-text" style="width:18px;height:18px"></i> CONTENT BLOCK EDITOR</div></div><p style="font-size:11px;color:var(--dim);margin-bottom:16px">Generic rich content section with heading, body text, image, and optional CTA.</p><div style="display:flex;flex-direction:column;gap:16px"><div><label class="form-label">HEADING</label><input class="form-input" value="Our Story"></div><div><label class="form-label">BODY CONTENT</label><textarea class="form-textarea">TriCore Events was founded with a simple mission: to transform how events are organized and experienced...</textarea></div><div class="form-row"><div><label class="form-label">IMAGE</label><div class="upload-zone" style="height:70px"><i data-lucide="upload" style="width:14px;height:14px"></i><span style="font-size:10px">Upload</span></div></div><div style="width:160px"><label class="form-label">IMAGE POSITION</label><div style="display:flex;align-items:center;justify-content:space-between;height:40px;padding:0 12px;background:var(--card);border:1px solid var(--border)"><span style="font-size:13px">Right</span><i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--dim)"></i></div></div></div><div class="form-row"><div><label class="form-label">CTA LABEL (optional)</label><input class="form-input" value="Learn More"></div><div><label class="form-label">CTA LINK</label><input class="form-input" value="/about#story"></div></div></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:24px">
+        <div class="panel"><div class="panel-header"><div class="editor-title" style="font-size:14px"><i data-lucide="users" style="width:18px;height:18px"></i> TEAM EDITOR</div></div><div><label class="form-label">HEADING</label><input class="form-input form-input-sm" value="Our Team" style="margin-bottom:12px"></div><label class="form-label" style="color:var(--gold)">TEAM MEMBERS</label><div style="display:flex;flex-direction:column;gap:8px;margin-top:8px"><div style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--card);border:1px solid var(--border)"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div style="flex:1"><div style="font-size:12px;font-weight:600">Vikram Patel</div><div style="font-size:10px;color:var(--dim)">Founder &amp; CEO</div></div><i data-lucide="pencil" style="width:12px;height:12px;color:var(--dim)"></i><i data-lucide="trash-2" style="width:12px;height:12px;color:var(--dim)"></i></div><div style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--card);border:1px solid var(--border)"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div style="flex:1"><div style="font-size:12px;font-weight:600">Ananya Reddy</div><div style="font-size:10px;color:var(--dim)">Operations Head</div></div><i data-lucide="pencil" style="width:12px;height:12px;color:var(--dim)"></i><i data-lucide="trash-2" style="width:12px;height:12px;color:var(--dim)"></i></div><button class="add-item" style="width:100%"><i data-lucide="plus" style="width:10px;height:10px"></i> Add Member</button></div></div>
+        <div class="panel"><div class="panel-header"><div class="editor-title" style="font-size:14px"><i data-lucide="circle-help" style="width:18px;height:18px"></i> FAQ EDITOR</div></div><div><label class="form-label">HEADING</label><input class="form-input form-input-sm" value="Frequently Asked Questions" style="margin-bottom:12px"></div><label class="form-label" style="color:var(--gold)">Q&amp;A ITEMS</label><div style="display:flex;flex-direction:column;gap:8px;margin-top:8px"><div style="padding:12px;background:var(--card);border:1px solid var(--border)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:11px;font-weight:600">Q: How do I register for an event?</span><i data-lucide="trash-2" style="width:12px;height:12px;color:var(--dim)"></i></div><span style="font-size:10px;color:var(--muted)">A: Browse our events page, select an event, and click Register...</span></div><div style="padding:12px;background:var(--card);border:1px solid var(--border)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:11px;font-weight:600">Q: What sports do you cover?</span><i data-lucide="trash-2" style="width:12px;height:12px;color:var(--dim)"></i></div><span style="font-size:10px;color:var(--muted)">A: Cricket, football, badminton, and more across all formats...</span></div><button class="add-item" style="width:100%"><i data-lucide="plus" style="width:10px;height:10px"></i> Add Q&amp;A</button></div></div>
+      </div>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== FORM EDITORS (ContactForm + StatsGrid + CreateEvent + CreateTestimonial) ========== -->
+<div id="s-form-editors" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav"><div class="nav-item" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div><div class="nav-item active"><i data-lucide="file-text"></i> Pages</div><div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div><div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div><div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div><div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div><div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div></nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><span class="top-bar-title">Section Editors — Forms &amp; Data</span><div class="top-bar-actions"><button class="btn-gold">Save Changes</button></div></div>
+    <div class="content-area" style="display:flex;gap:20px">
+      <div style="flex:1;display:flex;flex-direction:column;gap:20px">
+        <div class="panel"><div class="panel-header"><div class="editor-title" style="font-size:14px"><i data-lucide="mail" style="width:18px;height:18px"></i> CONTACT FORM EDITOR</div></div><div class="form-row" style="margin-bottom:14px"><div><label class="form-label">HEADING</label><input class="form-input form-input-sm" value="Get In Touch"></div><div><label class="form-label">SUBHEADING</label><input class="form-input form-input-sm" value="We'd love to hear from you"></div></div><label class="form-label" style="color:var(--gold)">FORM FIELDS (toggle to show/hide)</label><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="field-chip on"><span class="chip-dot"></span> Name</button><button class="field-chip on"><span class="chip-dot"></span> Email</button><button class="field-chip on"><span class="chip-dot"></span> Phone</button><button class="field-chip off"><span class="chip-dot"></span> Company</button><button class="field-chip on"><span class="chip-dot"></span> Message</button><button class="field-chip on"><span class="chip-dot"></span> Event Type</button></div></div>
+        <div class="panel"><div class="panel-header"><div class="editor-title" style="font-size:14px"><i data-lucide="bar-chart" style="width:18px;height:18px"></i> STATS GRID EDITOR</div></div><div><label class="form-label">HEADING</label><input class="form-input form-input-sm" value="By The Numbers" style="margin-bottom:12px"></div><label class="form-label" style="color:var(--gold)">STATS</label><div style="display:flex;flex-direction:column;gap:8px;margin-top:8px"><div style="display:grid;grid-template-columns:100px 1fr 100px 32px;gap:8px;align-items:center"><input class="form-input form-input-sm" value="150+"><input class="form-input form-input-sm" value="Events Delivered"><input class="form-input form-input-sm" value="trophy"><button class="remove-btn"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button></div><div style="display:grid;grid-template-columns:100px 1fr 100px 32px;gap:8px;align-items:center"><input class="form-input form-input-sm" value="50K+"><input class="form-input form-input-sm" value="Participants Engaged"><input class="form-input form-input-sm" value="users"><button class="remove-btn"><i data-lucide="trash-2" style="width:12px;height:12px"></i></button></div><button class="add-item" style="width:100%"><i data-lucide="plus" style="width:10px;height:10px"></i> Add Stat</button></div></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:20px">
+        <div class="panel"><div class="panel-header"><div class="editor-title" style="font-size:14px"><i data-lucide="calendar" style="width:18px;height:18px"></i> CREATE / EDIT EVENT</div></div><div style="display:flex;flex-direction:column;gap:14px"><div class="form-row"><div><label class="form-label">TITLE</label><input class="form-input form-input-sm" value="Premier Cricket League S4"></div><div style="width:140px"><label class="form-label">CATEGORY</label><div style="display:flex;align-items:center;justify-content:space-between;height:36px;padding:0 8px;background:var(--card);border:1px solid var(--border);font-size:11px">Sports <i data-lucide="chevron-down" style="width:12px;height:12px;color:var(--dim)"></i></div></div></div><div style="display:grid;grid-template-columns:1fr 1fr 120px;gap:12px"><div><label class="form-label">START DATE</label><input class="form-input form-input-sm" value="2026-04-15"></div><div><label class="form-label">END DATE</label><input class="form-input form-input-sm" value="2026-04-20"></div><div><label class="form-label">STATUS</label><div style="display:flex;align-items:center;justify-content:space-between;height:36px;padding:0 8px;background:var(--card);border:1px solid var(--border);font-size:11px">Upcoming <i data-lucide="chevron-down" style="width:12px;height:12px;color:var(--dim)"></i></div></div></div><div class="form-row"><div><label class="form-label">LOCATION</label><input class="form-input form-input-sm" value="Bangalore"></div><div><label class="form-label">VENUE</label><input class="form-input form-input-sm" value="Spark 7 Sports Arena"></div></div><div style="display:flex;gap:16px;align-items:end"><div style="width:100px"><label class="form-label">PRICE</label><input class="form-input form-input-sm" value="500"></div><div style="display:flex;gap:16px"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:var(--muted)">Featured</span><div class="toggle"></div></div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:var(--muted)">Registration</span><div class="toggle"></div></div></div></div></div></div>
+        <div class="panel"><div class="panel-header"><div class="editor-title" style="font-size:14px"><i data-lucide="message-square" style="width:18px;height:18px"></i> CREATE / EDIT TESTIMONIAL</div></div><div style="display:flex;flex-direction:column;gap:14px"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px"><div><label class="form-label">NAME</label><input class="form-input form-input-sm" value="Rajesh Kumar"></div><div><label class="form-label">ROLE</label><input class="form-input form-input-sm" value="Team Captain"></div><div><label class="form-label">COMPANY</label><input class="form-input form-input-sm" value="PCL Season 3"></div></div><div><label class="form-label">QUOTE</label><textarea class="form-textarea" style="min-height:50px;font-size:11px">The tournament was flawlessly organized...</textarea></div><div style="display:flex;gap:16px;align-items:center"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:var(--muted)">Rating:</span><span style="font-size:16px;color:var(--gold)">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:var(--muted)">Featured</span><div class="toggle"></div></div></div></div></div>
+      </div>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== MEDIA LIBRARY ========== -->
+<div id="s-media" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav"><div class="nav-item" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div><div class="nav-item" data-nav="hero-editor"><i data-lucide="file-text"></i> Pages</div><div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div><div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div><div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div><div class="nav-item active"><i data-lucide="image"></i> Media Library</div><div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div></nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><span class="top-bar-title">Media Library</span><div class="top-bar-actions"><span style="font-size:12px;color:var(--dim)">48 assets</span><button class="btn-gold"><i data-lucide="upload" style="width:14px;height:14px"></i> Upload</button></div></div>
+    <div class="content-area">
+      <div class="upload-zone" style="height:100px;margin-bottom:24px"><i data-lucide="upload" style="width:28px;height:28px"></i><span>Drop files here or click to upload</span><span class="upload-sub">PNG, JPG, WebP up to 5MB</span></div>
+      <div class="media-grid">
+        <div class="media-card"><img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">hero-bg.webp</div><div class="media-card-size">245 KB</div></div></div>
+        <div class="media-card"><img src="https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">cricket-match.webp</div><div class="media-card-size">189 KB</div></div></div>
+        <div class="media-card"><img src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">corporate-event.webp</div><div class="media-card-size">210 KB</div></div></div>
+        <div class="media-card"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">community.webp</div><div class="media-card-size">178 KB</div></div></div>
+        <div class="media-card"><img src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">badminton.webp</div><div class="media-card-size">156 KB</div></div></div>
+        <div class="media-card"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">stadium-lights.webp</div><div class="media-card-size">198 KB</div></div></div>
+        <div class="media-card"><img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">football-field.webp</div><div class="media-card-size">220 KB</div></div></div>
+        <div class="media-card"><img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">team-celebrate.webp</div><div class="media-card-size">175 KB</div></div></div>
+        <div class="media-card"><img src="https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=300&q=80" alt=""><div class="media-card-info"><div class="media-card-name">trophy.webp</div><div class="media-card-size">132 KB</div></div></div>
+        <div class="media-placeholder"><i data-lucide="plus" style="width:24px;height:24px;color:var(--dim)"></i><span style="font-size:11px;color:var(--dim)">Upload</span></div>
+      </div>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== EVENT EDITOR ENHANCED ========== -->
+<div id="s-event-editor" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav"><div class="nav-item" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div><div class="nav-item" data-nav="hero-editor"><i data-lucide="file-text"></i> Pages</div><div class="nav-item active" data-nav="events"><i data-lucide="calendar"></i> Events</div><div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div><div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div><div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div><div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div></nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><div class="breadcrumb"><span class="bc-dim">Events</span><span class="bc-dim">/</span><span class="bc-active">Premier Cricket League S4</span></div><div class="top-bar-actions"><button class="btn-ghost"><i data-lucide="eye" style="width:14px;height:14px"></i> Preview</button><button class="btn-gold">Save Event</button></div></div>
+    <div class="content-area">
+      <div class="tabs">
+        <div class="tab active" data-tab="ee-basic">BASIC INFO</div>
+        <div class="tab" data-tab="ee-sport-items">SPORT ITEMS</div>
+        <div class="tab" data-tab="ee-schedule">SCHEDULE</div>
+        <div class="tab" data-tab="ee-rules">RULES &amp; PRIZES</div>
+        <div class="tab" data-tab="ee-contacts">CONTACTS</div>
+        <div class="tab" data-tab="ee-registrations">REGISTRATIONS</div>
+      </div>
+
+      <div class="tab-panel active" id="tab-ee-basic">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:32px">
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div class="form-group"><label class="form-label">TITLE</label><input class="form-input" value="Premier Cricket League Season 4"></div>
+            <div class="form-group"><label class="form-label">SLUG</label><input class="form-input" value="premier-cricket-league-s4" style="font-family:monospace;font-size:12px"></div>
+            <div class="form-group"><label class="form-label">CATEGORY</label><div style="display:flex;align-items:center;justify-content:space-between;height:40px;padding:0 12px;background:var(--card);border:1px solid var(--border)"><span style="font-size:13px">Sports</span><i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--dim)"></i></div></div>
+            <div class="form-group"><label class="form-label">DESCRIPTION</label><textarea class="form-textarea" style="min-height:100px">The Premier Cricket League Season 4 brings together the best amateur cricket teams in Bangalore for an exciting week of competitive cricket. Join us for thrilling matches, great sportsmanship, and unforgettable moments.</textarea></div>
+            <div class="form-group"><label class="form-label">SHORT DESCRIPTION</label><input class="form-input" value="Bangalore's premier amateur cricket tournament - Season 4"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div class="form-group"><label class="form-label">STATUS</label><div style="display:flex;align-items:center;justify-content:space-between;height:40px;padding:0 12px;background:var(--card);border:1px solid var(--border)"><span style="font-size:13px">Upcoming</span><i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--dim)"></i></div></div>
+            <div class="form-row"><div class="form-group"><label class="form-label">START DATE</label><input class="form-input" value="2026-04-15"></div><div class="form-group"><label class="form-label">END DATE</label><input class="form-input" value="2026-04-20"></div></div>
+            <div class="form-group"><label class="form-label">LOCATION</label><input class="form-input" value="Bangalore"></div>
+            <div class="form-group"><label class="form-label">VENUE</label><input class="form-input" value="Spark 7 Sports Arena"></div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:32px">
+          <label class="form-label">COVER IMAGE</label>
+          <div class="upload-zone" style="height:120px"><i data-lucide="upload" style="width:28px;height:28px"></i><span>Click to upload or drag &amp; drop</span><span class="upload-sub">PNG, JPG, WebP up to 5MB &middot; Recommended 1920x600</span></div>
+        </div>
+
+        <div style="margin-bottom:32px">
+          <label class="form-label">TAGS</label>
+          <input class="form-input" value="cricket, tournament, season-4" placeholder="Comma-separated tags">
+        </div>
+
+        <div style="display:flex;align-items:center;gap:32px;padding:20px;background:var(--surface);border:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:var(--muted)">Featured</span><div class="toggle"></div></div>
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:var(--muted)">Registration Open</span><div class="toggle"></div></div>
+          <div style="display:flex;align-items:center;gap:12px"><label class="form-label" style="margin-bottom:0">REG OPENS</label><input class="form-input" style="width:150px;height:36px;font-size:12px" value="2026-03-20"></div>
+          <div style="display:flex;align-items:center;gap:12px"><label class="form-label" style="margin-bottom:0">REG CLOSES</label><input class="form-input" style="width:150px;height:36px;font-size:12px" value="2026-04-10"></div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-ee-sport-items"></div>
+      <div class="tab-panel" id="tab-ee-schedule"></div>
+      <div class="tab-panel" id="tab-ee-rules"></div>
+      <div class="tab-panel" id="tab-ee-contacts"></div>
+      <div class="tab-panel" id="tab-ee-registrations"></div>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== SPORT ITEMS MANAGER ========== -->
+<div id="s-sport-items" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav"><div class="nav-item" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div><div class="nav-item" data-nav="hero-editor"><i data-lucide="file-text"></i> Pages</div><div class="nav-item active" data-nav="events"><i data-lucide="calendar"></i> Events</div><div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div><div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div><div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div><div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div></nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><div class="breadcrumb"><span class="bc-dim">Events</span><span class="bc-dim">/</span><span class="bc-dim">PCL S4</span><span class="bc-dim">/</span><span class="bc-active">Sport Items</span></div><div class="top-bar-actions"><button class="btn-ghost"><i data-lucide="eye" style="width:14px;height:14px"></i> Preview</button><button class="btn-gold">Save Event</button></div></div>
+    <div class="content-area">
+      <div class="tabs">
+        <div class="tab" data-tab="si-basic">BASIC INFO</div>
+        <div class="tab active" data-tab="si-sport-items">SPORT ITEMS</div>
+        <div class="tab" data-tab="si-schedule">SCHEDULE</div>
+        <div class="tab" data-tab="si-rules">RULES &amp; PRIZES</div>
+        <div class="tab" data-tab="si-contacts">CONTACTS</div>
+        <div class="tab" data-tab="si-registrations">REGISTRATIONS</div>
+      </div>
+
+      <div class="tab-panel" id="tab-si-basic"></div>
+      <div class="tab-panel active" id="tab-si-sport-items">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+          <div style="display:flex;align-items:center;gap:12px">
+            <span style="font-size:14px;font-weight:700;letter-spacing:2px">SPORT ITEMS</span>
+            <span style="padding:4px 10px;background:rgba(255,255,255,.05);font-size:11px;font-weight:500;color:var(--muted)">4 items</span>
+          </div>
+          <button class="btn-gold"><i data-lucide="plus" style="width:14px;height:14px"></i> Add Sport Item</button>
+        </div>
+
+        <!-- Card 1: Expanded -->
+        <div style="background:var(--surface);border:1px solid var(--gold-border);margin-bottom:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <i data-lucide="chevron-down" style="width:16px;height:16px;color:var(--gold)"></i>
+              <span style="font-size:14px;font-weight:600">Cricket - Men's</span>
+              <span style="padding:3px 8px;font-size:9px;font-weight:600;letter-spacing:1px;background:rgba(33,150,243,.1);color:var(--blue)">TEAM</span>
+              <span style="padding:3px 8px;font-size:9px;font-weight:600;letter-spacing:1px;background:rgba(76,175,80,.1);color:var(--green)">OPEN</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-size:12px;color:var(--muted)">12/16 teams</span>
+              <button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button>
+              <button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button>
+            </div>
+          </div>
+          <div style="padding:0 20px 20px;border-top:1px solid var(--border);padding-top:16px">
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px">
+              <div><label class="form-label">PRICE</label><div style="font-size:14px;font-weight:600;color:var(--gold)">&#8377;500</div></div>
+              <div><label class="form-label">TEAM SIZE</label><div style="font-size:14px;font-weight:500">6 - 11</div></div>
+              <div><label class="form-label">MAX TEAMS</label><div style="font-size:14px;font-weight:500">16</div></div>
+              <div><label class="form-label">GENDER</label><div style="font-size:14px;font-weight:500">Male</div></div>
+              <div><label class="form-label">AGE RANGE</label><div style="font-size:14px;font-weight:500">16 - 45</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Collapsed -->
+        <div style="background:var(--surface);border:1px solid var(--border);margin-bottom:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--dim)"></i>
+              <span style="font-size:14px;font-weight:600">Cricket - Women's</span>
+              <span style="padding:3px 8px;font-size:9px;font-weight:600;letter-spacing:1px;background:rgba(33,150,243,.1);color:var(--blue)">TEAM</span>
+              <span style="padding:3px 8px;font-size:9px;font-weight:600;letter-spacing:1px;background:rgba(76,175,80,.1);color:var(--green)">OPEN</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-size:12px;color:var(--muted)">5/8 teams</span>
+              <button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button>
+              <button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Collapsed -->
+        <div style="background:var(--surface);border:1px solid var(--border);margin-bottom:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--dim)"></i>
+              <span style="font-size:14px;font-weight:600">Badminton Singles</span>
+              <span style="padding:3px 8px;font-size:9px;font-weight:600;letter-spacing:1px;background:rgba(255,255,255,.05);color:var(--muted)">INDIVIDUAL</span>
+              <span style="padding:3px 8px;font-size:9px;font-weight:600;letter-spacing:1px;background:rgba(76,175,80,.1);color:var(--green)">OPEN</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-size:12px;color:var(--muted)">18/32 participants</span>
+              <button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button>
+              <button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Collapsed, Full -->
+        <div style="background:var(--surface);border:1px solid var(--border);margin-bottom:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--dim)"></i>
+              <span style="font-size:14px;font-weight:600">Table Tennis Doubles</span>
+              <span style="padding:3px 8px;font-size:9px;font-weight:600;letter-spacing:1px;background:rgba(255,255,255,.05);color:var(--muted)">INDIVIDUAL</span>
+              <span style="padding:3px 8px;font-size:9px;font-weight:600;letter-spacing:1px;background:rgba(244,67,54,.1);color:var(--red)">FULL</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-size:12px;color:var(--muted)">16/16 participants</span>
+              <button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button>
+              <button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;border:1px dashed var(--border);color:var(--dim);font-size:12px;cursor:pointer;margin-top:8px" class="add-section"><i data-lucide="plus" style="width:14px;height:14px"></i> Add Sport Item</div>
+      </div>
+      <div class="tab-panel" id="tab-si-schedule"></div>
+      <div class="tab-panel" id="tab-si-rules"></div>
+      <div class="tab-panel" id="tab-si-contacts"></div>
+      <div class="tab-panel" id="tab-si-registrations"></div>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== REGISTRATIONS MANAGER ========== -->
+<div id="s-registrations" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav"><div class="nav-item" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div><div class="nav-item" data-nav="hero-editor"><i data-lucide="file-text"></i> Pages</div><div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div><div class="nav-item active"><i data-lucide="clipboard-list"></i> Registrations</div><div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div><div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div><div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div></nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><div style="display:flex;align-items:center;gap:12px"><span class="top-bar-title">Registrations</span><span style="font-size:12px;color:var(--dim)">156 total</span></div><div class="top-bar-actions"><button class="btn-ghost"><i data-lucide="download" style="width:14px;height:14px"></i> Export CSV</button></div></div>
+    <div class="content-area">
+      <!-- Filters -->
+      <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;height:36px;padding:0 12px;background:var(--card);border:1px solid var(--border);min-width:160px;font-size:12px;cursor:pointer"><span>All Events</span><i data-lucide="chevron-down" style="width:12px;height:12px;color:var(--dim)"></i></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;height:36px;padding:0 12px;background:var(--card);border:1px solid var(--border);min-width:160px;font-size:12px;cursor:pointer"><span>All Sport Items</span><i data-lucide="chevron-down" style="width:12px;height:12px;color:var(--dim)"></i></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button class="chip active">ALL</button>
+        <button class="chip">CONFIRMED</button>
+        <button class="chip">PENDING</button>
+        <button class="chip">WAITLISTED</button>
+        <button class="chip">CANCELLED</button>
+      </div>
+      <div class="filters" style="margin-bottom:24px">
+        <button class="chip active">ALL</button>
+        <button class="chip" style="border-color:rgba(76,175,80,.3);color:var(--green)">PAID</button>
+        <button class="chip" style="border-color:rgba(212,175,55,.3);color:var(--gold)">PENDING</button>
+        <button class="chip" style="border-color:rgba(244,67,54,.3);color:var(--red)">FAILED</button>
+      </div>
+
+      <!-- Table -->
+      <table class="data-table"><thead><tr><th>REG ID</th><th>PARTICIPANT / TEAM</th><th>EVENT</th><th>SPORT ITEM</th><th>TYPE</th><th>STATUS</th><th>PAYMENT</th><th>DATE</th><th>ACTIONS</th></tr></thead><tbody>
+        <tr><td style="font-size:12px;font-weight:600;font-family:monospace">#TRI-0847</td><td><strong>Rajesh Kumar</strong><br><span style="font-size:11px;color:var(--dim)">Thunder Strikers</span></td><td style="font-size:12px;color:var(--muted)">PCL S4</td><td style="font-size:12px;color:var(--muted)">Cricket Men's</td><td><span style="padding:3px 8px;font-size:9px;font-weight:600;letter-spacing:1px;background:rgba(33,150,243,.1);color:var(--blue)">TEAM</span></td><td><span class="status status-active">CONFIRMED</span></td><td><span style="color:var(--green);font-size:12px;font-weight:600">PAID &#8377;500</span></td><td style="font-size:12px;color:var(--muted)">Mar 25</td><td><div style="display:flex;gap:8px"><button class="table-btn" data-nav="reg-detail"><i data-lucide="eye" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button></div></td></tr>
+        <tr><td style="font-size:12px;font-weight:600;font-family:monospace">#TRI-0848</td><td><strong>Rajesh Kumar</strong></td><td style="font-size:12px;color:var(--muted)">PCL S4</td><td style="font-size:12px;color:var(--muted)">Badminton Singles</td><td><span style="padding:3px 8px;font-size:9px;font-weight:600;letter-spacing:1px;background:rgba(255,255,255,.05);color:var(--muted)">INDIVIDUAL</span></td><td><span class="status status-active">CONFIRMED</span></td><td><span style="color:var(--green);font-size:12px;font-weight:600">PAID &#8377;200</span></td><td style="font-size:12px;color:var(--muted)">Mar 25</td><td><div style="display:flex;gap:8px"><button class="table-btn" data-nav="reg-detail"><i data-lucide="eye" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button></div></td></tr>
+        <tr><td style="font-size:12px;font-weight:600;font-family:monospace">#TRI-0849</td><td><strong>Priya Menon</strong><br><span style="font-size:11px;color:var(--dim)">TechVista FC</span></td><td style="font-size:12px;color:var(--muted)">Football League</td><td style="font-size:12px;color:var(--muted)">Football 5-a-side</td><td><span style="padding:3px 8px;font-size:9px;font-weight:600;letter-spacing:1px;background:rgba(33,150,243,.1);color:var(--blue)">TEAM</span></td><td><span class="status status-upcoming">PENDING</span></td><td><span style="color:var(--gold);font-size:12px;font-weight:600">PENDING &#8377;500</span></td><td style="font-size:12px;color:var(--muted)">Mar 26</td><td><div style="display:flex;gap:8px"><button class="table-btn" data-nav="reg-detail"><i data-lucide="eye" style="width:14px;height:14px"></i></button><button class="btn-approve" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:none;background:var(--green);color:#fff;cursor:pointer" title="Approve"><i data-lucide="check" style="width:14px;height:14px"></i></button><button class="btn-reject" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid var(--red);background:none;color:var(--red);cursor:pointer" title="Reject"><i data-lucide="x" style="width:14px;height:14px"></i></button></div></td></tr>
+        <tr><td style="font-size:12px;font-weight:600;font-family:monospace">#TRI-0850</td><td><strong>Ankit Sharma</strong></td><td style="font-size:12px;color:var(--muted)">PCL S4</td><td style="font-size:12px;color:var(--muted)">Badminton</td><td><span style="padding:3px 8px;font-size:9px;font-weight:600;letter-spacing:1px;background:rgba(255,255,255,.05);color:var(--muted)">INDIVIDUAL</span></td><td><span class="status status-completed">WAITLISTED</span></td><td><span style="color:var(--gold);font-size:12px;font-weight:600">PENDING &#8377;200</span></td><td style="font-size:12px;color:var(--muted)">Mar 27</td><td><div style="display:flex;gap:8px"><button class="table-btn" data-nav="reg-detail"><i data-lucide="eye" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button></div></td></tr>
+        <tr><td style="font-size:12px;font-weight:600;font-family:monospace">#TRI-0851</td><td><strong>Deepika Nair</strong><br><span style="font-size:11px;color:var(--dim)">City Smashers</span></td><td style="font-size:12px;color:var(--muted)">PCL S4</td><td style="font-size:12px;color:var(--muted)">Cricket Women's</td><td><span style="padding:3px 8px;font-size:9px;font-weight:600;letter-spacing:1px;background:rgba(33,150,243,.1);color:var(--blue)">TEAM</span></td><td><span style="display:inline-flex;padding:4px 10px;font-size:10px;font-weight:600;letter-spacing:1px;border-radius:2px;background:rgba(244,67,54,.1);color:var(--red)">CANCELLED</span></td><td><span style="color:var(--dim);font-size:12px;font-weight:600">REFUNDED &#8377;500</span></td><td style="font-size:12px;color:var(--muted)">Mar 24</td><td><div style="display:flex;gap:8px"><button class="table-btn" data-nav="reg-detail"><i data-lucide="eye" style="width:14px;height:14px"></i></button></div></td></tr>
+      </tbody></table>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== REGISTRATION DETAIL ========== -->
+<div id="s-reg-detail" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav"><div class="nav-item" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div><div class="nav-item" data-nav="hero-editor"><i data-lucide="file-text"></i> Pages</div><div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div><div class="nav-item active" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div><div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div><div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div><div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div></nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><div class="breadcrumb"><span class="bc-dim" data-nav="registrations" style="cursor:pointer">Registrations</span><span class="bc-dim">/</span><span class="bc-active">#TRI-0847</span></div><div class="top-bar-actions"><button class="btn-approve" style="display:inline-flex;align-items:center;gap:6px;padding:8px 20px;background:var(--green);color:#fff;font-size:12px;font-weight:700;border:none;cursor:pointer"><i data-lucide="check" style="width:14px;height:14px"></i> Approve</button><button class="btn-reject" style="display:inline-flex;align-items:center;gap:6px;padding:8px 20px;border:1px solid var(--red);background:none;color:var(--red);font-size:12px;font-weight:700;cursor:pointer"><i data-lucide="x" style="width:14px;height:14px"></i> Reject</button></div></div>
+    <div class="content-area">
+      <div style="display:grid;grid-template-columns:1fr 360px;gap:24px">
+        <!-- Left Column -->
+        <div style="display:flex;flex-direction:column;gap:24px">
+          <!-- Registration Details -->
+          <div class="panel"><div class="panel-header"><span class="panel-title">REGISTRATION DETAILS</span></div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px">
+              <div><label class="form-label">REG ID</label><div style="font-size:14px;font-weight:600;font-family:monospace">#TRI-0847</div></div>
+              <div><label class="form-label">TYPE</label><span style="padding:4px 10px;font-size:10px;font-weight:600;letter-spacing:1px;background:rgba(33,150,243,.1);color:var(--blue)">TEAM</span></div>
+              <div><label class="form-label">STATUS</label><span class="status status-active">CONFIRMED</span></div>
+              <div><label class="form-label">DATE</label><div style="font-size:13px;color:var(--muted)">Mar 25, 2026</div></div>
+            </div>
+          </div>
+
+          <!-- Event Info -->
+          <div class="panel"><div class="panel-header"><span class="panel-title">EVENT INFO</span></div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px">
+              <div><label class="form-label">EVENT</label><div style="font-size:14px;font-weight:600">Premier Cricket League S4</div></div>
+              <div><label class="form-label">SPORT ITEM</label><div style="font-size:14px;font-weight:500;color:var(--muted)">Cricket - Men's</div></div>
+              <div><label class="form-label">VENUE</label><div style="font-size:13px;color:var(--muted)">Spark 7 Sports Arena, Bangalore</div></div>
+              <div><label class="form-label">DATES</label><div style="font-size:13px;color:var(--muted)">Apr 15 - 20, 2026</div></div>
+            </div>
+          </div>
+
+          <!-- Team Information -->
+          <div class="panel"><div class="panel-header"><span class="panel-title">TEAM INFORMATION</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+              <div><label class="form-label">TEAM NAME</label><div style="font-size:16px;font-weight:700">Thunder Strikers</div></div>
+              <div><label class="form-label">CAPTAIN</label><div style="font-size:14px;font-weight:600">Rajesh Kumar</div><div style="font-size:11px;color:var(--dim);margin-top:2px">rajesh@email.com &middot; +91 98765 43210</div></div>
+            </div>
+            <label class="form-label" style="margin-bottom:12px">TEAM MEMBERS (8)</label>
+            <table class="data-table"><thead><tr><th>#</th><th>NAME</th><th>EMAIL</th><th>PHONE</th><th>ROLE</th></tr></thead><tbody>
+              <tr><td style="font-size:12px">1</td><td style="font-size:12px;font-weight:500">Rajesh Kumar</td><td style="font-size:11px;color:var(--muted)">rajesh@email.com</td><td style="font-size:11px;color:var(--muted)">+91 98765 43210</td><td><span style="padding:2px 8px;font-size:9px;font-weight:600;letter-spacing:1px;background:var(--gold-dim);color:var(--gold)">CAPTAIN</span></td></tr>
+              <tr><td style="font-size:12px">2</td><td style="font-size:12px;font-weight:500">Amit Verma</td><td style="font-size:11px;color:var(--muted)">amit.v@email.com</td><td style="font-size:11px;color:var(--muted)">+91 98765 43211</td><td style="font-size:11px;color:var(--dim)">Player</td></tr>
+              <tr><td style="font-size:12px">3</td><td style="font-size:12px;font-weight:500">Suresh Reddy</td><td style="font-size:11px;color:var(--muted)">suresh.r@email.com</td><td style="font-size:11px;color:var(--muted)">+91 98765 43212</td><td style="font-size:11px;color:var(--dim)">Player</td></tr>
+              <tr><td style="font-size:12px">4</td><td style="font-size:12px;font-weight:500">Kiran Patel</td><td style="font-size:11px;color:var(--muted)">kiran.p@email.com</td><td style="font-size:11px;color:var(--muted)">+91 98765 43213</td><td style="font-size:11px;color:var(--dim)">Player</td></tr>
+              <tr><td style="font-size:12px">5</td><td style="font-size:12px;font-weight:500">Deepak Sharma</td><td style="font-size:11px;color:var(--muted)">deepak.s@email.com</td><td style="font-size:11px;color:var(--muted)">+91 98765 43214</td><td style="font-size:11px;color:var(--dim)">Player</td></tr>
+              <tr><td style="font-size:12px">6</td><td style="font-size:12px;font-weight:500">Vinay Kumar</td><td style="font-size:11px;color:var(--muted)">vinay.k@email.com</td><td style="font-size:11px;color:var(--muted)">+91 98765 43215</td><td style="font-size:11px;color:var(--dim)">Player</td></tr>
+              <tr><td style="font-size:12px">7</td><td style="font-size:12px;font-weight:500">Manoj Singh</td><td style="font-size:11px;color:var(--muted)">manoj.s@email.com</td><td style="font-size:11px;color:var(--muted)">+91 98765 43216</td><td style="font-size:11px;color:var(--dim)">Player</td></tr>
+              <tr><td style="font-size:12px">8</td><td style="font-size:12px;font-weight:500">Rohit Mehta</td><td style="font-size:11px;color:var(--muted)">rohit.m@email.com</td><td style="font-size:11px;color:var(--muted)">+91 98765 43217</td><td style="font-size:11px;color:var(--dim)">Player</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div style="display:flex;flex-direction:column;gap:24px">
+          <!-- Payment -->
+          <div class="panel"><div class="panel-header"><span class="panel-title">PAYMENT</span></div>
+            <div style="text-align:center;padding:12px 0 20px">
+              <div style="font-size:36px;font-weight:800;color:var(--gold);letter-spacing:-1px">&#8377;500</div>
+              <span class="status status-active" style="margin-top:8px">PAID</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--border);padding-top:16px">
+              <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--dim)">Method</span><span style="font-size:12px;font-weight:500">Razorpay</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--dim)">Transaction ID</span><span style="font-size:11px;font-weight:500;font-family:monospace">pay_LM7abc123</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--dim)">Date</span><span style="font-size:12px;font-weight:500">Mar 25, 2026</span></div>
+            </div>
+          </div>
+
+          <!-- Admin Notes -->
+          <div class="panel"><div class="panel-header"><span class="panel-title">ADMIN NOTES</span></div>
+            <textarea class="form-textarea" style="min-height:80px;margin-bottom:12px" placeholder="Add internal notes about this registration..."></textarea>
+            <button class="btn-ghost" style="width:100%;justify-content:center">Save Note</button>
+          </div>
+
+          <!-- Actions -->
+          <div class="panel"><div class="panel-header"><span class="panel-title">ACTIONS</span></div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <button class="btn-ghost" style="width:100%;justify-content:center"><i data-lucide="mail" style="width:14px;height:14px"></i> Send Confirmation Email</button>
+              <button class="btn-ghost" style="width:100%;justify-content:center;border-color:rgba(244,67,54,.3);color:var(--red)"><i data-lucide="x-circle" style="width:14px;height:14px"></i> Cancel Registration</button>
+              <button class="btn-ghost" style="width:100%;justify-content:center;border-color:rgba(244,67,54,.3);color:var(--red)"><i data-lucide="rotate-ccw" style="width:14px;height:14px"></i> Issue Refund</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== CEO DASHBOARD ========== -->
+<div id="s-ceo-dashboard" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav">
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:8px 12px 4px">OVERVIEW</div>
+    <div class="nav-item active"><i data-lucide="layout-dashboard"></i> Dashboard</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">CONTENT</div>
+    <div class="nav-item" data-nav="hero-editor"><i data-lucide="file-text"></i> Pages</div>
+    <div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div>
+    <div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">EVENTS</div>
+    <div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div>
+    <div class="nav-item" data-nav="calendar"><i data-lucide="calendar-days"></i> Calendar</div>
+    <div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">FINANCE</div>
+    <div class="nav-item" data-nav="payments"><i data-lucide="credit-card"></i> Payments</div>
+    <div class="nav-item"><i data-lucide="file-text"></i> Invoices</div>
+    <div class="nav-item"><i data-lucide="trending-down"></i> Expenses</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">REPORTS</div>
+    <div class="nav-item"><i data-lucide="bar-chart-3"></i> Analytics</div>
+    <div class="nav-item"><i data-lucide="pie-chart"></i> Reports</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">SETTINGS</div>
+    <div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div>
+    <div class="nav-item" data-nav="users-roles"><i data-lucide="users"></i> Users &amp; Roles</div>
+    <div class="nav-item" data-nav="notif-settings"><i data-lucide="bell"></i> Notifications</div>
+    <div class="nav-item" data-nav="backup"><i data-lucide="database"></i> Backup</div>
+  </nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><span class="top-bar-title">CEO Dashboard</span><div class="top-bar-actions"><button class="btn-ghost"><i data-lucide="download" style="width:14px;height:14px"></i> Export</button><button class="btn-gold"><i data-lucide="refresh-cw" style="width:14px;height:14px"></i> Refresh</button></div></div>
+    <div class="content-area">
+      <!-- Alert Banner -->
+      <div style="background:rgba(212,175,55,.08);border:1px solid var(--gold-border);padding:14px 20px;margin-bottom:24px;display:flex;align-items:center;gap:12px">
+        <i data-lucide="alert-triangle" style="width:18px;height:18px;color:var(--gold);flex-shrink:0"></i>
+        <span style="font-size:13px;color:var(--gold);font-weight:500">3 pending approvals require your attention — 2 event proposals and 1 refund request.</span>
+        <span style="margin-left:auto;font-size:12px;font-weight:600;color:var(--gold);cursor:pointer">Review →</span>
+      </div>
+      <!-- Stat Cards -->
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px">
+        <div class="stat-card"><div class="stat-card-label">REGISTRATIONS TODAY</div><div class="stat-card-row"><span class="stat-card-value">12</span><i data-lucide="user-plus" class="stat-card-icon" style="width:24px;height:24px"></i></div></div>
+        <div class="stat-card"><div class="stat-card-label">REVENUE</div><div class="stat-card-row"><span class="stat-card-value gold">₹45,200</span><i data-lucide="indian-rupee" class="stat-card-icon" style="width:24px;height:24px"></i></div></div>
+        <div class="stat-card"><div class="stat-card-label">ACTIVE EVENTS</div><div class="stat-card-row"><span class="stat-card-value">6</span><i data-lucide="calendar" class="stat-card-icon" style="width:24px;height:24px"></i></div></div>
+        <div class="stat-card"><div class="stat-card-label">PENDING APPROVALS</div><div class="stat-card-row"><span class="stat-card-value" style="color:var(--red)">3</span><i data-lucide="clock" class="stat-card-icon" style="width:24px;height:24px"></i></div></div>
+        <div class="stat-card"><div class="stat-card-label">CAPACITY</div><div class="stat-card-row"><span class="stat-card-value gold">72%</span><i data-lucide="users" class="stat-card-icon" style="width:24px;height:24px"></i></div></div>
+      </div>
+      <!-- Chart Placeholders -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px">
+        <div style="background:var(--surface);border:1px solid var(--border);padding:24px;height:240px;display:flex;flex-direction:column">
+          <span style="font-size:10px;font-weight:700;letter-spacing:2px;color:var(--muted);margin-bottom:16px">REGISTRATION TREND</span>
+          <div style="flex:1;display:flex;align-items:flex-end;gap:8px;padding-top:16px">
+            <div style="flex:1;background:var(--gold-dim);border-top:2px solid var(--gold);height:40%"></div>
+            <div style="flex:1;background:var(--gold-dim);border-top:2px solid var(--gold);height:55%"></div>
+            <div style="flex:1;background:var(--gold-dim);border-top:2px solid var(--gold);height:35%"></div>
+            <div style="flex:1;background:var(--gold-dim);border-top:2px solid var(--gold);height:70%"></div>
+            <div style="flex:1;background:var(--gold-dim);border-top:2px solid var(--gold);height:60%"></div>
+            <div style="flex:1;background:var(--gold-dim);border-top:2px solid var(--gold);height:85%"></div>
+            <div style="flex:1;background:var(--gold-dim);border-top:2px solid var(--gold);height:75%"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:9px;color:var(--dim)"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);padding:24px;height:240px;display:flex;flex-direction:column">
+          <span style="font-size:10px;font-weight:700;letter-spacing:2px;color:var(--muted);margin-bottom:16px">REVENUE BY MONTH</span>
+          <div style="flex:1;display:flex;align-items:flex-end;gap:8px;padding-top:16px">
+            <div style="flex:1;background:rgba(76,175,80,.15);border-top:2px solid var(--green);height:50%"></div>
+            <div style="flex:1;background:rgba(76,175,80,.15);border-top:2px solid var(--green);height:65%"></div>
+            <div style="flex:1;background:rgba(76,175,80,.15);border-top:2px solid var(--green);height:45%"></div>
+            <div style="flex:1;background:rgba(76,175,80,.15);border-top:2px solid var(--green);height:80%"></div>
+            <div style="flex:1;background:rgba(76,175,80,.15);border-top:2px solid var(--green);height:90%"></div>
+            <div style="flex:1;background:rgba(76,175,80,.15);border-top:2px solid var(--green);height:70%"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:9px;color:var(--dim)"><span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span></div>
+        </div>
+      </div>
+      <!-- 3 Column Bottom -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">
+        <!-- Upcoming Events -->
+        <div class="panel"><div class="panel-header"><span class="panel-title">UPCOMING EVENTS</span><span class="panel-link" data-nav="events">View All</span></div>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;gap:12px;align-items:flex-start"><div style="width:3px;height:40px;background:var(--gold);flex-shrink:0"></div><div><div style="font-size:13px;font-weight:600">Premier Cricket League S4</div><div style="font-size:11px;color:var(--dim)">Apr 15 — Spark 7 Arena</div></div></div>
+            <div style="display:flex;gap:12px;align-items:flex-start"><div style="width:3px;height:40px;background:var(--blue);flex-shrink:0"></div><div><div style="font-size:13px;font-weight:600">Corporate Champions Cup</div><div style="font-size:11px;color:var(--dim)">May 8 — Various Venues</div></div></div>
+            <div style="display:flex;gap:12px;align-items:flex-start"><div style="width:3px;height:40px;background:var(--green);flex-shrink:0"></div><div><div style="font-size:13px;font-weight:600">Neighbourhood Football</div><div style="font-size:11px;color:var(--dim)">Jun 1 — Community Ground</div></div></div>
+          </div>
+        </div>
+        <!-- Pending Actions -->
+        <div class="panel"><div class="panel-header"><span class="panel-title">PENDING ACTIONS</span><span class="panel-link">3 items</span></div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card);border:1px solid var(--border-light)"><i data-lucide="alert-circle" style="width:16px;height:16px;color:var(--gold)"></i><div style="flex:1"><div style="font-size:12px;font-weight:500">Approve: Summer Sports Camp</div><div style="font-size:10px;color:var(--dim)">Submitted 2 hours ago</div></div><button class="btn-gold" style="padding:4px 12px;font-size:10px">Review</button></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card);border:1px solid var(--border-light)"><i data-lucide="alert-circle" style="width:16px;height:16px;color:var(--gold)"></i><div style="flex:1"><div style="font-size:12px;font-weight:500">Approve: Marathon 2026</div><div style="font-size:10px;color:var(--dim)">Submitted 5 hours ago</div></div><button class="btn-gold" style="padding:4px 12px;font-size:10px">Review</button></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card);border:1px solid var(--border-light)"><i data-lucide="rotate-ccw" style="width:16px;height:16px;color:var(--red)"></i><div style="flex:1"><div style="font-size:12px;font-weight:500">Refund: Rajesh K. — ₹2,500</div><div style="font-size:10px;color:var(--dim)">Requested 1 day ago</div></div><button class="btn-gold" style="padding:4px 12px;font-size:10px">Review</button></div>
+          </div>
+        </div>
+        <!-- Activity Feed -->
+        <div class="panel"><div class="panel-header"><span class="panel-title">ACTIVITY FEED</span><span class="panel-link">Live</span></div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;gap:10px"><div style="width:6px;height:6px;border-radius:50%;background:var(--green);margin-top:6px;flex-shrink:0"></div><div><div style="font-size:12px">New registration — <strong>Amit S.</strong> for Cricket League</div><div style="font-size:10px;color:var(--dim)">2 min ago</div></div></div>
+            <div style="display:flex;gap:10px"><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:6px;flex-shrink:0"></div><div><div style="font-size:12px">Payment received — <strong>₹3,500</strong></div><div style="font-size:10px;color:var(--dim)">15 min ago</div></div></div>
+            <div style="display:flex;gap:10px"><div style="width:6px;height:6px;border-radius:50%;background:var(--blue);margin-top:6px;flex-shrink:0"></div><div><div style="font-size:12px">Event updated — <strong>Corporate Cup</strong> schedule changed</div><div style="font-size:10px;color:var(--dim)">1 hr ago</div></div></div>
+            <div style="display:flex;gap:10px"><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:6px;flex-shrink:0"></div><div><div style="font-size:12px">Media uploaded — <strong>3 images</strong> to Cricket League</div><div style="font-size:10px;color:var(--dim)">2 hrs ago</div></div></div>
+            <div style="display:flex;gap:10px"><div style="width:6px;height:6px;border-radius:50%;background:var(--green);margin-top:6px;flex-shrink:0"></div><div><div style="font-size:12px">New registration — <strong>Priya M.</strong> for Marathon</div><div style="font-size:10px;color:var(--dim)">3 hrs ago</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== CALENDAR VIEW ========== -->
+<div id="s-calendar" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav">
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:8px 12px 4px">OVERVIEW</div>
+    <div class="nav-item" data-nav="ceo-dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">CONTENT</div>
+    <div class="nav-item" data-nav="hero-editor"><i data-lucide="file-text"></i> Pages</div>
+    <div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div>
+    <div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">EVENTS</div>
+    <div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div>
+    <div class="nav-item active"><i data-lucide="calendar-days"></i> Calendar</div>
+    <div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">FINANCE</div>
+    <div class="nav-item" data-nav="payments"><i data-lucide="credit-card"></i> Payments</div>
+    <div class="nav-item"><i data-lucide="file-text"></i> Invoices</div>
+    <div class="nav-item"><i data-lucide="trending-down"></i> Expenses</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">REPORTS</div>
+    <div class="nav-item"><i data-lucide="bar-chart-3"></i> Analytics</div>
+    <div class="nav-item"><i data-lucide="pie-chart"></i> Reports</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">SETTINGS</div>
+    <div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div>
+    <div class="nav-item" data-nav="users-roles"><i data-lucide="users"></i> Users &amp; Roles</div>
+    <div class="nav-item" data-nav="notif-settings"><i data-lucide="bell"></i> Notifications</div>
+    <div class="nav-item" data-nav="backup"><i data-lucide="database"></i> Backup</div>
+  </nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><span class="top-bar-title">Calendar View</span><div class="top-bar-actions"><button class="btn-ghost"><i data-lucide="list" style="width:14px;height:14px"></i> List View</button></div></div>
+    <div class="content-area">
+      <div style="display:grid;grid-template-columns:1fr 280px;gap:24px">
+        <!-- Calendar Main -->
+        <div>
+          <!-- Month Header -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+            <button class="btn-ghost" style="padding:6px 12px"><i data-lucide="chevron-left" style="width:16px;height:16px"></i></button>
+            <span style="font-size:18px;font-weight:700;letter-spacing:2px">MARCH 2026</span>
+            <button class="btn-ghost" style="padding:6px 12px"><i data-lucide="chevron-right" style="width:16px;height:16px"></i></button>
+          </div>
+          <!-- Day Headers -->
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:1px">
+            <div style="text-align:center;padding:8px;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--dim)">SUN</div>
+            <div style="text-align:center;padding:8px;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--dim)">MON</div>
+            <div style="text-align:center;padding:8px;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--dim)">TUE</div>
+            <div style="text-align:center;padding:8px;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--dim)">WED</div>
+            <div style="text-align:center;padding:8px;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--dim)">THU</div>
+            <div style="text-align:center;padding:8px;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--dim)">FRI</div>
+            <div style="text-align:center;padding:8px;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--dim)">SAT</div>
+          </div>
+          <!-- Calendar Grid (March 2026 starts on Sunday) -->
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px">
+            <!-- Row 1: Mar 1-7 -->
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">1</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">2</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">3</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">4</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">5</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">6</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">7</span><div style="margin-top:4px;padding:2px 6px;font-size:9px;font-weight:600;background:rgba(212,175,55,.15);color:var(--gold);border-left:2px solid var(--gold)">Cricket Trials</div></div>
+            <!-- Row 2: Mar 8-14 -->
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">8</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">9</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">10</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">11</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">12</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">13</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">14</span><div style="margin-top:4px;padding:2px 6px;font-size:9px;font-weight:600;background:rgba(244,67,54,.12);color:var(--red);border-left:2px solid var(--red)">Holi</div></div>
+            <!-- Row 3: Mar 15-21 -->
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">15</span><div style="margin-top:4px;padding:2px 6px;font-size:9px;font-weight:600;background:rgba(212,175,55,.15);color:var(--gold);border-left:2px solid var(--gold)">Corp Workshop</div></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">16</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">17</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">18</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">19</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">20</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">21</span></div>
+            <!-- Row 4: Mar 22-28 -->
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">22</span><div style="margin-top:4px;padding:2px 6px;font-size:9px;font-weight:600;background:rgba(128,0,255,.12);color:#B388FF;border-left:2px solid #B388FF">IPL Match</div></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">23</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">24</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">25</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">26</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">27</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">28</span><div style="margin-top:4px;padding:2px 6px;font-size:9px;font-weight:600;background:rgba(212,175,55,.15);color:var(--gold);border-left:2px solid var(--gold)">Team Building</div></div>
+            <!-- Row 5: Mar 29-31 -->
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">29</span><div style="margin-top:4px;padding:2px 6px;font-size:9px;font-weight:600;background:rgba(128,0,255,.12);color:#B388FF;border-left:2px solid #B388FF">IPL Match</div></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">30</span></div>
+            <div style="background:var(--surface);border:1px solid var(--border);min-height:80px;padding:8px"><span style="font-size:12px;font-weight:600">31</span></div>
+            <div style="background:var(--bg);min-height:80px;padding:8px"></div>
+            <div style="background:var(--bg);min-height:80px;padding:8px"></div>
+            <div style="background:var(--bg);min-height:80px;padding:8px"></div>
+            <div style="background:var(--bg);min-height:80px;padding:8px"></div>
+          </div>
+        </div>
+        <!-- Calendar Sidebar -->
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div class="panel">
+            <div class="panel-header"><span class="panel-title">CALENDAR SOURCES</span></div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <label style="display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);cursor:pointer"><input type="checkbox" checked style="accent-color:var(--gold)"><span style="width:8px;height:8px;border-radius:50%;background:var(--gold)"></span> TriCore Events</label>
+              <label style="display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);cursor:pointer"><input type="checkbox" checked style="accent-color:var(--red)"><span style="width:8px;height:8px;border-radius:50%;background:var(--red)"></span> Holidays</label>
+              <label style="display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);cursor:pointer"><input type="checkbox" checked style="accent-color:#B388FF"><span style="width:8px;height:8px;border-radius:50%;background:#B388FF"></span> IPL Schedule</label>
+            </div>
+            <button class="btn-ghost" style="width:100%;justify-content:center;margin-top:16px"><i data-lucide="refresh-cw" style="width:14px;height:14px"></i> Sync Now</button>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><span class="panel-title">UPCOMING</span></div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;gap:10px"><div style="width:3px;height:36px;background:var(--gold);flex-shrink:0"></div><div><div style="font-size:12px;font-weight:600">Cricket Trials</div><div style="font-size:10px;color:var(--dim)">Mar 7 · 9:00 AM</div></div></div>
+              <div style="display:flex;gap:10px"><div style="width:3px;height:36px;background:var(--red);flex-shrink:0"></div><div><div style="font-size:12px;font-weight:600">Holi</div><div style="font-size:10px;color:var(--dim)">Mar 14 · All day</div></div></div>
+              <div style="display:flex;gap:10px"><div style="width:3px;height:36px;background:var(--gold);flex-shrink:0"></div><div><div style="font-size:12px;font-weight:600">Corp Workshop</div><div style="font-size:10px;color:var(--dim)">Mar 15 · 10:00 AM</div></div></div>
+              <div style="display:flex;gap:10px"><div style="width:3px;height:36px;background:#B388FF;flex-shrink:0"></div><div><div style="font-size:12px;font-weight:600">IPL Match</div><div style="font-size:10px;color:var(--dim)">Mar 22 · 7:30 PM</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== PAYMENTS ========== -->
+<div id="s-payments" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav">
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:8px 12px 4px">OVERVIEW</div>
+    <div class="nav-item" data-nav="ceo-dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">CONTENT</div>
+    <div class="nav-item" data-nav="hero-editor"><i data-lucide="file-text"></i> Pages</div>
+    <div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div>
+    <div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">EVENTS</div>
+    <div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div>
+    <div class="nav-item" data-nav="calendar"><i data-lucide="calendar-days"></i> Calendar</div>
+    <div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">FINANCE</div>
+    <div class="nav-item active"><i data-lucide="credit-card"></i> Payments</div>
+    <div class="nav-item"><i data-lucide="file-text"></i> Invoices</div>
+    <div class="nav-item"><i data-lucide="trending-down"></i> Expenses</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">REPORTS</div>
+    <div class="nav-item"><i data-lucide="bar-chart-3"></i> Analytics</div>
+    <div class="nav-item"><i data-lucide="pie-chart"></i> Reports</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">SETTINGS</div>
+    <div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div>
+    <div class="nav-item" data-nav="users-roles"><i data-lucide="users"></i> Users &amp; Roles</div>
+    <div class="nav-item" data-nav="notif-settings"><i data-lucide="bell"></i> Notifications</div>
+    <div class="nav-item" data-nav="backup"><i data-lucide="database"></i> Backup</div>
+  </nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><span class="top-bar-title">Payments</span><div class="top-bar-actions"><button class="btn-ghost"><i data-lucide="download" style="width:14px;height:14px"></i> Export CSV</button></div></div>
+    <div class="content-area">
+      <!-- Stat Cards -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:28px">
+        <div class="stat-card"><div class="stat-card-label">RECEIVED</div><div class="stat-card-row"><span class="stat-card-value" style="color:var(--green)">₹1,98,000</span><i data-lucide="trending-up" class="stat-card-icon" style="width:24px;height:24px;color:rgba(76,175,80,.25)"></i></div></div>
+        <div class="stat-card"><div class="stat-card-label">PENDING</div><div class="stat-card-row"><span class="stat-card-value gold">₹28,500</span><i data-lucide="clock" class="stat-card-icon" style="width:24px;height:24px"></i></div></div>
+        <div class="stat-card"><div class="stat-card-label">REFUNDED</div><div class="stat-card-row"><span class="stat-card-value" style="color:var(--red)">₹8,000</span><i data-lucide="rotate-ccw" class="stat-card-icon" style="width:24px;height:24px;color:rgba(244,67,54,.25)"></i></div></div>
+      </div>
+      <!-- Payments Table -->
+      <table class="data-table"><thead><tr><th>ID</th><th>PARTICIPANT</th><th>EVENT</th><th>AMOUNT</th><th>STATUS</th><th>METHOD</th><th>DATE</th></tr></thead><tbody>
+        <tr><td style="font-size:12px;font-family:monospace;color:var(--dim)">#PAY-1024</td><td><strong>Amit Sharma</strong></td><td style="font-size:12px;color:var(--muted)">Cricket League S4</td><td style="font-weight:600">₹3,500</td><td><span class="status status-active">PAID</span></td><td style="font-size:12px;color:var(--muted)">UPI</td><td style="font-size:12px;color:var(--dim)">Mar 25, 2026</td></tr>
+        <tr><td style="font-size:12px;font-family:monospace;color:var(--dim)">#PAY-1023</td><td><strong>Priya Mehta</strong></td><td style="font-size:12px;color:var(--muted)">Corporate Champions</td><td style="font-weight:600">₹5,000</td><td><span class="status status-active">PAID</span></td><td style="font-size:12px;color:var(--muted)">Card</td><td style="font-size:12px;color:var(--dim)">Mar 24, 2026</td></tr>
+        <tr><td style="font-size:12px;font-family:monospace;color:var(--dim)">#PAY-1022</td><td><strong>Rajesh Kumar</strong></td><td style="font-size:12px;color:var(--muted)">Cricket League S4</td><td style="font-weight:600">₹2,500</td><td><span class="status" style="background:rgba(244,67,54,.1);color:var(--red)">REFUNDED</span></td><td style="font-size:12px;color:var(--muted)">UPI</td><td style="font-size:12px;color:var(--dim)">Mar 22, 2026</td></tr>
+        <tr><td style="font-size:12px;font-family:monospace;color:var(--dim)">#PAY-1021</td><td><strong>Sneha Iyer</strong></td><td style="font-size:12px;color:var(--muted)">Marathon 2026</td><td style="font-weight:600">₹1,500</td><td><span class="status status-upcoming">PENDING</span></td><td style="font-size:12px;color:var(--muted)">Net Banking</td><td style="font-size:12px;color:var(--dim)">Mar 21, 2026</td></tr>
+        <tr><td style="font-size:12px;font-family:monospace;color:var(--dim)">#PAY-1020</td><td><strong>Vikram Singh</strong></td><td style="font-size:12px;color:var(--muted)">Football League</td><td style="font-weight:600">₹4,000</td><td><span class="status status-active">PAID</span></td><td style="font-size:12px;color:var(--muted)">Card</td><td style="font-size:12px;color:var(--dim)">Mar 20, 2026</td></tr>
+      </tbody></table>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== NOTIFICATION SETTINGS ========== -->
+<div id="s-notif-settings" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav">
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:8px 12px 4px">OVERVIEW</div>
+    <div class="nav-item" data-nav="ceo-dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">CONTENT</div>
+    <div class="nav-item" data-nav="hero-editor"><i data-lucide="file-text"></i> Pages</div>
+    <div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div>
+    <div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">EVENTS</div>
+    <div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div>
+    <div class="nav-item" data-nav="calendar"><i data-lucide="calendar-days"></i> Calendar</div>
+    <div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">FINANCE</div>
+    <div class="nav-item" data-nav="payments"><i data-lucide="credit-card"></i> Payments</div>
+    <div class="nav-item"><i data-lucide="file-text"></i> Invoices</div>
+    <div class="nav-item"><i data-lucide="trending-down"></i> Expenses</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">REPORTS</div>
+    <div class="nav-item"><i data-lucide="bar-chart-3"></i> Analytics</div>
+    <div class="nav-item"><i data-lucide="pie-chart"></i> Reports</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">SETTINGS</div>
+    <div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div>
+    <div class="nav-item" data-nav="users-roles"><i data-lucide="users"></i> Users &amp; Roles</div>
+    <div class="nav-item active"><i data-lucide="bell"></i> Notifications</div>
+    <div class="nav-item" data-nav="backup"><i data-lucide="database"></i> Backup</div>
+  </nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><span class="top-bar-title">Notification Settings</span><div class="top-bar-actions"><button class="btn-gold">Save Changes</button></div></div>
+    <div class="content-area">
+      <!-- Channel Cards -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:32px">
+        <!-- Email -->
+        <div class="panel">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><span style="font-size:12px;font-weight:700;letter-spacing:2px">EMAIL</span><div class="toggle"></div></div>
+          <div class="form-group"><label class="form-label">PROVIDER</label><select class="form-input form-input-sm" style="appearance:auto"><option selected>SendGrid</option><option>Mailgun</option><option>AWS SES</option></select></div>
+          <div class="form-group"><label class="form-label">API KEY</label><input class="form-input form-input-sm" value="SG.xxxx••••••••xxxx" type="password"></div>
+          <div class="form-group"><label class="form-label">FROM ADDRESS</label><input class="form-input form-input-sm" value="noreply@tricoreevents.com"></div>
+          <button class="btn-ghost" style="width:100%;justify-content:center"><i data-lucide="send" style="width:14px;height:14px"></i> Send Test Email</button>
+        </div>
+        <!-- SMS -->
+        <div class="panel">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><span style="font-size:12px;font-weight:700;letter-spacing:2px">SMS</span><div class="toggle off"></div></div>
+          <div class="form-group"><label class="form-label">PROVIDER</label><select class="form-input form-input-sm" style="appearance:auto"><option selected>Twilio</option><option>MSG91</option><option>Nexmo</option></select></div>
+          <div class="form-group"><label class="form-label">ACCOUNT SID</label><input class="form-input form-input-sm" placeholder="Enter Twilio SID"></div>
+          <div class="form-group"><label class="form-label">AUTH TOKEN</label><input class="form-input form-input-sm" placeholder="Enter auth token" type="password"></div>
+          <button class="btn-ghost" style="width:100%;justify-content:center"><i data-lucide="send" style="width:14px;height:14px"></i> Send Test SMS</button>
+        </div>
+        <!-- WhatsApp -->
+        <div class="panel">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><span style="font-size:12px;font-weight:700;letter-spacing:2px">WHATSAPP</span><div class="toggle off"></div></div>
+          <div class="form-group"><label class="form-label">PROVIDER</label><select class="form-input form-input-sm" style="appearance:auto"><option selected>Meta Business</option><option>Twilio</option><option>Gupshup</option></select></div>
+          <div class="form-group"><label class="form-label">PHONE NUMBER ID</label><input class="form-input form-input-sm" placeholder="Enter phone number ID"></div>
+          <div class="form-group"><label class="form-label">ACCESS TOKEN</label><input class="form-input form-input-sm" placeholder="Enter access token" type="password"></div>
+          <button class="btn-ghost" style="width:100%;justify-content:center"><i data-lucide="send" style="width:14px;height:14px"></i> Send Test Message</button>
+        </div>
+      </div>
+      <!-- Triggers Matrix -->
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">NOTIFICATION TRIGGERS</span></div>
+        <table class="data-table"><thead><tr><th style="width:40%">TRIGGER</th><th style="text-align:center">EMAIL</th><th style="text-align:center">SMS</th><th style="text-align:center">WHATSAPP</th></tr></thead><tbody>
+          <tr><td style="font-size:13px">New Registration</td><td style="text-align:center"><span style="color:var(--green);font-size:16px">&#10003;</span></td><td style="text-align:center"><span style="color:var(--green);font-size:16px">&#10003;</span></td><td style="text-align:center"><span style="color:var(--green);font-size:16px">&#10003;</span></td></tr>
+          <tr><td style="font-size:13px">Payment Confirmation</td><td style="text-align:center"><span style="color:var(--green);font-size:16px">&#10003;</span></td><td style="text-align:center"><span style="color:var(--green);font-size:16px">&#10003;</span></td><td style="text-align:center"><span style="color:var(--dim);font-size:14px">—</span></td></tr>
+          <tr><td style="font-size:13px">Event Reminder (24h)</td><td style="text-align:center"><span style="color:var(--green);font-size:16px">&#10003;</span></td><td style="text-align:center"><span style="color:var(--dim);font-size:14px">—</span></td><td style="text-align:center"><span style="color:var(--green);font-size:16px">&#10003;</span></td></tr>
+          <tr><td style="font-size:13px">Registration Cancelled</td><td style="text-align:center"><span style="color:var(--green);font-size:16px">&#10003;</span></td><td style="text-align:center"><span style="color:var(--dim);font-size:14px">—</span></td><td style="text-align:center"><span style="color:var(--dim);font-size:14px">—</span></td></tr>
+          <tr><td style="font-size:13px">Refund Processed</td><td style="text-align:center"><span style="color:var(--green);font-size:16px">&#10003;</span></td><td style="text-align:center"><span style="color:var(--green);font-size:16px">&#10003;</span></td><td style="text-align:center"><span style="color:var(--dim);font-size:14px">—</span></td></tr>
+          <tr><td style="font-size:13px">Event Published</td><td style="text-align:center"><span style="color:var(--green);font-size:16px">&#10003;</span></td><td style="text-align:center"><span style="color:var(--dim);font-size:14px">—</span></td><td style="text-align:center"><span style="color:var(--green);font-size:16px">&#10003;</span></td></tr>
+          <tr><td style="font-size:13px">Capacity Warning (90%)</td><td style="text-align:center"><span style="color:var(--green);font-size:16px">&#10003;</span></td><td style="text-align:center"><span style="color:var(--dim);font-size:14px">—</span></td><td style="text-align:center"><span style="color:var(--dim);font-size:14px">—</span></td></tr>
+          <tr><td style="font-size:13px">Daily Summary Report</td><td style="text-align:center"><span style="color:var(--green);font-size:16px">&#10003;</span></td><td style="text-align:center"><span style="color:var(--dim);font-size:14px">—</span></td><td style="text-align:center"><span style="color:var(--dim);font-size:14px">—</span></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== BACKUP & MAINTENANCE ========== -->
+<div id="s-backup" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav">
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:8px 12px 4px">OVERVIEW</div>
+    <div class="nav-item" data-nav="ceo-dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">CONTENT</div>
+    <div class="nav-item" data-nav="hero-editor"><i data-lucide="file-text"></i> Pages</div>
+    <div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div>
+    <div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">EVENTS</div>
+    <div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div>
+    <div class="nav-item" data-nav="calendar"><i data-lucide="calendar-days"></i> Calendar</div>
+    <div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">FINANCE</div>
+    <div class="nav-item" data-nav="payments"><i data-lucide="credit-card"></i> Payments</div>
+    <div class="nav-item"><i data-lucide="file-text"></i> Invoices</div>
+    <div class="nav-item"><i data-lucide="trending-down"></i> Expenses</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">REPORTS</div>
+    <div class="nav-item"><i data-lucide="bar-chart-3"></i> Analytics</div>
+    <div class="nav-item"><i data-lucide="pie-chart"></i> Reports</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">SETTINGS</div>
+    <div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div>
+    <div class="nav-item" data-nav="users-roles"><i data-lucide="users"></i> Users &amp; Roles</div>
+    <div class="nav-item" data-nav="notif-settings"><i data-lucide="bell"></i> Notifications</div>
+    <div class="nav-item active"><i data-lucide="database"></i> Backup</div>
+  </nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><span class="top-bar-title">Backup &amp; Maintenance</span><div class="top-bar-actions"><button class="btn-gold"><i data-lucide="database" style="width:14px;height:14px"></i> Backup Now</button></div></div>
+    <div class="content-area">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px">
+        <!-- Manual Backup -->
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">MANUAL BACKUP</span></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--card);border:1px solid var(--border-light);margin-bottom:16px">
+            <i data-lucide="check-circle" style="width:20px;height:20px;color:var(--green)"></i>
+            <div><div style="font-size:13px;font-weight:600">Last Backup: Mar 27, 2026 at 02:00 AM</div><div style="font-size:11px;color:var(--dim)">Size: 124 MB · Duration: 45s · Status: Success</div></div>
+          </div>
+          <button class="btn-gold" style="width:100%;justify-content:center"><i data-lucide="download" style="width:14px;height:14px"></i> Create Manual Backup</button>
+        </div>
+        <!-- Automatic Backup -->
+        <div class="panel">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><span class="panel-title">AUTOMATIC BACKUP</span><div class="toggle"></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+            <div class="form-group"><label class="form-label">FREQUENCY</label><select class="form-input form-input-sm" style="appearance:auto"><option selected>Daily</option><option>Weekly</option><option>Monthly</option></select></div>
+            <div class="form-group"><label class="form-label">TIME</label><select class="form-input form-input-sm" style="appearance:auto"><option selected>02:00 AM</option><option>04:00 AM</option><option>06:00 AM</option></select></div>
+            <div class="form-group"><label class="form-label">RETENTION</label><select class="form-input form-input-sm" style="appearance:auto"><option>7 days</option><option selected>14 days</option><option>30 days</option><option>90 days</option></select></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px">
+        <!-- Email Recipients -->
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">EMAIL RECIPIENTS</span><button class="add-item" style="margin:0"><i data-lucide="plus" style="width:12px;height:12px"></i> Add</button></div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted)">admin@tricoreevents.com <i data-lucide="x" style="width:12px;height:12px;color:var(--dim);cursor:pointer"></i></span>
+            <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted)">ceo@tricoreevents.com <i data-lucide="x" style="width:12px;height:12px;color:var(--dim);cursor:pointer"></i></span>
+            <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted)">devops@tricoreevents.com <i data-lucide="x" style="width:12px;height:12px;color:var(--dim);cursor:pointer"></i></span>
+          </div>
+        </div>
+        <!-- Backup Options -->
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">BACKUP OPTIONS</span></div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:var(--muted)">Include media uploads</span><div class="toggle"></div></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:var(--muted)">Encrypt backup files</span><div class="toggle"></div></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:var(--muted)">Compress (gzip)</span><div class="toggle"></div></div>
+          </div>
+        </div>
+      </div>
+      <!-- Backup History -->
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">BACKUP HISTORY</span></div>
+        <table class="data-table"><thead><tr><th>DATE</th><th>TYPE</th><th>SIZE</th><th>DURATION</th><th>STATUS</th><th>ACTIONS</th></tr></thead><tbody>
+          <tr><td style="font-size:12px">Mar 27, 2026 02:00 AM</td><td style="font-size:12px;color:var(--muted)">Automatic</td><td style="font-size:12px">124 MB</td><td style="font-size:12px;color:var(--dim)">45s</td><td><span class="status status-active">SUCCESS</span></td><td><button class="table-btn"><i data-lucide="download" style="width:14px;height:14px"></i></button></td></tr>
+          <tr><td style="font-size:12px">Mar 26, 2026 02:00 AM</td><td style="font-size:12px;color:var(--muted)">Automatic</td><td style="font-size:12px">122 MB</td><td style="font-size:12px;color:var(--dim)">42s</td><td><span class="status status-active">SUCCESS</span></td><td><button class="table-btn"><i data-lucide="download" style="width:14px;height:14px"></i></button></td></tr>
+          <tr><td style="font-size:12px">Mar 25, 2026 02:00 AM</td><td style="font-size:12px;color:var(--muted)">Automatic</td><td style="font-size:12px">121 MB</td><td style="font-size:12px;color:var(--dim)">44s</td><td><span class="status status-active">SUCCESS</span></td><td><button class="table-btn"><i data-lucide="download" style="width:14px;height:14px"></i></button></td></tr>
+          <tr><td style="font-size:12px">Mar 24, 2026 03:15 PM</td><td style="font-size:12px;color:var(--muted)">Manual</td><td style="font-size:12px">120 MB</td><td style="font-size:12px;color:var(--dim)">38s</td><td><span class="status status-active">SUCCESS</span></td><td><button class="table-btn"><i data-lucide="download" style="width:14px;height:14px"></i></button></td></tr>
+          <tr><td style="font-size:12px">Mar 23, 2026 02:00 AM</td><td style="font-size:12px;color:var(--muted)">Automatic</td><td style="font-size:12px">—</td><td style="font-size:12px;color:var(--dim)">—</td><td><span class="status" style="background:rgba(244,67,54,.1);color:var(--red)">FAILED</span></td><td><button class="table-btn"><i data-lucide="refresh-cw" style="width:14px;height:14px"></i></button></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </main>
+</div></div>
+
+<!-- ========== USERS & ROLES ========== -->
+<div id="s-users-roles" class="screen"><div class="admin-layout">
+  <aside class="sidebar"><div class="sidebar-logo"><div class="logo-mark"><svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><polygon points="7,0 14,12 0,12"/></svg></div><span class="sidebar-logo-text">TRICORE</span><span class="sidebar-logo-tag">ADMIN</span></div><div class="sidebar-divider"></div><nav class="sidebar-nav">
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:8px 12px 4px">OVERVIEW</div>
+    <div class="nav-item" data-nav="ceo-dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">CONTENT</div>
+    <div class="nav-item" data-nav="hero-editor"><i data-lucide="file-text"></i> Pages</div>
+    <div class="nav-item" data-nav="testimonials"><i data-lucide="message-square"></i> Testimonials</div>
+    <div class="nav-item" data-nav="media"><i data-lucide="image"></i> Media Library</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">EVENTS</div>
+    <div class="nav-item" data-nav="events"><i data-lucide="calendar"></i> Events</div>
+    <div class="nav-item" data-nav="calendar"><i data-lucide="calendar-days"></i> Calendar</div>
+    <div class="nav-item" data-nav="registrations"><i data-lucide="clipboard-list"></i> Registrations</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">FINANCE</div>
+    <div class="nav-item" data-nav="payments"><i data-lucide="credit-card"></i> Payments</div>
+    <div class="nav-item"><i data-lucide="file-text"></i> Invoices</div>
+    <div class="nav-item"><i data-lucide="trending-down"></i> Expenses</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">REPORTS</div>
+    <div class="nav-item"><i data-lucide="bar-chart-3"></i> Analytics</div>
+    <div class="nav-item"><i data-lucide="pie-chart"></i> Reports</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);padding:12px 12px 4px">SETTINGS</div>
+    <div class="nav-item" data-nav="settings"><i data-lucide="settings"></i> Site Settings</div>
+    <div class="nav-item active"><i data-lucide="users"></i> Users &amp; Roles</div>
+    <div class="nav-item" data-nav="notif-settings"><i data-lucide="bell"></i> Notifications</div>
+    <div class="nav-item" data-nav="backup"><i data-lucide="database"></i> Backup</div>
+  </nav><div class="sidebar-footer"><div class="sidebar-avatar"><i data-lucide="user"></i></div><div><div class="sidebar-user-name">Admin User</div><div class="sidebar-user-role">Administrator</div></div></div></aside>
+  <main class="main-content"><div class="top-bar"><span class="top-bar-title">Users &amp; Roles</span><div class="top-bar-actions"><button class="btn-gold"><i data-lucide="user-plus" style="width:14px;height:14px"></i> Invite User</button></div></div>
+    <div class="content-area">
+      <!-- Role Cards -->
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-bottom:28px">
+        <div style="background:var(--surface);border:1px solid var(--border);padding:20px;text-align:center"><div style="font-size:28px;font-weight:800;color:var(--gold);margin-bottom:4px">1</div><div style="font-size:10px;font-weight:600;letter-spacing:2px;color:var(--muted)">ADMIN</div></div>
+        <div style="background:var(--surface);border:1px solid var(--border);padding:20px;text-align:center"><div style="font-size:28px;font-weight:800;margin-bottom:4px">3</div><div style="font-size:10px;font-weight:600;letter-spacing:2px;color:var(--muted)">EVENT MGR</div></div>
+        <div style="background:var(--surface);border:1px solid var(--border);padding:20px;text-align:center"><div style="font-size:28px;font-weight:800;margin-bottom:4px">2</div><div style="font-size:10px;font-weight:600;letter-spacing:2px;color:var(--muted)">SPORTS COORD</div></div>
+        <div style="background:var(--surface);border:1px solid var(--border);padding:20px;text-align:center"><div style="font-size:28px;font-weight:800;margin-bottom:4px">2</div><div style="font-size:10px;font-weight:600;letter-spacing:2px;color:var(--muted)">REG MGR</div></div>
+        <div style="background:var(--surface);border:1px solid var(--border);padding:20px;text-align:center"><div style="font-size:28px;font-weight:800;margin-bottom:4px">1</div><div style="font-size:10px;font-weight:600;letter-spacing:2px;color:var(--muted)">FINANCE</div></div>
+        <div style="background:var(--surface);border:1px solid var(--border);padding:20px;text-align:center"><div style="font-size:28px;font-weight:800;margin-bottom:4px">2</div><div style="font-size:10px;font-weight:600;letter-spacing:2px;color:var(--muted)">CONTENT ED</div></div>
+      </div>
+      <!-- Users Table -->
+      <table class="data-table"><thead><tr><th>NAME</th><th>EMAIL</th><th>ROLE</th><th>ASSIGNED EVENTS</th><th>STATUS</th><th>ACTIONS</th></tr></thead><tbody>
+        <tr><td><strong>Rahul Kapoor</strong></td><td style="font-size:12px;color:var(--muted)">rahul@tricoreevents.com</td><td><span class="status status-upcoming">ADMIN</span></td><td style="font-size:12px;color:var(--muted)">All Events</td><td><span class="status status-active">ACTIVE</span></td><td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td></tr>
+        <tr><td><strong>Anita Desai</strong></td><td style="font-size:12px;color:var(--muted)">anita@tricoreevents.com</td><td><span class="status status-completed">EVENT MGR</span></td><td style="font-size:12px;color:var(--muted)">Cricket League, Marathon</td><td><span class="status status-active">ACTIVE</span></td><td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td></tr>
+        <tr><td><strong>Vikram Patel</strong></td><td style="font-size:12px;color:var(--muted)">vikram@tricoreevents.com</td><td><span class="status" style="background:rgba(76,175,80,.1);color:var(--green)">SPORTS COORD</span></td><td style="font-size:12px;color:var(--muted)">Cricket League, Football</td><td><span class="status status-active">ACTIVE</span></td><td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td></tr>
+        <tr><td><strong>Meera Joshi</strong></td><td style="font-size:12px;color:var(--muted)">meera@tricoreevents.com</td><td><span class="status status-completed">EVENT MGR</span></td><td style="font-size:12px;color:var(--muted)">Corporate Champions</td><td><span class="status status-active">ACTIVE</span></td><td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td></tr>
+        <tr><td><strong>Sanjay Rao</strong></td><td style="font-size:12px;color:var(--muted)">sanjay@tricoreevents.com</td><td><span class="status" style="background:rgba(255,255,255,.05);color:var(--dim)">FINANCE</span></td><td style="font-size:12px;color:var(--muted)">All Events</td><td><span class="status status-draft">INVITED</span></td><td><div style="display:flex;gap:8px"><button class="table-btn"><i data-lucide="pencil" style="width:14px;height:14px"></i></button><button class="table-btn"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button></div></td></tr>
+      </tbody></table>
+    </div>
+  </main>
+</div></div>
+
+<script>
+  function show(name) {
+    document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+    var el = document.getElementById('s-' + name);
+    if (el) el.classList.add('active');
+    document.querySelectorAll('.sn-item').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.screen === name);
+    });
+    // Update toggle label
+    var activeBtn = document.querySelector('.sn-item.active');
+    if (activeBtn) {
+      document.getElementById('navToggle').textContent = activeBtn.textContent.trim() + ' ▾';
+    }
+    lucide.createIcons();
+  }
+
+  // Toggle nav panel
+  document.getElementById('navToggle').addEventListener('click', function() {
+    document.getElementById('screenNav').classList.toggle('open');
+  });
+
+  document.addEventListener('click', function(e) {
+    // Screen nav dropdown items
+    var snItem = e.target.closest('.sn-item[data-screen]');
+    if (snItem) {
+      show(snItem.dataset.screen);
+      document.getElementById('screenNav').classList.remove('open');
+      return;
+    }
+    // Sidebar nav items
+    var navTarget = e.target.closest('[data-nav]');
+    if (navTarget) {
+      show(navTarget.dataset.nav);
+      return;
+    }
+    // Settings tabs
+    var tabBtn = e.target.closest('[data-tab]');
+    if (tabBtn) {
+      tabBtn.parentElement.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+      tabBtn.classList.add('active');
+      var panels = tabBtn.closest('.content-area').querySelectorAll('.tab-panel');
+      panels.forEach(function(p) { p.classList.remove('active'); });
+      var panel = document.getElementById('tab-' + tabBtn.dataset.tab);
+      if (panel) panel.classList.add('active');
+      lucide.createIcons();
+      return;
+    }
+    // Toggle switches
+    var toggle = e.target.closest('.toggle');
+    if (toggle) {
+      toggle.classList.toggle('off');
+      return;
+    }
+    // Field chips (on/off)
+    var fieldChip = e.target.closest('.field-chip');
+    if (fieldChip) {
+      fieldChip.classList.toggle('on');
+      fieldChip.classList.toggle('off');
+      return;
+    }
+    // Filter chips
+    var chip = e.target.closest('.chip');
+    if (chip) {
+      chip.parentElement.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('active'); });
+      chip.classList.add('active');
+      return;
+    }
+    // Approve buttons
+    var approveBtn = e.target.closest('.btn-approve');
+    if (approveBtn) {
+      alert('Registration approved');
+      return;
+    }
+    // Reject buttons
+    var rejectBtn = e.target.closest('.btn-reject');
+    if (rejectBtn) {
+      alert('Registration rejected');
+      return;
+    }
+    // Edit buttons in tables → go to form editors
+    var tableBtn = e.target.closest('.table-btn');
+    if (tableBtn) {
+      var icon = tableBtn.querySelector('[data-lucide]');
+      if (icon) {
+        var iconName = icon.getAttribute('data-lucide');
+        if (iconName === 'pencil') {
+          // Determine if we're in events or testimonials
+          var inEvents = tableBtn.closest('#s-events');
+          var inTestimonials = tableBtn.closest('#s-testimonials');
+          if (inEvents || inTestimonials) {
+            show('form-editors');
+          }
+        } else if (iconName === 'trash-2') {
+          tableBtn.closest('tr').style.opacity = '0.3';
+          tableBtn.closest('tr').style.textDecoration = 'line-through';
+        }
+      }
+      return;
+    }
+    // Remove buttons — hide parent row
+    var removeBtn = e.target.closest('.remove-btn');
+    if (removeBtn) {
+      var parentRow = removeBtn.closest('.stat-editor-row, .nav-editor-row, .footer-link-row, [style*="display:grid"], [style*="display:flex"]');
+      if (parentRow) parentRow.style.display = 'none';
+      return;
+    }
+    // Add buttons
+    var addItem = e.target.closest('.add-item, .add-section');
+    if (addItem) {
+      alert('This would add a new item in the real app');
+      return;
+    }
+    // Upload zones
+    var uploadZone = e.target.closest('.upload-zone');
+    if (uploadZone) {
+      alert('File upload dialog would open here');
+      return;
+    }
+    // Create Event / Add Testimonial buttons AND Save buttons
+    var goldBtn = e.target.closest('.btn-gold');
+    if (goldBtn) {
+      var btnText = goldBtn.textContent.trim().toLowerCase();
+      if (btnText.indexOf('create event') !== -1 || btnText.indexOf('add testimonial') !== -1) {
+        show('form-editors');
+        return;
+      }
+      if (btnText.indexOf('save') !== -1) {
+        var originalText = goldBtn.textContent;
+        goldBtn.textContent = 'Saved!';
+        setTimeout(function() { goldBtn.textContent = originalText; }, 1000);
+        return;
+      }
+    }
+    // Preview buttons
+    var previewBtn = e.target.closest('.btn-ghost');
+    if (previewBtn && previewBtn.textContent.trim().toLowerCase().indexOf('preview') !== -1) {
+      alert('Preview would open in new tab');
+      return;
+    }
+    // Editor close X icons
+    var closeX = e.target.closest('.editor-header [data-lucide="x"]');
+    if (closeX) {
+      show('hero-editor');
+      return;
+    }
+    // Close nav dropdown when clicking outside
+    if (!e.target.closest('.screen-nav')) {
+      document.getElementById('screenNav').classList.remove('open');
+    }
+  });
+
+  lucide.createIcons();
+</script>
+</body>
+</html>
