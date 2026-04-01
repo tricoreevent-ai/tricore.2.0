@@ -24,6 +24,21 @@ export default function GoogleLoginButton() {
     );
   }
 
+  if (!googleAuthConfig.shouldRenderButton) {
+    return (
+      <div>
+        <button className="btn-secondary cursor-not-allowed opacity-70" disabled type="button">
+          Google Sign-In Unavailable
+        </button>
+        <p className="mt-2 max-w-md text-xs text-red-600">
+          Google sign-in is disabled on this temporary Hostinger preview domain. Add{' '}
+          <strong>{googleAuthConfig.currentOrigin}</strong> to Google OAuth Authorized JavaScript
+          origins and `VITE_GOOGLE_ALLOWED_ORIGINS`, or use the final production domain instead.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className={authenticating ? 'pointer-events-none opacity-60' : ''}>
       <GoogleLogin

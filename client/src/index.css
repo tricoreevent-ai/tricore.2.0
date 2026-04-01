@@ -427,8 +427,26 @@
 
   .public-marketing-shell {
     position: relative;
+    isolation: isolate;
     background-color: var(--public-bg);
     color: var(--public-text);
+  }
+
+  .public-marketing-shell > header,
+  .public-marketing-shell > main,
+  .public-marketing-shell > footer {
+    position: relative;
+    z-index: 1;
+  }
+
+  .public-marketing-shell a,
+  .public-marketing-shell button,
+  .public-marketing-shell input,
+  .public-marketing-shell textarea,
+  .public-marketing-shell select,
+  .public-marketing-shell label {
+    pointer-events: auto;
+    touch-action: manipulation;
   }
 
   .public-panel {

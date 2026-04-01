@@ -123,11 +123,11 @@ export default function HomeBannerCarousel({ banners, expertiseItems, trustIndic
 
   return (
     <section className="relative overflow-hidden border-b border-[rgba(212,175,55,0.12)]">
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,#0a0a0a_0%,#0a0a0acc_35%,#0a0a0a_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,#0a0a0a_0%,#0a0a0acc_35%,#0a0a0a_100%)]" />
       {currentBanner.imageUrl ? (
         <img
           alt={currentBanner.imageAlt || currentBanner.title || 'TriCore banner'}
-          className="absolute inset-0 h-full w-full object-cover opacity-30"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-30"
           decoding="async"
           fetchPriority="high"
           loading="eager"
@@ -135,11 +135,11 @@ export default function HomeBannerCarousel({ banners, expertiseItems, trustIndic
           src={currentBanner.imageUrl}
         />
       ) : null}
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,10,0.95)_0%,rgba(10,10,10,0.4)_40%,rgba(10,10,10,0.92)_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,10,0.95)_0%,rgba(10,10,10,0.4)_40%,rgba(10,10,10,0.92)_100%)]" />
       <div className="pointer-events-none absolute -right-24 top-12 h-64 w-64 border border-[rgba(212,175,55,0.15)] opacity-40" />
       <div className="pointer-events-none absolute bottom-20 left-10 h-16 w-16 rounded-full border border-[rgba(212,175,55,0.15)] opacity-50" />
 
-      <div className="container-shell relative z-10 grid gap-12 py-20 lg:min-h-[46rem] lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:py-24">
+      <div className="container-shell pointer-events-auto relative z-10 grid gap-12 py-20 lg:min-h-[46rem] lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:py-24">
         <div>
           <div className="flex flex-wrap items-center gap-3">
             {currentBanner.badge ? <span className="public-chip-neutral">{currentBanner.badge}</span> : null}

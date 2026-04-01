@@ -41,6 +41,7 @@ const parseClientIdMap = (value) => {
 };
 
 const isIpv4Address = (value) => /^\d{1,3}(\.\d{1,3}){3}$/.test(value || '');
+const isHostingerPreviewHostname = (value) => /\.hostingersite\.com$/i.test(String(value || '').trim());
 
 const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
 const currentHostname = typeof window !== 'undefined' ? window.location.hostname : '';
@@ -61,6 +62,11 @@ const currentHostScopedClientId =
 
 const resolvedClientId =
   clientIdByOrigin[currentOrigin] || currentHostScopedClientId || defaultClientId;
+const hasExplicitOriginConfiguration =
+  Boolean(clientIdByOrigin[currentOrigin]) || configuredOrigins.includes(currentOrigin);
+const isPreviewOrigin = isHostingerPreviewHostname(currentHostname);
+const requiresExplicitPreviewOriginSetup =
+  isPreviewOrigin && Boolean(resolvedClientId) && !hasExplicitOriginConfiguration;
 
 const allowedOrigins = Array.from(
   new Set(
@@ -78,6 +84,10 @@ export const googleAuthConfig = {
   clientId: resolvedClientId,
   currentHostname,
   currentOrigin,
+  hasExplicitOriginConfiguration,
   hasClientId: Boolean(resolvedClientId),
-  isLanOrigin: isIpv4Address(currentHostname)
+  isLanOrigin: isIpv4Address(currentHostname),
+  isPreviewOrigin,
+  requiresExplicitPreviewOriginSetup,
+  shouldRenderButton: Boolean(resolvedClientId) && !requiresExplicitPreviewOriginSetup
 };
