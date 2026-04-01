@@ -6,6 +6,9 @@ import { getEventById } from '../../api/eventsApi.js';
 import { getPublicPaymentSettings } from '../../api/publicSettingsApi.js';
 import FormAlert from '../../components/common/FormAlert.jsx';
 import LoadingSpinner from '../../components/common/LoadingSpinner.jsx';
+import SeoMetadata from '../../components/common/SeoMetadata.jsx';
+import { contactContent } from '../../data/siteContent.js';
+import { EVENT_PAYMENT_PAGE_SEO_KEYWORDS, mergeSeoKeywords } from '../../seo/publicSeo.js';
 import { getApiErrorMessage } from '../../utils/apiErrors.js';
 import { formatCurrency } from '../../utils/formatters.js';
 import {
@@ -21,6 +24,11 @@ const readFileAsDataUrl = (file) =>
     reader.readAsDataURL(file);
   });
 
+const normalizeBaseUrl = (value) =>
+  String(value || '')
+    .trim()
+    .replace(/\/+$/, '');
+
 export default function EventPaymentPage() {
   const { eventId } = useParams();
   const navigate = useNavigate();
@@ -34,6 +42,11 @@ export default function EventPaymentPage() {
   const [receiptFileName, setReceiptFileName] = useState('');
   const [receiptDataUrl, setReceiptDataUrl] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const baseUrl = normalizeBaseUrl(
+    contactContent.website ||
+      (typeof window !== 'undefined' ? window.location.origin : 'https://www.tricoreevents.online')
+  );
+  const canonicalUrl = `${baseUrl}/events/${eventId}/payment`;
 
   useEffect(() => {
     const loadPage = async () => {
@@ -85,6 +98,26 @@ export default function EventPaymentPage() {
 
     return items;
   }, [paymentSettings]);
+  const seoKeywords = useMemo(
+    () => mergeSeoKeywords(EVENT_PAYMENT_PAGE_SEO_KEYWORDS, [event?.name]),
+    [event]
+  );
+  const seoTitle = event?.name
+    ? `Payment for ${event.name} | TriCore Events Bangalore`
+    : 'Event Payment | TriCore Events Bangalore';
+  const seoDescription = event?.name
+    ? `Complete payment and upload proof for ${event.name}, a TriCore Bangalore event registration.`
+    : 'Complete payment and upload proof for your TriCore Bangalore event registration.';
+  const seoMetadata = (
+    <SeoMetadata
+      canonicalUrl={canonicalUrl}
+      description={seoDescription}
+      keywords={seoKeywords}
+      robots="noindex,nofollow"
+      title={seoTitle}
+      url={canonicalUrl}
+    />
+  );
 
   const handleReceiptChange = async (eventValue) => {
     const file = eventValue.target.files?.[0];
@@ -147,73 +180,83 @@ export default function EventPaymentPage() {
   };
 
   if (loading) {
-    return <LoadingSpinner label="Loading payment options..." />;
+    return (
+      <>
+        {seoMetadata}
+        <LoadingSpinner label="Loading payment options..." />
+      </>
+    );
   }
 
   if (!event) {
     return (
-      <div className="container-shell py-16">
-        <div className="panel p-8 text-center">
-          <h1 className="text-3xl font-bold">Payment screen unavailable</h1>
+      <>
+        {seoMetadata}
+        <div className="container-shell py-16">
+          <div className="panel p-8 text-center">
+            <h1 className="text-3xl font-bold">Payment screen unavailable</h1>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="container-shell py-6 sm:py-10">
-      <div className="mx-auto max-w-6xl space-y-6 sm:space-y-8">
-        <div className="panel overflow-hidden">
-          <div className="bg-gradient-to-br from-brand-blue via-brand-navy to-sky-500 p-5 text-white sm:p-8">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-100">
-              Payment Workflow
-            </p>
-            <h1 className="mt-3 text-3xl font-bold sm:text-4xl">Complete Payment for {event.name}</h1>
-            <p className="mt-4 max-w-3xl text-sm leading-7 text-blue-100 sm:text-base">
-              Your registration details are saved. Use any configured payment method below,
-              then upload the payment screenshot for admin confirmation.
-            </p>
-          </div>
-          <div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-6 xl:grid-cols-3">
-            <div className="rounded-3xl bg-slate-50 p-5">
-              <p className="text-sm font-semibold text-slate-500">Team / Registrant</p>
-              <p className="mt-2 text-lg font-bold text-slate-950">
-                {draft?.teamName || draft?.name || 'Draft registration'}
+    <>
+      {seoMetadata}
+      <div className="container-shell py-6 sm:py-10">
+        <div className="mx-auto max-w-6xl space-y-6 sm:space-y-8">
+          <div className="panel overflow-hidden">
+            <div className="bg-gradient-to-br from-brand-blue via-brand-navy to-sky-500 p-5 text-white sm:p-8">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-100">
+                Payment Workflow
+              </p>
+              <h1 className="mt-3 text-3xl font-bold sm:text-4xl">Complete Payment for {event.name}</h1>
+              <p className="mt-4 max-w-3xl text-sm leading-7 text-blue-100 sm:text-base">
+                Your registration details are saved. Use any configured payment method below,
+                then upload the payment screenshot for admin confirmation.
               </p>
             </div>
-            <div className="rounded-3xl bg-slate-50 p-5">
-              <p className="text-sm font-semibold text-slate-500">Entry Fee</p>
-              <p className="mt-2 text-lg font-bold text-slate-950">{formatCurrency(event.entryFee)}</p>
-            </div>
-            <div className="rounded-3xl bg-slate-50 p-5">
-              <p className="text-sm font-semibold text-slate-500">Available Methods</p>
-              <p className="mt-2 text-lg font-bold text-slate-950">{paymentMethods.length}</p>
-            </div>
-          </div>
-        </div>
-
-        <FormAlert message={error} />
-        <FormAlert message={success} type="success" />
-
-        {!draft ? (
-          <div className="panel p-6">
-            <p className="text-sm text-slate-600">
-              No registration draft was found for this event. Go back to the event page, add players,
-              and continue again.
-            </p>
-            <Link className="btn-secondary mt-4 inline-flex w-full sm:w-auto" to={`/events/${eventId}`}>
-              Back to Event
-            </Link>
-          </div>
-        ) : (
-          <div className="grid gap-8 xl:grid-cols-[1.1fr_0.9fr]">
-            <section className="panel space-y-6 p-4 sm:p-6">
-              <div>
-                <h2 className="text-2xl font-bold">Configured Payment Methods</h2>
-                <p className="mt-2 text-sm text-slate-500">
-                  Only the methods enabled in admin settings are shown here.
+            <div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-6 xl:grid-cols-3">
+              <div className="rounded-3xl bg-slate-50 p-5">
+                <p className="text-sm font-semibold text-slate-500">Team / Registrant</p>
+                <p className="mt-2 text-lg font-bold text-slate-950">
+                  {draft?.teamName || draft?.name || 'Draft registration'}
                 </p>
               </div>
+              <div className="rounded-3xl bg-slate-50 p-5">
+                <p className="text-sm font-semibold text-slate-500">Entry Fee</p>
+                <p className="mt-2 text-lg font-bold text-slate-950">{formatCurrency(event.entryFee)}</p>
+              </div>
+              <div className="rounded-3xl bg-slate-50 p-5">
+                <p className="text-sm font-semibold text-slate-500">Available Methods</p>
+                <p className="mt-2 text-lg font-bold text-slate-950">{paymentMethods.length}</p>
+              </div>
+            </div>
+          </div>
+
+          <FormAlert message={error} />
+          <FormAlert message={success} type="success" />
+
+          {!draft ? (
+            <div className="panel p-6">
+              <p className="text-sm text-slate-600">
+                No registration draft was found for this event. Go back to the event page, add players,
+                and continue again.
+              </p>
+              <Link className="btn-secondary mt-4 inline-flex w-full sm:w-auto" to={`/events/${eventId}`}>
+                Back to Event
+              </Link>
+            </div>
+          ) : (
+            <div className="grid gap-8 xl:grid-cols-[1.1fr_0.9fr]">
+              <section className="panel space-y-6 p-4 sm:p-6">
+                <div>
+                  <h2 className="text-2xl font-bold">Configured Payment Methods</h2>
+                  <p className="mt-2 text-sm text-slate-500">
+                    Only the methods enabled in admin settings are shown here.
+                  </p>
+                </div>
 
               {paymentMethods.includes('qr') ? (
                 <div className="rounded-3xl bg-slate-50 p-5">
@@ -284,7 +327,7 @@ export default function EventPaymentPage() {
               ) : null}
             </section>
 
-            <form className="panel space-y-6 p-4 sm:p-6" onSubmit={handleSubmit}>
+              <form className="panel space-y-6 p-4 sm:p-6" onSubmit={handleSubmit}>
               <div>
                 <h2 className="text-2xl font-bold">Upload Payment Proof</h2>
                 <p className="mt-2 text-sm text-slate-500">
@@ -348,10 +391,11 @@ export default function EventPaymentPage() {
                   Back to Event
                 </Link>
               </div>
-            </form>
-          </div>
-        )}
+              </form>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

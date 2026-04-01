@@ -5,6 +5,17 @@ import WhatsAppFloatingButton from '../common/WhatsAppFloatingButton.jsx';
 import Footer from './Footer.jsx';
 import Navbar from './Navbar.jsx';
 import { contactContent } from '../../data/siteContent.js';
+import {
+  ABOUT_PAGE_SEO_KEYWORDS,
+  CONTACT_PAGE_SEO_KEYWORDS,
+  CORPORATE_EVENTS_SEO_KEYWORDS,
+  EVENT_DETAIL_PAGE_SEO_KEYWORDS,
+  EVENT_PAYMENT_PAGE_SEO_KEYWORDS,
+  EVENTS_PAGE_SEO_KEYWORDS,
+  FALLBACK_PAGE_SEO_KEYWORDS,
+  HOME_PAGE_SEO_KEYWORDS,
+  SPONSORSHIP_PAGE_SEO_KEYWORDS
+} from '../../seo/publicSeo.js';
 
 const normalizeBaseUrl = (value) =>
   String(value || '')
@@ -12,9 +23,10 @@ const normalizeBaseUrl = (value) =>
     .replace(/\/+$/, '');
 
 const HOME_SEO = {
-  title: 'TriCore Events - Corporate Events, Sports Tournaments, and Cricket Experiences',
+  title: 'TriCore Events Bangalore - Corporate Events, Sports Tournaments, and Cricket Experiences',
   description:
-    'TriCore Events is backed by partners with 20+ years of collective experience across corporate events, sports tournaments, registrations, scheduling, and on-ground execution.'
+    'TriCore Events is a Bangalore-based event management team backed by partners with 20+ years of collective experience across corporate events, sports tournaments, registrations, scheduling, and on-ground execution.',
+  keywords: HOME_PAGE_SEO_KEYWORDS
 };
 
 export default function MainLayout() {
@@ -33,57 +45,64 @@ export default function MainLayout() {
 
     if (pathname === '/about') {
       return {
-        title: 'About TriCore Events | Corporate Sports and Cricket Event Experience',
+        title: 'About TriCore Events Bangalore | Corporate Sports Event Partner',
         description:
-          'Learn how TriCore Events pairs a new brand with partner-led experience across sports tournaments, corporate gatherings, and people-first event operations.'
+          'Learn how TriCore Events pairs a new Bangalore-based brand with partner-led experience across sports tournaments, corporate gatherings, and people-first event operations.',
+        keywords: ABOUT_PAGE_SEO_KEYWORDS
       };
     }
 
     if (pathname === '/corporate-events') {
       return {
-        title: 'Corporate Events & Experiences | TriCore Events',
+        title: 'Corporate Events in Bangalore | TriCore Events',
         description:
-          'Explore TriCore corporate event services backed by partner experience in conferences, team building programs, strategic offsites, AGMs, employee engagement events, and launches.'
+          'Explore TriCore Bangalore corporate event services backed by partner experience in conferences, team building programs, strategic offsites, AGMs, employee engagement events, and launches.',
+        keywords: CORPORATE_EVENTS_SEO_KEYWORDS
       };
     }
 
     if (pathname === '/events') {
       return {
-        title: 'Upcoming Sports and Cricket Events | TriCore Events',
+        title: 'Upcoming Sports and Cricket Events in Bangalore | TriCore Events',
         description:
-          'Browse upcoming TriCore sports tournaments, cricket events, registration windows, venues, entry fees, and schedules across corporate and community competitions.'
+          'Browse upcoming Bangalore TriCore sports tournaments, cricket events, registration windows, venues, entry fees, and schedules across corporate and community competitions.',
+        keywords: EVENTS_PAGE_SEO_KEYWORDS
       };
     }
 
     if (pathname.startsWith('/events/') && pathname.endsWith('/payment')) {
       return {
-        title: 'Event Payment | TriCore Events',
-        description: 'Secure payment and proof upload for TriCore event registrations.',
+        title: 'Event Payment | TriCore Events Bangalore',
+        description: 'Secure payment and proof upload for TriCore Bangalore event registrations.',
+        keywords: EVENT_PAYMENT_PAGE_SEO_KEYWORDS,
         robots: 'noindex,nofollow'
       };
     }
 
     if (pathname.startsWith('/events/')) {
       return {
-        title: 'Event Details | TriCore Events',
+        title: 'Event Details in Bangalore | TriCore Events',
         description:
-          'View TriCore event details, registration deadlines, venue information, payment instructions, and participation guidance for the selected tournament.'
+          'View TriCore Bangalore event details, registration deadlines, venue information, payment instructions, and participation guidance for the selected tournament.',
+        keywords: EVENT_DETAIL_PAGE_SEO_KEYWORDS
       };
     }
 
     if (pathname === '/contact') {
       return {
-        title: 'Contact TriCore Events | Corporate Sports Tournament Planning',
+        title: 'Contact TriCore Events Bangalore | Corporate Sports Tournament Planning',
         description:
-          'Contact TriCore Events for partner-led corporate event planning, sports tournaments, sponsorship enquiries, and quick WhatsApp support.'
+          'Contact TriCore Events in Bangalore for partner-led corporate event planning, sports tournaments, sponsorship enquiries, and quick WhatsApp support.',
+        keywords: CONTACT_PAGE_SEO_KEYWORDS
       };
     }
 
     if (pathname === '/partner-access') {
       return {
-        title: 'Sports Event Sponsorships | TriCore Events',
+        title: 'Sports Event Sponsorships in Bangalore | TriCore Events',
         description:
-          'Explore sponsorship opportunities with TriCore Events and connect your brand with corporate sports tournaments, cricket audiences, and community participation.'
+          'Explore sponsorship opportunities with TriCore Events in Bangalore and connect your brand with corporate sports tournaments, cricket audiences, and community participation.',
+        keywords: SPONSORSHIP_PAGE_SEO_KEYWORDS
       };
     }
 
@@ -91,13 +110,15 @@ export default function MainLayout() {
       return {
         title: 'User Dashboard | TriCore Events',
         description: 'Registered user dashboard for TriCore Events.',
+        keywords: FALLBACK_PAGE_SEO_KEYWORDS,
         robots: 'noindex,nofollow'
       };
     }
 
     return {
       title: 'TriCore Events',
-      description: 'Corporate sports tournament management, registrations, schedules, and event operations.'
+      description: 'Bangalore corporate sports tournament management, registrations, schedules, and event operations.',
+      keywords: FALLBACK_PAGE_SEO_KEYWORDS
     };
   })();
 
@@ -112,6 +133,7 @@ export default function MainLayout() {
       <SeoMetadata
         canonicalUrl={canonicalUrl}
         description={pageSeo.description}
+        keywords={pageSeo.keywords}
         robots={pageSeo.robots}
         title={pageSeo.title}
         url={canonicalUrl}

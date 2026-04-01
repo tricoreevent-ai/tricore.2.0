@@ -3,21 +3,15 @@ import { Link } from 'react-router-dom';
 import AppIcon from '../../components/common/AppIcon.jsx';
 import SeoMetadata from '../../components/common/SeoMetadata.jsx';
 import { contactContent, corporateEventsContent } from '../../data/siteContent.js';
+import {
+  BANGALORE_LOCATION_LABEL,
+  CORPORATE_EVENTS_SEO_KEYWORDS
+} from '../../seo/publicSeo.js';
 import { getTelephoneHref, getWhatsAppHref } from '../../utils/contactLinks.js';
 
-const DEFAULT_SEO_TITLE = 'Corporate Events & Experiences | TriCore Events';
+const DEFAULT_SEO_TITLE = 'Corporate Events in Bangalore | TriCore Events';
 const DEFAULT_SEO_DESCRIPTION =
-  'TriCore Events plans meetings, conferences, team-building programs, strategic offsites, AGMs, employee engagement events, and product launches with partner-led execution.';
-const DEFAULT_SEO_KEYWORDS = [
-  'corporate event management',
-  'corporate conferences',
-  'team building programs',
-  'strategic offsites',
-  'employee engagement events',
-  'product launches',
-  'brand activations',
-  'TriCore Events'
-];
+  'TriCore Events plans Bangalore meetings, conferences, team-building programs, strategic offsites, AGMs, employee engagement events, and product launches with partner-led execution.';
 
 const normalizeBaseUrl = (value) =>
   String(value || '')
@@ -30,14 +24,16 @@ const buildStructuredData = ({ baseUrl, phone }) => [
     '@type': 'Service',
     name: 'Corporate Events & Experiences',
     description: DEFAULT_SEO_DESCRIPTION,
-    areaServed: 'IN',
+    areaServed: BANGALORE_LOCATION_LABEL,
+    serviceArea: BANGALORE_LOCATION_LABEL,
     url: `${baseUrl}/corporate-events`,
     provider: {
       '@type': 'Organization',
       name: 'TriCore Events',
       url: `${baseUrl}/`,
       email: contactContent.email,
-      telephone: phone || undefined
+      telephone: phone || undefined,
+      areaServed: BANGALORE_LOCATION_LABEL
     }
   },
   {
@@ -78,7 +74,7 @@ export default function CorporateEventsPage() {
       <SeoMetadata
         canonicalUrl={canonicalUrl}
         description={DEFAULT_SEO_DESCRIPTION}
-        keywords={DEFAULT_SEO_KEYWORDS}
+        keywords={CORPORATE_EVENTS_SEO_KEYWORDS}
         structuredData={buildStructuredData({ baseUrl, phone: primaryPhone })}
         title={DEFAULT_SEO_TITLE}
         url={canonicalUrl}

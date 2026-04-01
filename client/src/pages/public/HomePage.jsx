@@ -24,24 +24,15 @@ import {
   isVisiblePublicEvent,
   sortPublicUpcomingEvents
 } from '../../utils/eventTimeline.js';
+import {
+  BANGALORE_LOCATION_LABEL,
+  HOME_PAGE_SEO_KEYWORDS
+} from '../../seo/publicSeo.js';
 
 const DEFAULT_SEO_TITLE =
-  'TriCore Events - Corporate Events, Sports Tournaments, and Cricket Experiences';
+  'TriCore Events Bangalore - Corporate Events, Sports Tournaments, and Cricket Experiences';
 const DEFAULT_SEO_DESCRIPTION =
-  'TriCore Events is backed by partners with 20+ years of collective experience across sports tournaments, corporate events, registrations, scheduling, and on-ground execution.';
-const DEFAULT_SEO_KEYWORDS = [
-  'corporate events',
-  'corporate experiences',
-  'corporate sports tournaments',
-  'corporate cricket events',
-  'cricket tournament management',
-  'sports event management',
-  'event registrations',
-  'tournament schedules',
-  'sports payments',
-  'corporate event quote',
-  'TriCore Events'
-];
+  'TriCore Events is a Bangalore-based event management team backed by partners with 20+ years of collective experience across sports tournaments, corporate events, registrations, scheduling, and on-ground execution.';
 
 const normalizeBaseUrl = (value) =>
   String(value || '')
@@ -82,7 +73,7 @@ const buildHomePageStructuredData = ({ baseUrl, events, imageUrl }) => {
       contactType: 'customer support',
       name: partner.name,
       telephone: phone,
-      areaServed: 'IN',
+      areaServed: BANGALORE_LOCATION_LABEL,
       availableLanguage: ['en']
     }))
   );
@@ -95,14 +86,16 @@ const buildHomePageStructuredData = ({ baseUrl, events, imageUrl }) => {
       logo: buildAbsoluteUrl('/tricore-logo.png', baseUrl),
       email: contactContent.email,
       description: DEFAULT_SEO_DESCRIPTION,
-      areaServed: 'IN',
+      areaServed: BANGALORE_LOCATION_LABEL,
       contactPoint: contactPoints,
       knowsAbout: [
-        'Corporate sports tournament management',
+        'Bangalore corporate sports tournament management',
         'Corporate cricket events',
         'Sports registrations',
         'Tournament scheduling',
-        'Tournament accounting'
+        'Tournament accounting',
+        'Bangalore corporate events',
+        'Bangalore sports event management'
       ]
     },
     {
@@ -147,7 +140,13 @@ const buildHomePageStructuredData = ({ baseUrl, events, imageUrl }) => {
         : 'https://schema.org/EventCompleted',
       location: {
         '@type': 'Place',
-        name: event.venue || 'Venue to be announced'
+        name: event.venue || 'Venue to be announced',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Bangalore',
+          addressRegion: 'Karnataka',
+          addressCountry: 'IN'
+        }
       },
       organizer: { '@id': organizationId },
       url: eventUrl,
@@ -286,7 +285,7 @@ export default function HomePage() {
         canonicalUrl={`${siteBaseUrl}/`}
         description={DEFAULT_SEO_DESCRIPTION}
         image={seoImageUrl}
-        keywords={DEFAULT_SEO_KEYWORDS}
+        keywords={HOME_PAGE_SEO_KEYWORDS}
         structuredData={structuredData}
         title={DEFAULT_SEO_TITLE}
         url={`${siteBaseUrl}/`}

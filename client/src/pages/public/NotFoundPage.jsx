@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 import SeoMetadata from '../../components/common/SeoMetadata.jsx';
 import { contactContent } from '../../data/siteContent.js';
+import { FALLBACK_PAGE_SEO_KEYWORDS } from '../../seo/publicSeo.js';
 import { getWhatsAppHref } from '../../utils/contactLinks.js';
 
 const normalizeBaseUrl = (value) =>
@@ -20,7 +21,8 @@ export default function NotFoundPage() {
     <div className="public-theme min-h-screen bg-[#0a0a0a] px-3 py-16 sm:px-6">
       <SeoMetadata
         canonicalUrl={`${baseUrl}/404`}
-        description="The requested TriCore page could not be found. Explore events, corporate services, or contact the team for help."
+        description="The requested TriCore Bangalore events page could not be found. Explore events, corporate services, or contact the team for help."
+        keywords={FALLBACK_PAGE_SEO_KEYWORDS}
         robots="noindex,nofollow"
         title="Page Not Found | TriCore Events"
       />
