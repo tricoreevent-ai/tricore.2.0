@@ -40,6 +40,47 @@ const registrationStatusLabels = {
   closed: 'Registration Closed'
 };
 
+function MobileUpcomingEventCard({ event }) {
+  const registrationStatus = getPublicEventRegistrationStatus(event);
+
+  return (
+    <article className="public-panel-soft p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-base font-extrabold text-white">{event.name}</p>
+          <p className="mt-1 text-sm text-[#a0a0a0]">
+            {event.sportType} • {formatDate(event.startDate)}
+          </p>
+        </div>
+        <span
+          className={`inline-flex items-center border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${
+            registrationStatusClasses[registrationStatus] || registrationStatusClasses.closed
+          }`}
+        >
+          {registrationStatusLabels[registrationStatus] || registrationStatusLabels.closed}
+        </span>
+      </div>
+
+      <div className="mt-4 grid gap-3 text-sm text-[#a0a0a0]">
+        <p>
+          <span className="font-semibold text-white">Venue:</span> {event.venue || 'Venue to be announced'}
+        </p>
+        <p>
+          <span className="font-semibold text-white">Entry Fee:</span> {formatCurrency(event.entryFee)}
+        </p>
+      </div>
+
+      <Link
+        className="public-btn-primary mt-4 w-full"
+        state={{ eventPreview: event }}
+        to={`/events/${event._id}`}
+      >
+        {registrationStatus === 'coming_soon' ? 'Open Notify View' : 'View Event'}
+      </Link>
+    </article>
+  );
+}
+
 export default function EventsPage() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,9 +97,14 @@ export default function EventsPage() {
     () => sortEventsByStartDate(publicEvents),
     [publicEvents]
   );
+  const mobileUpcomingEvents = useMemo(() => upcomingEvents.slice(0, 2), [upcomingEvents]);
+  const mobileCalendarInitialSelectedDate = useMemo(
+    () => upcomingEvents[0]?.startDate || mobileCalendarEvents[0]?.startDate || new Date(),
+    [mobileCalendarEvents, upcomingEvents]
+  );
   const mobileCalendarInitialMonth = useMemo(
-    () => mobileCalendarEvents[0]?.startDate || new Date(),
-    [mobileCalendarEvents]
+    () => mobileCalendarInitialSelectedDate,
+    [mobileCalendarInitialSelectedDate]
   );
 
   useEffect(() => {
@@ -125,6 +171,7 @@ export default function EventsPage() {
                 registrationDotClasses[getPublicEventRegistrationStatus(event)] || 'bg-brand-blue'
               }
               getItemId={(event) => event._id}
+              initialSelectedDate={mobileCalendarInitialSelectedDate}
               initialMonth={mobileCalendarInitialMonth}
               items={mobileCalendarEvents}
               renderSelectedItem={(event) => {
@@ -179,9 +226,34 @@ export default function EventsPage() {
                   </article>
                 );
               }}
-              subtitle="Android-style month view for mobile. Tap a date to see only the registration details for that day."
+              showDayMonthTokens={false}
+              showSelectionHeader={false}
               title="Event Calendar"
             />
+
+            <div className="mt-5 space-y-3">
+              <div className="flex items-end justify-between gap-3">
+                <div>
+                  <p className="public-label">Coming Up</p>
+                  <h2 className="public-title-card mt-3 text-[1.55rem]">Next events</h2>
+                </div>
+                <span className="badge bg-[rgba(255,255,255,0.08)] text-white">
+                  {mobileUpcomingEvents.length} event{mobileUpcomingEvents.length === 1 ? '' : 's'}
+                </span>
+              </div>
+
+              {mobileUpcomingEvents.length ? (
+                mobileUpcomingEvents.map((event) => (
+                  <MobileUpcomingEventCard event={event} key={event._id} />
+                ))
+              ) : (
+                <div className="public-panel p-5">
+                  <p className="public-copy-small">
+                    No upcoming events match this sport filter right now.
+                  </p>
+                </div>
+              )}
+            </div>
           </section>
 
           <section className="hidden md:block">

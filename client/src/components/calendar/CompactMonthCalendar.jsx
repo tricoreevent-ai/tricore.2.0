@@ -36,6 +36,15 @@ const getMonthToken = (value) =>
     month: 'short'
   });
 
+const normalizeDate = (value) => {
+  if (!value) {
+    return null;
+  }
+
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
 const startOfDay = (value) => {
   const date = new Date(value);
   date.setHours(0, 0, 0, 0);
@@ -77,7 +86,42 @@ const itemOverlapsDay = (item, day) => {
 const isSameMonth = (left, right) =>
   left.getFullYear() === right.getFullYear() && left.getMonth() === right.getMonth();
 
-const getDefaultSelectedDate = (monthDate) => {
+const getFirstScheduledDateInMonth = (monthDate, items = []) => {
+  const monthStart = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
+  const monthEnd = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
+  const today = startOfDay(new Date());
+  const scheduledDates = items
+    .map((item) => {
+      if (!item?.startDate) {
+        return null;
+      }
+
+      const itemStart = startOfDay(item.startDate);
+      const itemEnd = endOfDay(item.endDate || item.startDate);
+
+      if (itemEnd < startOfDay(monthStart) || itemStart > endOfDay(monthEnd)) {
+        return null;
+      }
+
+      return itemStart < monthStart ? monthStart : itemStart;
+    })
+    .filter(Boolean)
+    .sort((left, right) => left.getTime() - right.getTime());
+
+  return scheduledDates.find((date) => date >= today) || scheduledDates[0] || null;
+};
+
+const getDefaultSelectedDate = (monthDate, items = [], preferredDate) => {
+  if (preferredDate && isSameMonth(preferredDate, monthDate)) {
+    return startOfDay(preferredDate);
+  }
+
+  const scheduledDate = getFirstScheduledDateInMonth(monthDate, items);
+
+  if (scheduledDate) {
+    return scheduledDate;
+  }
+
   const today = new Date();
   return isSameMonth(today, monthDate)
     ? startOfDay(today)
@@ -89,22 +133,32 @@ export default function CompactMonthCalendar({
   emptyDayMessage = 'No items scheduled on this date.',
   getItemDotClass = () => 'bg-brand-blue',
   getItemId,
+  initialSelectedDate,
   initialMonth,
   items = [],
   renderSelectedItem,
+  showDayMonthTokens = true,
+  showSelectionHeader = true,
   subtitle = '',
   title = 'Month View'
 }) {
-  const [calendarMonth, setCalendarMonth] = useState(() => normalizeMonth(initialMonth));
+  const normalizedInitialMonth = normalizeMonth(initialMonth);
+  const normalizedInitialSelectedDate = normalizeDate(initialSelectedDate);
+  const [calendarMonth, setCalendarMonth] = useState(() => normalizedInitialMonth);
   const [selectedDateKey, setSelectedDateKey] = useState(() =>
-    dateKey(getDefaultSelectedDate(normalizeMonth(initialMonth)))
+    dateKey(getDefaultSelectedDate(normalizedInitialMonth, items, normalizedInitialSelectedDate))
   );
 
   useEffect(() => {
     const nextMonth = normalizeMonth(initialMonth);
+    const nextSelectedDate = getDefaultSelectedDate(
+      nextMonth,
+      items,
+      normalizeDate(initialSelectedDate)
+    );
     setCalendarMonth(nextMonth);
-    setSelectedDateKey(dateKey(getDefaultSelectedDate(nextMonth)));
-  }, [initialMonth]);
+    setSelectedDateKey(dateKey(nextSelectedDate));
+  }, [initialMonth, initialSelectedDate, items]);
 
   const calendarDays = useMemo(() => buildCalendarDays(calendarMonth), [calendarMonth]);
   const monthLabel = useMemo(
@@ -124,7 +178,7 @@ export default function CompactMonthCalendar({
   const moveMonth = (offset) => {
     const nextMonth = shiftMonth(calendarMonth, offset);
     setCalendarMonth(nextMonth);
-    setSelectedDateKey(dateKey(getDefaultSelectedDate(nextMonth)));
+    setSelectedDateKey(dateKey(getDefaultSelectedDate(nextMonth, items)));
   };
 
   const handleDaySelect = (day) => {
@@ -209,17 +263,19 @@ export default function CompactMonthCalendar({
                 >
                   {day.getDate()}
                 </span>
-                <span
-                  className={`text-[9px] font-semibold uppercase tracking-[0.12em] ${
-                    isSelected
-                      ? 'text-brand-blue/80'
-                      : isCurrentMonth
-                        ? 'text-slate-400'
-                        : 'text-slate-300'
-                  }`.trim()}
-                >
-                  {getMonthToken(day)}
-                </span>
+                {showDayMonthTokens ? (
+                  <span
+                    className={`text-[9px] font-semibold uppercase tracking-[0.12em] ${
+                      isSelected
+                        ? 'text-brand-blue/80'
+                        : isCurrentMonth
+                          ? 'text-slate-400'
+                          : 'text-slate-300'
+                    }`.trim()}
+                  >
+                    {getMonthToken(day)}
+                  </span>
+                ) : null}
               </span>
               <span className="absolute bottom-2 left-1/2 flex -translate-x-1/2 items-center gap-1">
                 {dayItems.slice(0, 3).map((item) => (
@@ -238,25 +294,27 @@ export default function CompactMonthCalendar({
       </div>
 
       <div className="mt-5">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-orange">
-              Selected Date
-            </p>
-            <h3 className="mt-1 text-lg font-bold text-slate-950">
-              {selectedDate.toLocaleString('en-IN', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-              })}
-            </h3>
+        {showSelectionHeader ? (
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-orange">
+                Selected Date
+              </p>
+              <h3 className="mt-1 text-lg font-bold text-slate-950">
+                {selectedDate.toLocaleString('en-IN', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric'
+                })}
+              </h3>
+            </div>
+            <span className="badge bg-slate-100 text-slate-700">
+              {selectedItems.length} item{selectedItems.length === 1 ? '' : 's'}
+            </span>
           </div>
-          <span className="badge bg-slate-100 text-slate-700">
-            {selectedItems.length} item{selectedItems.length === 1 ? '' : 's'}
-          </span>
-        </div>
+        ) : null}
 
-        <div className="mt-4 space-y-3">
+        <div className={`${showSelectionHeader ? 'mt-4' : ''} space-y-3`.trim()}>
           {selectedItems.length ? (
             selectedItems.map((item) => (
               <div key={getItemId(item)}>{renderSelectedItem(item)}</div>
