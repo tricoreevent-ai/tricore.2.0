@@ -39,6 +39,17 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
+    build: {
+      cssCodeSplit: false,
+      rollupOptions: {
+        output: {
+          entryFileNames: 'assets/index.js',
+          assetFileNames: (assetInfo) =>
+            assetInfo.name?.endsWith('.css') ? 'assets/index.css' : 'assets/[name][extname]',
+          chunkFileNames: 'assets/chunks/[name]-[hash].js'
+        }
+      }
+    },
     server: {
       host: true,
       port: 5173,

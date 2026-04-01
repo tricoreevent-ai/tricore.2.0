@@ -83,6 +83,12 @@ if (env.nodeEnv === 'production' && hasClientBuild) {
       return next();
     }
 
+    // Do not send index.html for missing built assets; that breaks module/css loading on
+    // platforms with stale HTML caches by returning HTML to asset requests.
+    if (req.path.startsWith('/assets/') || path.extname(req.path)) {
+      return next();
+    }
+
     res.sendFile(path.join(clientDistPath, 'index.html'));
   });
 }
