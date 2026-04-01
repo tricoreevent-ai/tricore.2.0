@@ -92,7 +92,7 @@ const buildHomePageStructuredData = ({ baseUrl, events, imageUrl }) => {
       '@id': organizationId,
       name: 'TriCore Events',
       url: `${baseUrl}/`,
-      logo: buildAbsoluteUrl('/tricore-mark.svg', baseUrl),
+      logo: buildAbsoluteUrl('/tricore-logo.png', baseUrl),
       email: contactContent.email,
       description: DEFAULT_SEO_DESCRIPTION,
       areaServed: 'IN',
@@ -271,7 +271,7 @@ export default function HomePage() {
     const candidateImage =
       displayBanners.find((banner) => banner?.imageUrl)?.imageUrl ||
       events.find((event) => event?.bannerImage)?.bannerImage ||
-      '/tricore-mark.svg';
+      '/tricore-logo.png';
 
     return buildAbsoluteUrl(candidateImage, siteBaseUrl);
   }, [displayBanners, events, siteBaseUrl]);

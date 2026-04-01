@@ -5,6 +5,8 @@ export const INVOICE_SETTINGS_KEY = 'invoice-settings';
 
 const DEFAULT_TEMPLATE_STYLE = 'modern';
 const ALLOWED_TEMPLATE_STYLES = new Set(['modern', 'classic', 'executive']);
+const DEFAULT_COMPANY_LOGO_URL = '/tricore-logo.png';
+const LEGACY_COMPANY_LOGO_URL = '/tricore-mark.svg';
 const DEFAULT_TERMS = [
   'Payment is due on or before the due date stated on this document unless otherwise agreed in writing by TriCore Events.',
   'Amounts paid for confirmed event allocations, sponsorship inventory, or completed services are non-refundable except where TriCore approves a documented exception.',
@@ -16,7 +18,7 @@ const DEFAULT_INVOICE_SETTINGS = {
   companyName: 'TriCore Events',
   companyEmail: 'contact@tricoreevents.online',
   companyWebsite: 'https://www.tricoreevents.online/',
-  companyLogoUrl: '/tricore-mark.svg',
+  companyLogoUrl: DEFAULT_COMPANY_LOGO_URL,
   invoicePrefix: 'TRI',
   invoiceNumberFormat: '{PREFIX}-{YYYY}-{SEQ4}',
   nextSequenceNumber: 1,
@@ -55,11 +57,18 @@ const normalizeTemplateStyle = (value) => {
   return ALLOWED_TEMPLATE_STYLES.has(normalized) ? normalized : DEFAULT_TEMPLATE_STYLE;
 };
 
+const normalizeCompanyLogoUrl = (value) => {
+  const normalized = normalizeText(value);
+  return !normalized || normalized === LEGACY_COMPANY_LOGO_URL
+    ? DEFAULT_INVOICE_SETTINGS.companyLogoUrl
+    : normalized;
+};
+
 const normalizeInvoiceSettingsValue = (value = {}) => ({
   companyName: normalizeText(value.companyName) || DEFAULT_INVOICE_SETTINGS.companyName,
   companyEmail: normalizeText(value.companyEmail) || DEFAULT_INVOICE_SETTINGS.companyEmail,
   companyWebsite: normalizeText(value.companyWebsite) || DEFAULT_INVOICE_SETTINGS.companyWebsite,
-  companyLogoUrl: normalizeText(value.companyLogoUrl) || DEFAULT_INVOICE_SETTINGS.companyLogoUrl,
+  companyLogoUrl: normalizeCompanyLogoUrl(value.companyLogoUrl),
   invoicePrefix: normalizeText(value.invoicePrefix).slice(0, 20) || DEFAULT_INVOICE_SETTINGS.invoicePrefix,
   invoiceNumberFormat: normalizeInvoiceNumberFormat(value.invoiceNumberFormat),
   nextSequenceNumber: normalizePositiveInteger(
@@ -156,8 +165,7 @@ export const ensureInvoiceSettingDocument = async () => {
         $set: {
           value: {
             ...normalizedExisting,
-            companyLogoUrl:
-              normalizeText(existing.value?.companyLogoUrl) || DEFAULT_INVOICE_SETTINGS.companyLogoUrl
+            companyLogoUrl: normalizeCompanyLogoUrl(existing.value?.companyLogoUrl)
           }
         }
       },
@@ -177,8 +185,7 @@ export const serializeInvoiceSettings = (settingDocument) => {
 
   return {
     ...normalized,
-    companyLogoUrl:
-      normalizeText(settingDocument?.value?.companyLogoUrl) || DEFAULT_INVOICE_SETTINGS.companyLogoUrl,
+    companyLogoUrl: normalizeCompanyLogoUrl(settingDocument?.value?.companyLogoUrl),
     previewDocumentNumber: formatInvoiceDocumentNumber({
       issueDate: new Date(),
       sequence: previewSequence,
@@ -198,7 +205,7 @@ export const updateInvoiceSettings = async ({ payload, userId }) => {
   const existingValue = normalizeInvoiceSettingsValue(existing?.value || DEFAULT_INVOICE_SETTINGS);
   const nextLogoUrl =
     payload.companyLogoUrl === undefined
-      ? normalizeText(existing?.value?.companyLogoUrl) || DEFAULT_INVOICE_SETTINGS.companyLogoUrl
+      ? normalizeCompanyLogoUrl(existing?.value?.companyLogoUrl)
       : await persistImageReference(payload.companyLogoUrl, {
           folder: 'branding',
           filenamePrefix: 'invoice-logo'
@@ -216,8 +223,7 @@ export const updateInvoiceSettings = async ({ payload, userId }) => {
         key: INVOICE_SETTINGS_KEY,
         value: {
           ...nextValue,
-          companyLogoUrl:
-            normalizeText(nextValue.companyLogoUrl) || DEFAULT_INVOICE_SETTINGS.companyLogoUrl,
+          companyLogoUrl: normalizeCompanyLogoUrl(nextValue.companyLogoUrl),
           nextSequenceNumber: existingValue.nextSequenceNumber
         },
         updatedBy: userId

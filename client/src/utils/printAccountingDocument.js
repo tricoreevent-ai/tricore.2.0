@@ -8,11 +8,14 @@ const DEFAULT_FOOTER_TERMS = [
   "This document and any related commercial arrangement are governed by the applicable laws and jurisdiction connected to TriCore Events' operating entity in India."
 ];
 
+const DEFAULT_COMPANY_LOGO_URL = '/tricore-logo.png';
+const LEGACY_COMPANY_LOGO_URL = '/tricore-mark.svg';
+
 const DEFAULT_INVOICE_CONFIG = {
   companyName: 'TriCore Events',
   companyEmail: contactContent.email,
   companyWebsite: contactContent.website,
-  companyLogoUrl: '/tricore-mark.svg',
+  companyLogoUrl: DEFAULT_COMPANY_LOGO_URL,
   defaultTaxLabel: 'GST',
   paymentTermsLabel: 'Due within 15 days from invoice date.',
   footerNotes: 'Sarva Horizon is the Event Partner.',
@@ -83,20 +86,22 @@ const addDaysToDateValue = (value, days = 0) => {
 
 const resolveAssetUrl = (value) => {
   const normalized = String(value || '').trim();
+  const normalizedLogoUrl =
+    !normalized || normalized === LEGACY_COMPANY_LOGO_URL ? DEFAULT_COMPANY_LOGO_URL : normalized;
 
-  if (!normalized || typeof window === 'undefined') {
-    return normalized;
+  if (!normalizedLogoUrl || typeof window === 'undefined') {
+    return normalizedLogoUrl;
   }
 
-  if (/^(https?:|data:)/i.test(normalized)) {
-    return normalized;
+  if (/^(https?:|data:)/i.test(normalizedLogoUrl)) {
+    return normalizedLogoUrl;
   }
 
-  if (normalized.startsWith('/')) {
-    return `${window.location.origin}${normalized}`;
+  if (normalizedLogoUrl.startsWith('/')) {
+    return `${window.location.origin}${normalizedLogoUrl}`;
   }
 
-  return normalized;
+  return normalizedLogoUrl;
 };
 
 const buildEffectiveInvoiceConfig = (invoiceConfig = {}) => ({

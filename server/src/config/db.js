@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+﻿import mongoose from 'mongoose';
 
 import { env } from './env.js';
 
@@ -158,11 +158,20 @@ export const isMongoConnectivityError = (error) => {
       'MongoServerSelectionError',
       'MongoNetworkError',
       'MongoNetworkTimeoutError',
-      'MongoTopologyClosedError'
+      'MongoTopologyClosedError',
+      'MongoAPIError'
     ].includes(error?.name) ||
+    ['ECONNREFUSED', 'ECONNRESET', 'ENOTFOUND', 'EAI_AGAIN', 'ETIMEDOUT'].includes(error?.code) ||
     /Could not connect to any servers/i.test(message) ||
     /SSL routines/i.test(message) ||
     /tlsv1 alert/i.test(message) ||
+    /querySrv\s+ENOTFOUND/i.test(message) ||
+    /getaddrinfo\s+ENOTFOUND/i.test(message) ||
+    /EAI_AGAIN/i.test(message) ||
+    /ENOTFOUND/i.test(message) ||
+    /_mongodb\._tcp/i.test(message) ||
+    /server selection timed out/i.test(message) ||
+    /connection timed out/i.test(message) ||
     /topology was destroyed/i.test(message) ||
     /connection .* closed/i.test(message) ||
     /before initial connection is complete/i.test(message) ||
@@ -246,3 +255,4 @@ export const connectDB = async () => {
   registerConnectionListeners();
   await recoverDbConnection({ forceReconnect: mongoose.connection.readyState !== 0 });
 };
+

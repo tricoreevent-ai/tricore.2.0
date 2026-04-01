@@ -17,8 +17,8 @@ input,textarea,button,select{font-family:var(--font);outline:none}
 /* Sidebar */
 .sidebar{background:var(--bg-alt);border-right:1px solid var(--border);padding:24px 0;display:flex;flex-direction:column}
 .sidebar-logo{display:flex;align-items:center;gap:8px;padding:0 24px 24px}
-.logo-mark{width:28px;height:28px;background:linear-gradient(180deg,#D4AF37,#B8962E);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.logo-mark svg{color:var(--bg)}
+.logo-mark{width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:center/cover no-repeat url('../assets/tricore-logo.png');border-radius:10px;overflow:hidden;box-shadow:0 12px 28px rgba(15,95,219,.22),0 12px 28px rgba(249,115,22,.18)}
+.logo-mark svg{display:none}
 .sidebar-logo-text{font-size:16px;font-weight:800;letter-spacing:3px}
 .sidebar-logo-tag{font-size:9px;font-weight:600;letter-spacing:2px;color:var(--gold)}
 .sidebar-divider{height:1px;background:var(--border)}

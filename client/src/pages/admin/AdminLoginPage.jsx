@@ -1,9 +1,10 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import AppIcon from '../../components/common/AppIcon.jsx';
 import TriCoreLogo from '../../components/common/TriCoreLogo.jsx';
 import useAdminAuth from '../../hooks/useAdminAuth.js';
+import { getAdminLoginErrorMessage } from '../../utils/apiErrors.js';
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
@@ -22,18 +23,19 @@ export default function AdminLoginPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const normalizedUsername = form.username.trim();
+
+    if (!normalizedUsername || !form.password) {
+      setError('Enter your admin username and password to continue.');
+      return;
+    }
 
     try {
       setError('');
-      await login(form.username, form.password);
+      await login(normalizedUsername, form.password);
       navigate(location.state?.from?.pathname || '/admin-portal', { replace: true });
     } catch (loginError) {
-      const fallbackMessage =
-        !loginError.response && typeof window !== 'undefined'
-          ? `Admin login failed. Cannot reach the server from this device. Try ${window.location.origin}/api/health first.`
-          : 'Admin login failed.';
-
-      setError(loginError.response?.data?.message || fallbackMessage);
+      setError(getAdminLoginErrorMessage(loginError));
     }
   };
 
@@ -111,7 +113,10 @@ export default function AdminLoginPage() {
                   />
                 </div>
                 {error ? (
-                  <p className="border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+                  <p
+                    className="border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-300"
+                    role="alert"
+                  >
                     {error}
                   </p>
                 ) : null}

@@ -1,5 +1,13 @@
+const TRICORE_LOGO_SRC = '/tricore-logo.png';
+
 export function TriCoreMark({ className = 'h-12 w-12' }) {
-  return <img alt="TriCore Events logo" className={className} src="/tricore-mark.svg" />;
+  return (
+    <img
+      alt="TriCore Events logo"
+      className={`${className} shrink-0 object-contain`}
+      src={TRICORE_LOGO_SRC}
+    />
+  );
 }
 
 export default function TriCoreLogo({

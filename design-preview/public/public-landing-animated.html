@@ -83,13 +83,17 @@
     .logo-mark {
       width: 36px;
       height: 36px;
-      background: linear-gradient(180deg, #D4AF37, #B8962E);
       display: flex;
       align-items: center;
       justify-content: center;
+      background: center / cover no-repeat url('../assets/tricore-logo.png');
+      border-radius: 10px;
+      flex-shrink: 0;
+      overflow: hidden;
+      box-shadow: 0 12px 28px rgba(15, 95, 219, 0.22), 0 12px 28px rgba(249, 115, 22, 0.18);
     }
 
-    .logo-mark svg { color: var(--color-bg); }
+    .logo-mark svg { display: none; }
 
     .logo-text {
       font-size: 22px;
