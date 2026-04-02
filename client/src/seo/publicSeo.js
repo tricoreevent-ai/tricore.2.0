@@ -85,6 +85,16 @@ export const CONTACT_PAGE_SEO_KEYWORDS = mergeSeoKeywords(BANGALORE_CORE_KEYWORD
   'event quote Bangalore'
 ]);
 
+export const LEGAL_PAGE_SEO_KEYWORDS = mergeSeoKeywords(BANGALORE_CORE_KEYWORDS, [
+  'TriCore Events legal',
+  'TriCore Events terms and conditions',
+  'TriCore Events privacy policy',
+  'TriCore Events refund policy',
+  'event registration terms Bangalore',
+  'event refund policy Bangalore',
+  'sports tournament privacy policy Bangalore'
+]);
+
 export const SPONSORSHIP_PAGE_SEO_KEYWORDS = mergeSeoKeywords(BANGALORE_CORE_KEYWORDS, [
   'sports sponsorship Bangalore',
   'event sponsorship Bangalore',

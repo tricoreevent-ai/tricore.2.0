@@ -13,6 +13,7 @@ import CorporateEventsPage from './pages/public/CorporateEventsPage.jsx';
 import EventDetailPage from './pages/public/EventDetailPage.jsx';
 import EventsPage from './pages/public/EventsPage.jsx';
 import HomePage from './pages/public/HomePage.jsx';
+import LegalPage from './pages/public/LegalPage.jsx';
 import NotFoundPage from './pages/public/NotFoundPage.jsx';
 import SponsorshipPage from './pages/public/SponsorshipPage.jsx';
 import { adminPermissions } from './data/adminAccess.js';
@@ -124,6 +125,7 @@ export default function App() {
           <Route path="/corporate-events" element={<CorporateEventsPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/events/:eventId" element={<EventDetailPage />} />
+          <Route path="/legal" element={<LegalPage />} />
           <Route path="/partner-access" element={<SponsorshipPage />} />
           <Route path="/contact" element={<ContactPage />} />
 

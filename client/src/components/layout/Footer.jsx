@@ -10,7 +10,8 @@ const quickLinks = [
   { to: '/about', label: 'About' },
   { to: '/corporate-events', label: 'Corporate Events' },
   { to: '/events', label: 'Events' },
-  { to: '/contact', label: 'Contact' }
+  { to: '/contact', label: 'Contact' },
+  { to: '/legal', label: 'Legal' }
 ];
 
 export default function Footer({ marketing = false }) {

@@ -7,6 +7,7 @@ const STATIC_PUBLIC_PATHS = [
   { path: '/', changefreq: 'daily', priority: '1.0' },
   { path: '/about', changefreq: 'monthly', priority: '0.8' },
   { path: '/events', changefreq: 'daily', priority: '0.9' },
+  { path: '/legal', changefreq: 'monthly', priority: '0.5' },
   { path: '/contact', changefreq: 'monthly', priority: '0.7' },
   { path: '/partner-access', changefreq: 'monthly', priority: '0.6' }
 ];

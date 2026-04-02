@@ -14,6 +14,7 @@ import {
   EVENTS_PAGE_SEO_KEYWORDS,
   FALLBACK_PAGE_SEO_KEYWORDS,
   HOME_PAGE_SEO_KEYWORDS,
+  LEGAL_PAGE_SEO_KEYWORDS,
   SPONSORSHIP_PAGE_SEO_KEYWORDS
 } from '../../seo/publicSeo.js';
 
@@ -94,6 +95,15 @@ export default function MainLayout() {
         description:
           'Contact TriCore Events in Bangalore for partner-led corporate event planning, sports tournaments, sponsorship enquiries, and quick WhatsApp support.',
         keywords: CONTACT_PAGE_SEO_KEYWORDS
+      };
+    }
+
+    if (pathname === '/legal') {
+      return {
+        title: 'Terms & Conditions and Privacy Policy | TriCore Events',
+        description:
+          'Read the TriCore Events Terms & Conditions and Privacy Policy covering registrations, refunds, event rules, liability, data use, and grievance contact details.',
+        keywords: LEGAL_PAGE_SEO_KEYWORDS
       };
     }
 
