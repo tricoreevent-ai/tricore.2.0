@@ -161,7 +161,7 @@ export default function NewsletterForm({
       nextErrors.content = 'Newsletter content is required.';
     }
 
-    if (!form.categoryIds.length) {
+    if (form.status === 'published' && !form.categoryIds.length) {
       nextErrors.categoryIds = 'Select at least one category.';
     }
 
@@ -219,7 +219,8 @@ export default function NewsletterForm({
 
       {!categories.length ? (
         <div className="rounded-[1.5rem] border border-dashed border-[rgba(212,175,55,0.2)] bg-[rgba(212,175,55,0.06)] px-5 py-4 text-sm text-[#d9d9d9]">
-          Create at least one newsletter category before publishing newsletters.
+          Drafts can be saved without categories. Create at least one newsletter category before
+          publishing a newsletter.
         </div>
       ) : null}
 
@@ -373,7 +374,7 @@ export default function NewsletterForm({
       <div className="flex flex-col gap-3 sm:flex-row">
         <button
           className="admin-btn-primary"
-          disabled={submitting || !categories.length}
+          disabled={submitting}
           type="submit"
         >
           {submitting

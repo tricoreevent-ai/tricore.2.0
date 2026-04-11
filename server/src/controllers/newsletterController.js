@@ -101,11 +101,15 @@ const getPublicCategories = async () => {
     .sort(sortByName);
 };
 
-const ensureCategoryIdsExist = async (categoryIds = []) => {
+const ensureCategoryIdsExist = async (categoryIds = [], { requireAtLeastOne = false } = {}) => {
   const normalizedIds = [...new Set((Array.isArray(categoryIds) ? categoryIds : []).map(String))].filter(Boolean);
 
   if (!normalizedIds.length) {
-    throw new ApiError(400, 'Select at least one newsletter category.');
+    if (requireAtLeastOne) {
+      throw new ApiError(400, 'Select at least one newsletter category before publishing.');
+    }
+
+    return [];
   }
 
   const count = await NewsletterCategory.countDocuments({
@@ -117,6 +121,8 @@ const ensureCategoryIdsExist = async (categoryIds = []) => {
   if (count !== normalizedIds.length) {
     throw new ApiError(400, 'One or more newsletter categories do not exist anymore.');
   }
+
+  return normalizedIds;
 };
 
 const buildCategorySlug = (name) => slugifyNewsletterValue(name).replace(/-/g, '-') || 'newsletter-category';
@@ -262,8 +268,10 @@ export const getAdminNewsletterById = asyncHandler(async (req, res) => {
 });
 
 export const createNewsletter = asyncHandler(async (req, res) => {
-  await ensureCategoryIdsExist(req.body.categoryIds);
   const payload = await prepareNewsletterPayload(req.body);
+  await ensureCategoryIdsExist(payload.categoryIds, {
+    requireAtLeastOne: payload.status === 'published'
+  });
   const newsletter = await Newsletter.create({
     ...payload,
     createdBy: req.user?._id || null,
@@ -295,11 +303,10 @@ export const updateNewsletter = asyncHandler(async (req, res) => {
     throw new ApiError(404, 'Newsletter not found.');
   }
 
-  if (hasOwn(req.body, 'categoryIds')) {
-    await ensureCategoryIdsExist(req.body.categoryIds);
-  }
-
   const preparedPayload = await prepareNewsletterPayload(req.body, existingNewsletter);
+  await ensureCategoryIdsExist(preparedPayload.categoryIds, {
+    requireAtLeastOne: preparedPayload.status === 'published'
+  });
   const updatePayload = {
     ...preparedPayload,
     updatedBy: req.user?._id || null
