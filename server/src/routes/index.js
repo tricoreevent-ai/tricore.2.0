@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import { getDbStatus } from '../config/db.js';
+import { requireDatabaseReady } from '../middleware/databaseReady.js';
 import accountingRoutes from './accountingRoutes.js';
 import activityLogRoutes from './activityLogRoutes.js';
 import audienceRoutes from './audienceRoutes.js';
@@ -27,6 +28,8 @@ router.get('/health', (_req, res) => {
     }
   });
 });
+
+router.use(requireDatabaseReady);
 
 router.use('/auth', authRoutes);
 router.use('/audience', audienceRoutes);

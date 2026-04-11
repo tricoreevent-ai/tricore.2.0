@@ -10,9 +10,10 @@ export const errorHandler = (err, _req, res, _next) => {
   const connectivityFailure = isMongoConnectivityError(err);
   const statusCode = connectivityFailure ? 503 : err.statusCode || 500;
   const isOperationalClientError = err instanceof ApiError && statusCode < 500;
+  const isOperationalServiceUnavailable = err instanceof ApiError && statusCode === 503;
   const message = connectivityFailure
     ? getMongoAvailabilityMessage()
-    : isOperationalClientError
+    : isOperationalClientError || isOperationalServiceUnavailable
       ? err.message || 'Request failed.'
       : statusCode >= 500
         ? 'A backend service is temporarily unavailable. Please try again shortly and check the server logs if the issue continues.'
