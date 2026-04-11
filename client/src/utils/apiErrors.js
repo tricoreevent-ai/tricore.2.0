@@ -7,11 +7,19 @@ const looksLikeInfrastructureError = (message) =>
     String(message || '')
   );
 
+const looksLikeExpiredSession = (message) =>
+  /session has expired|jwt expired|authentication required/i.test(String(message || ''));
+
 export const getApiErrorMessage = (error, fallbackMessage) => {
   const message = readErrorMessage(error);
+  const status = Number(error?.response?.status || 0);
 
   if (!message) {
     return fallbackMessage;
+  }
+
+  if (status === 401 && looksLikeExpiredSession(message)) {
+    return 'Your session has expired. Please sign in again.';
   }
 
   if (looksLikeInfrastructureError(message)) {

@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from 'react';
 
 import { getCurrentUser, loginWithGoogleToken } from '../api/authApi.js';
 import { hasAdminPortalAccess } from '../data/adminAccess.js';
-import { PUBLIC_TOKEN_KEY } from '../utils/authKeys.js';
+import { AUTH_EXPIRED_EVENT, PUBLIC_TOKEN_KEY } from '../utils/authKeys.js';
 
 export const AuthContext = createContext(null);
 
@@ -56,6 +56,21 @@ export function AuthProvider({ children }) {
 
     hydrateUser();
   }, [token]);
+
+  useEffect(() => {
+    const handleAuthExpired = (event) => {
+      if (event?.detail?.tokenKey !== PUBLIC_TOKEN_KEY) {
+        return;
+      }
+
+      setToken(null);
+      setUser(null);
+      setLoading(false);
+    };
+
+    window.addEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
+    return () => window.removeEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
+  }, []);
 
   const login = async (credential) => {
     setAuthenticating(true);

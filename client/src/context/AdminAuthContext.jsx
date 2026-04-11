@@ -6,7 +6,7 @@ import {
   hasAdminPermission,
   hasAdminPortalAccess
 } from '../data/adminAccess.js';
-import { ADMIN_TOKEN_KEY } from '../utils/authKeys.js';
+import { ADMIN_TOKEN_KEY, AUTH_EXPIRED_EVENT } from '../utils/authKeys.js';
 
 export const AdminAuthContext = createContext(null);
 
@@ -65,6 +65,21 @@ export function AdminAuthProvider({ children }) {
 
     hydrateAdmin();
   }, [token]);
+
+  useEffect(() => {
+    const handleAuthExpired = (event) => {
+      if (event?.detail?.tokenKey !== ADMIN_TOKEN_KEY) {
+        return;
+      }
+
+      setToken(null);
+      setUser(null);
+      setLoading(false);
+    };
+
+    window.addEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
+    return () => window.removeEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
+  }, []);
 
   const login = async (username, password) => {
     setAuthenticating(true);

@@ -37,6 +37,22 @@ const loadUserWithRecovery = async (userId) => {
   }
 };
 
+const verifyTokenOrThrow = (token) => {
+  try {
+    return jwt.verify(token, env.jwtSecret);
+  } catch (error) {
+    if (error?.name === 'TokenExpiredError') {
+      throw new ApiError(401, 'Your session has expired. Please sign in again.');
+    }
+
+    if (error?.name === 'JsonWebTokenError' || error?.name === 'NotBeforeError') {
+      throw new ApiError(401, 'Authentication required.');
+    }
+
+    throw error;
+  }
+};
+
 export const authenticate = asyncHandler(async (req, _res, next) => {
   const token = getTokenFromRequest(req);
 
@@ -44,7 +60,7 @@ export const authenticate = asyncHandler(async (req, _res, next) => {
     throw new ApiError(401, 'Authentication required.');
   }
 
-  const decoded = jwt.verify(token, env.jwtSecret);
+  const decoded = verifyTokenOrThrow(token);
   const user = await loadUserWithRecovery(decoded.sub);
 
   if (!user) {

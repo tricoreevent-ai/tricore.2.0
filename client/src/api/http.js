@@ -1,5 +1,9 @@
 import axios from 'axios';
-import { ADMIN_TOKEN_KEY, PUBLIC_TOKEN_KEY } from '../utils/authKeys.js';
+import {
+  ADMIN_TOKEN_KEY,
+  AUTH_EXPIRED_EVENT,
+  PUBLIC_TOKEN_KEY
+} from '../utils/authKeys.js';
 
 const trimTrailingSlash = (value = '') => value.replace(/\/+$/, '');
 const buildApiUrl = (origin) => `${trimTrailingSlash(origin)}/api`;
@@ -70,6 +74,25 @@ const createApiClient = (tokenKey) => {
 
     return config;
   });
+
+  client.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error?.response?.status === 401) {
+        localStorage.removeItem(tokenKey);
+
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(
+            new CustomEvent(AUTH_EXPIRED_EVENT, {
+              detail: { tokenKey }
+            })
+          );
+        }
+      }
+
+      return Promise.reject(error);
+    }
+  );
 
   return client;
 };
