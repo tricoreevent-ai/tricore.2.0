@@ -1,4 +1,5 @@
 import { Event } from '../models/Event.js';
+import { Newsletter } from '../models/Newsletter.js';
 import { getDbStatus } from '../config/db.js';
 import { getPublicSiteSettings } from './publicSiteSettingsService.js';
 
@@ -7,6 +8,7 @@ const STATIC_PUBLIC_PATHS = [
   { path: '/', changefreq: 'daily', priority: '1.0' },
   { path: '/about', changefreq: 'monthly', priority: '0.8' },
   { path: '/events', changefreq: 'daily', priority: '0.9' },
+  { path: '/newsletters', changefreq: 'weekly', priority: '0.8' },
   { path: '/legal', changefreq: 'monthly', priority: '0.5' },
   { path: '/contact', changefreq: 'monthly', priority: '0.7' },
   { path: '/partner-access', changefreq: 'monthly', priority: '0.6' }
@@ -65,6 +67,27 @@ const loadVisibleEvents = async () => {
   }
 };
 
+const loadVisibleNewsletters = async () => {
+  if (getDbStatus().readyState !== 1) {
+    return [];
+  }
+
+  try {
+    return await Newsletter.find({
+      status: 'published',
+      publicationDate: {
+        $ne: null,
+        $lte: new Date()
+      }
+    })
+      .select('slug updatedAt')
+      .sort({ publicationDate: -1, createdAt: -1 })
+      .lean();
+  } catch {
+    return [];
+  }
+};
+
 export const buildRobotsTxt = async () => {
   const baseUrl = await resolvePublicBaseUrl();
 
@@ -82,7 +105,10 @@ export const buildRobotsTxt = async () => {
 export const buildSitemapXml = async () => {
   const baseUrl = await resolvePublicBaseUrl();
   const nowIso = new Date().toISOString();
-  const eventEntries = await loadVisibleEvents();
+  const [eventEntries, newsletterEntries] = await Promise.all([
+    loadVisibleEvents(),
+    loadVisibleNewsletters()
+  ]);
   const urlEntries = [
     ...STATIC_PUBLIC_PATHS.map((entry) => ({
       loc: buildAbsoluteUrl(baseUrl, entry.path),
@@ -95,6 +121,12 @@ export const buildSitemapXml = async () => {
       lastmod: new Date(event.updatedAt || nowIso).toISOString(),
       changefreq: 'daily',
       priority: '0.8'
+    })),
+    ...newsletterEntries.map((newsletter) => ({
+      loc: `${baseUrl}/newsletters/${newsletter.slug}`,
+      lastmod: new Date(newsletter.updatedAt || nowIso).toISOString(),
+      changefreq: 'weekly',
+      priority: '0.7'
     }))
   ];
 

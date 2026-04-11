@@ -4,10 +4,12 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { resolveEnvFilePath } from './resolve-env-file.mjs';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
-const envPath = path.resolve(rootDir, 'server/.env');
+const envPath = resolveEnvFilePath(rootDir);
 const atlasApiBaseUrl = 'https://cloud.mongodb.com/api/atlas/v2';
 const atlasApiVersion = 'application/vnd.atlas.2025-03-12+json';
 const httpStatusMarker = '__HTTP_STATUS__:';
@@ -20,8 +22,11 @@ const parseBoolean = (value, fallback = false) => {
   return ['1', 'true', 'yes', 'on'].includes(String(value).trim().toLowerCase());
 };
 
+const isPlaceholderMongoUri = (value) =>
+  /YOUR_DB_USER|YOUR_DB_PASSWORD|YOUR_CLUSTER/i.test(String(value || ''));
+
 const parseEnvFile = (filePath) => {
-  if (!fs.existsSync(filePath)) {
+  if (!filePath || !fs.existsSync(filePath)) {
     return {};
   }
 
@@ -244,7 +249,10 @@ const ensureAtlasDevAccess = async () => {
     return;
   }
 
-  if (!String(env.MONGODB_URI || '').includes('mongodb.net')) {
+  if (
+    !String(env.MONGODB_URI || '').includes('mongodb.net') ||
+    isPlaceholderMongoUri(env.MONGODB_URI)
+  ) {
     log('Skipped Atlas IP allowlist update because MongoDB Atlas is not configured.');
     return;
   }

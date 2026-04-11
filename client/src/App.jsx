@@ -14,6 +14,8 @@ import EventDetailPage from './pages/public/EventDetailPage.jsx';
 import EventsPage from './pages/public/EventsPage.jsx';
 import HomePage from './pages/public/HomePage.jsx';
 import LegalPage from './pages/public/LegalPage.jsx';
+import NewsletterDetailPage from './pages/public/NewsletterDetailPage.jsx';
+import NewslettersPage from './pages/public/NewslettersPage.jsx';
 import NotFoundPage from './pages/public/NotFoundPage.jsx';
 import SponsorshipPage from './pages/public/SponsorshipPage.jsx';
 import { adminPermissions } from './data/adminAccess.js';
@@ -23,6 +25,7 @@ const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage.j
 const AdminEventsPage = lazy(() => import('./pages/admin/AdminEventsPage.jsx'));
 const AdminLoginPage = lazy(() => import('./pages/admin/AdminLoginPage.jsx'));
 const AdminMatchesPage = lazy(() => import('./pages/admin/AdminMatchesPage.jsx'));
+const AdminNewslettersPage = lazy(() => import('./pages/admin/AdminNewslettersPage.jsx'));
 const AdminRegistrationsPage = lazy(() => import('./pages/admin/AdminRegistrationsPage.jsx'));
 const AdminReportsPage = lazy(() => import('./pages/admin/AdminReportsPage.jsx'));
 const AdminSettingsPage = lazy(() => import('./pages/admin/AdminSettingsPage.jsx'));
@@ -58,6 +61,14 @@ export default function App() {
             element={
               <AdminPermissionGuard permissions={[adminPermissions.events]}>
                 {renderLazyPage(<AdminEventsPage />, 'Loading events admin...')}
+              </AdminPermissionGuard>
+            }
+          />
+          <Route
+            path="/admin-portal/newsletters"
+            element={
+              <AdminPermissionGuard permissions={[adminPermissions.events]}>
+                {renderLazyPage(<AdminNewslettersPage />, 'Loading newsletter admin...')}
               </AdminPermissionGuard>
             }
           />
@@ -125,6 +136,8 @@ export default function App() {
           <Route path="/corporate-events" element={<CorporateEventsPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/events/:eventId" element={<EventDetailPage />} />
+          <Route path="/newsletters" element={<NewslettersPage />} />
+          <Route path="/newsletters/:slug" element={<NewsletterDetailPage />} />
           <Route path="/legal" element={<LegalPage />} />
           <Route path="/partner-access" element={<SponsorshipPage />} />
           <Route path="/contact" element={<ContactPage />} />

@@ -3,13 +3,19 @@ import net from 'node:net';
 import { fileURLToPath } from 'node:url';
 
 import dotenv from 'dotenv';
+import { resolveEnvFilePath } from './resolve-env-file.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const rootDir = path.resolve(__dirname, '..');
 
-dotenv.config({
-  path: path.resolve(__dirname, '../server/.env')
-});
+const envFilePath = resolveEnvFilePath(rootDir);
+
+if (envFilePath) {
+  dotenv.config({
+    path: envFilePath
+  });
+}
 
 const normalizeConnectHost = (value) => {
   const host = String(value || '').trim();

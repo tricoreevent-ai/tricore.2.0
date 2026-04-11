@@ -123,7 +123,8 @@ export const createRegistration = asyncHandler(async (req, res) => {
     eventId: event._id,
     paymentId: payment._id,
     status: 'Confirmed',
-    confirmedAt
+    confirmedAt,
+    termsAcceptedAt: registrationData.termsAccepted ? new Date() : null
   });
 
   await notifyRegistrationCreated({ event, registration, payment });
@@ -190,7 +191,8 @@ export const createManualRegistration = asyncHandler(async (req, res) => {
     userId: req.user._id,
     eventId: event._id,
     paymentId: payment._id,
-    status: 'Registered'
+    status: 'Registered',
+    termsAcceptedAt: registrationData.termsAccepted ? new Date() : null
   });
 
   await notifyRegistrationCreated({ event, registration, payment });
@@ -475,11 +477,12 @@ export const updateMyRegistration = asyncHandler(async (req, res) => {
     phone1: req.body.phone1 ?? registration.phone1,
     phone2: req.body.phone2 ?? registration.phone2,
     address: req.body.address ?? registration.address,
+    termsAccepted: req.body.termsAccepted ?? registration.termsAccepted,
     players: req.body.players ?? registration.players
   };
 
   const registrationData = normalizeRegistrationData(mergedPayload);
-  validateRegistrationForEvent(event, registrationData);
+  validateRegistrationForEvent(event, registrationData, { requireTermsAcceptance: false });
   await ensureUniqueRegistration(event._id, registrationData, registration._id);
 
   registration.name = registrationData.name;
@@ -489,6 +492,13 @@ export const updateMyRegistration = asyncHandler(async (req, res) => {
   registration.phone1 = registrationData.phone1;
   registration.phone2 = registrationData.phone2;
   registration.address = registrationData.address;
+  registration.termsAccepted = registrationData.termsAccepted;
+  registration.termsAcceptedAt =
+    registrationData.termsAccepted && !registration.termsAcceptedAt
+      ? new Date()
+      : registration.termsAccepted
+        ? registration.termsAcceptedAt
+        : null;
   registration.players = registrationData.players;
   await registration.save();
 

@@ -19,6 +19,26 @@ const RECEIPT_DATA_URL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB
 const QR_DATA_URL = RECEIPT_DATA_URL;
 const TEST_EMAIL = process.env.VALIDATION_TEST_EMAIL || env.smtpToRecipients[0] || env.smtpFromEmail || '';
 const VALIDATION_NOTES = `[${SUITE_TAG}]`;
+const startOfToday = new Date();
+startOfToday.setHours(0, 0, 0, 0);
+
+const addDays = (value, days) => {
+  const date = new Date(value);
+  date.setDate(date.getDate() + days);
+  return date;
+};
+
+const toDateString = (value) => value.toISOString().slice(0, 10);
+const toIsoAtHour = (value, hour) => {
+  const date = new Date(value);
+  date.setHours(hour, 0, 0, 0);
+  return date.toISOString();
+};
+
+const validationRegistrationStartDate = new Date(startOfToday);
+const validationRegistrationDeadline = addDays(startOfToday, 5);
+const validationEventStartDate = addDays(startOfToday, 7);
+const validationEventEndDate = addDays(startOfToday, 8);
 
 const validationTeams = [
   {
@@ -132,7 +152,7 @@ const accountingSeed = [
   {
     scope: 'common',
     type: 'income',
-    category: 'other',
+    category: 'other_income',
     amount: 3200,
     date: '2026-03-22',
     reference: 'Training clinic revenue',
@@ -327,6 +347,11 @@ const pickPaymentSettingsPayload = (settings) => ({
   paymentProofRecipientEmail: String(settings?.paymentProofRecipientEmail || '')
 });
 
+const pickTransactionOtpPayload = (settings) => ({
+  enabled: Boolean(settings?.enabled),
+  deliveryEmail: String(settings?.deliveryEmail || '')
+});
+
 const request = async ({ method = 'GET', path, token, body }) => {
   const headers = {};
 
@@ -410,11 +435,12 @@ const createValidationEvent = async (adminToken) => {
     bannerImage: '',
     sportType: 'Cricket',
     venue: 'TriCore Validation Arena',
-    startDate: '2026-04-15',
-    endDate: '2026-04-16',
+    startDate: toDateString(validationEventStartDate),
+    endDate: toDateString(validationEventEndDate),
     maxParticipants: 8,
     entryFee: 1750,
-    registrationDeadline: '2026-04-10',
+    registrationStartDate: toIsoAtHour(validationRegistrationStartDate, 0),
+    registrationDeadline: toDateString(validationRegistrationDeadline),
     teamSize: 3,
     playerLimit: 5,
     registrationEnabled: true
@@ -438,6 +464,7 @@ const createManualRegistrationPayload = (eventId, team) => ({
   phone2: team.phone2,
   address: team.address,
   players: team.players,
+  termsAccepted: true,
   manualReference: team.manualReference,
   receiptDataUrl: RECEIPT_DATA_URL,
   receiptFilename: `${team.teamName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-proof.png`
@@ -468,6 +495,7 @@ const createTransactions = async ({ adminToken, eventId }) => {
 const main = async () => {
   let adminToken = '';
   let originalPaymentSettings = null;
+  let originalTransactionOtpSettings = null;
 
   try {
     await connectDB();
@@ -480,6 +508,10 @@ const main = async () => {
 
     originalPaymentSettings = pickPaymentSettingsPayload((await request({
       path: '/settings/payment',
+      token: adminToken
+    })).data);
+    originalTransactionOtpSettings = pickTransactionOtpPayload((await request({
+      path: '/settings/transaction-otp',
       token: adminToken
     })).data);
 
@@ -507,6 +539,15 @@ const main = async () => {
       path: '/settings/payment',
       token: adminToken,
       body: validationPaymentSettings
+    });
+    await request({
+      method: 'PUT',
+      path: '/settings/transaction-otp',
+      token: adminToken,
+      body: {
+        enabled: false,
+        deliveryEmail: originalTransactionOtpSettings.deliveryEmail
+      }
     });
 
     const publicPaymentSettings = (await request({ path: '/payment-settings' })).data;
@@ -557,10 +598,11 @@ const main = async () => {
       registrationResults.push(registrationResponse.data.registration);
     }
 
-    const adminRegistrations = (await request({
+    const adminRegistrationsResponse = await request({
       path: `/registrations?eventId=${eventId}`,
       token: adminToken
-    })).data;
+    });
+    const adminRegistrations = adminRegistrationsResponse.data.items || [];
     assert(adminRegistrations.length === validationTeams.length, 'Admin should see all validation registrations.');
 
     for (const registration of adminRegistrations) {
@@ -576,10 +618,11 @@ const main = async () => {
       });
     }
 
-    const confirmedRegistrations = (await request({
+    const confirmedRegistrationsResponse = await request({
       path: `/registrations?eventId=${eventId}&status=Confirmed`,
       token: adminToken
-    })).data;
+    });
+    const confirmedRegistrations = confirmedRegistrationsResponse.data.items || [];
     assert(confirmedRegistrations.length === validationTeams.length, 'All validation registrations should be confirmed by admin.');
 
     const confirmedTeams = (await request({
@@ -594,14 +637,14 @@ const main = async () => {
       token: adminToken,
       body: {
         eventId,
-        date: '2026-04-15',
+        date: toDateString(validationEventStartDate),
         time: '09:30',
         venue: createdEvent.venue,
         replaceExisting: true
       }
     });
 
-    const matches = (await request({ path: `/matches/${eventId}` })).data;
+    const matches = (await request({ path: `/matches/${eventId}`, token: userTokens[0] })).data;
     assert(matches.length >= 1, 'Knockout generation should create at least one match.');
 
     const userDashboard = (await request({
@@ -649,7 +692,7 @@ const main = async () => {
     });
 
     const allTransactionsResponse = await request({
-      path: '/transactions',
+      path: '/transactions?limit=200',
       token: adminToken
     });
     const allTransactions = allTransactionsResponse.data.transactions;
@@ -750,6 +793,19 @@ const main = async () => {
         });
       } catch (restoreError) {
         console.error('Payment settings restore failed:', restoreError.message);
+      }
+    }
+
+    if (adminToken && originalTransactionOtpSettings) {
+      try {
+        await request({
+          method: 'PUT',
+          path: '/settings/transaction-otp',
+          token: adminToken,
+          body: originalTransactionOtpSettings
+        });
+      } catch (restoreError) {
+        console.error('Transaction OTP settings restore failed:', restoreError.message);
       }
     }
 

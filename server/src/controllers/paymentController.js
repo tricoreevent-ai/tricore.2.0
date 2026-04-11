@@ -235,7 +235,8 @@ export const verifyPayment = asyncHandler(async (req, res) => {
     eventId: event._id,
     paymentId: payment._id,
     status: 'Confirmed',
-    confirmedAt
+    confirmedAt,
+    termsAcceptedAt: registrationData.termsAccepted ? new Date() : null
   });
 
   await createRegistrationIncomeTransaction({

@@ -79,6 +79,14 @@ const registrationSchema = new mongoose.Schema(
       required: true,
       trim: true
     },
+    termsAccepted: {
+      type: Boolean,
+      default: false
+    },
+    termsAcceptedAt: {
+      type: Date,
+      default: null
+    },
     players: {
       type: [playerSchema],
       default: []

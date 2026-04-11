@@ -117,6 +117,23 @@ export const EVENT_PAYMENT_PAGE_SEO_KEYWORDS = mergeSeoKeywords(BANGALORE_CORE_K
   'sports registration payment Bangalore'
 ]);
 
+export const NEWSLETTERS_PAGE_SEO_KEYWORDS = mergeSeoKeywords(BANGALORE_CORE_KEYWORDS, [
+  'TriCore newsletter',
+  'event newsletter Bangalore',
+  'Bangalore sports event news',
+  'corporate event updates Bangalore',
+  'event highlights Bangalore',
+  'TriCore announcements'
+]);
+
+export const NEWSLETTER_DETAIL_PAGE_SEO_KEYWORDS = mergeSeoKeywords(BANGALORE_CORE_KEYWORDS, [
+  'TriCore newsletter article',
+  'event story Bangalore',
+  'newsletter update Bangalore',
+  'sports event recap Bangalore',
+  'corporate event story Bangalore'
+]);
+
 export const FALLBACK_PAGE_SEO_KEYWORDS = mergeSeoKeywords(BANGALORE_CORE_KEYWORDS, [
   'TriCore Events',
   'Bangalore event services'
@@ -128,4 +145,11 @@ export const buildEventSeoKeywords = (event) =>
     event?.sportType ? `${event.sportType} event Bangalore` : '',
     event?.sportType ? `${event.sportType} tournament Bangalore` : '',
     event?.venue ? `${event.venue} Bangalore` : ''
+  ]);
+
+export const buildNewsletterSeoKeywords = (newsletter) =>
+  mergeSeoKeywords(NEWSLETTER_DETAIL_PAGE_SEO_KEYWORDS, [
+    newsletter?.title,
+    ...(newsletter?.categories || []).map((category) => category?.name),
+    newsletter?.summary
   ]);

@@ -219,7 +219,7 @@
               for staff who want a clear day-to-day reference for registrations, payments,
               accounting, reports, users, settings, audience campaigns, and backup diagnostics.
             </p>
-            <p class="eyebrow" style="margin-top: 16px;">Updated 27 March 2026</p>
+            <p class="eyebrow" style="margin-top: 16px;">Updated 8 April 2026</p>
             <div class="card-grid" style="margin-top: 18px;">
               <div class="mini-card">
                 <h3 style="margin-top: 0;">Admin</h3>
@@ -253,15 +253,16 @@
           <a href="#overview">1. Platform Overview</a>
           <a href="#website">2. Public Website Guide</a>
           <a href="#admin">3. Admin Portal Guide</a>
-          <a href="#registration">4. Registration Process</a>
-          <a href="#payment">5. Payment Process</a>
-          <a href="#admin-actions">6. Admin Actions</a>
-          <a href="#accounting">7. Accounting Guide</a>
-          <a href="#reports">8. Reports</a>
-          <a href="#users-settings">9. Users and Settings</a>
-          <a href="#visuals">10. Visual Aids</a>
-          <a href="#troubleshooting">11. Troubleshooting</a>
-          <a href="#best-practices">12. Best Practices</a>
+          <a href="#screens">4. Screen Reference</a>
+          <a href="#registration">5. Registration Process</a>
+          <a href="#payment">6. Payment Process</a>
+          <a href="#admin-actions">7. Admin Actions</a>
+          <a href="#accounting">8. Accounting Guide</a>
+          <a href="#reports">9. Reports</a>
+          <a href="#users-settings">10. Users and Settings</a>
+          <a href="#visuals">11. Visual Aids</a>
+          <a href="#troubleshooting">12. Troubleshooting</a>
+          <a href="#best-practices">13. Best Practices</a>
         </nav>
 
         <div class="content">
@@ -389,6 +390,165 @@
               <div class="mini-card"><h3 style="margin-top: 0;">Users</h3><p>Manage audience users, campaigns, admin accounts, roles, access, and passwords.</p></div>
               <div class="mini-card"><h3 style="margin-top: 0;">Settings</h3><p>Configure email, invoice, appearance, banners, galleries, backups, OTP security, and payments.</p></div>
               <div class="mini-card"><h3 style="margin-top: 0;">User Manual</h3><p>Open the built-in guide inside the admin portal or launch it full screen for training.</p></div>
+            </div>
+          </section>
+
+          <section class="section" id="screens">
+            <span class="badge">Screen Reference</span>
+            <h2>Purpose of each page and a simple example</h2>
+            <p>
+              Use this section during onboarding. Each card explains what the screen is for and one
+              realistic task a staff member or visitor would complete there.
+            </p>
+
+            <h3>Public website screens</h3>
+            <div class="mini-grid">
+              <div class="mini-card">
+                <p class="label">Route: /</p>
+                <h3 style="margin-top: 0;">Home</h3>
+                <p><strong>Purpose:</strong> Introduces TriCore, featured events, banners, and main call-to-action links.</p>
+                <p><strong>Example:</strong> A visitor clicks <strong>Register for a Tournament</strong> to move to the Events page.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /about</p>
+                <h3 style="margin-top: 0;">About</h3>
+                <p><strong>Purpose:</strong> Explains the TriCore story, partner background, and delivery credibility.</p>
+                <p><strong>Example:</strong> A sponsor reads the background section before deciding to contact the team.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /corporate-events</p>
+                <h3 style="margin-top: 0;">Corporate Events</h3>
+                <p><strong>Purpose:</strong> Presents corporate event services and quick quote actions.</p>
+                <p><strong>Example:</strong> An HR manager reviews services, then uses the quote/contact action.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /events</p>
+                <h3 style="margin-top: 0;">Events</h3>
+                <p><strong>Purpose:</strong> Lists visible events with status, date, and entry actions.</p>
+                <p><strong>Example:</strong> A player filters by sport and opens one upcoming tournament card.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /events/:eventId</p>
+                <h3 style="margin-top: 0;">Event Detail</h3>
+                <p><strong>Purpose:</strong> Shows the full event description, schedule, registration state, and form access.</p>
+                <p><strong>Example:</strong> A signed-in captain checks the fee, venue, and match schedule before registering.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /events/:eventId/payment</p>
+                <h3 style="margin-top: 0;">Event Payment</h3>
+                <p><strong>Purpose:</strong> Completes paid registrations by collecting payment proof and a reference.</p>
+                <p><strong>Example:</strong> A user uploads a UPI screenshot and submits the final paid registration.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /newsletters</p>
+                <h3 style="margin-top: 0;">Newsletters</h3>
+                <p><strong>Purpose:</strong> Lists published newsletters with search and category filters.</p>
+                <p><strong>Example:</strong> A visitor searches for cricket updates and opens a recap article.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /newsletters/:slug</p>
+                <h3 style="margin-top: 0;">Newsletter Detail</h3>
+                <p><strong>Purpose:</strong> Displays one published newsletter and suggests recent related posts.</p>
+                <p><strong>Example:</strong> A reader finishes one article and opens another from the sidebar list.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /contact</p>
+                <h3 style="margin-top: 0;">Contact</h3>
+                <p><strong>Purpose:</strong> Provides WhatsApp, phone, email, and enquiry form access.</p>
+                <p><strong>Example:</strong> A company shares city, dates, and audience size in the enquiry form.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /legal</p>
+                <h3 style="margin-top: 0;">Legal</h3>
+                <p><strong>Purpose:</strong> Shows terms, privacy, and policy-related contact information.</p>
+                <p><strong>Example:</strong> A participant checks refund language before submitting a paid registration.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /partner-access</p>
+                <h3 style="margin-top: 0;">Partner Access</h3>
+                <p><strong>Purpose:</strong> Hosts the sponsor and partner-facing landing page used in outreach.</p>
+                <p><strong>Example:</strong> An admin copies this link and shares it with a sponsor prospect.</p>
+              </div>
+            </div>
+
+            <h3>User account screen</h3>
+            <div class="mini-grid">
+              <div class="mini-card">
+                <p class="label">Route: /dashboard</p>
+                <h3 style="margin-top: 0;">User Dashboard</h3>
+                <p><strong>Purpose:</strong> Shows registrations, payment states, upcoming matches, and payout details for the signed-in user.</p>
+                <p><strong>Example:</strong> A participant checks whether payment moved from <strong>Under Review</strong> to <strong>Confirmed</strong>.</p>
+              </div>
+            </div>
+
+            <h3>Admin portal screens</h3>
+            <div class="mini-grid">
+              <div class="mini-card">
+                <p class="label">Route: /admin-portal/login</p>
+                <h3 style="margin-top: 0;">Admin Login</h3>
+                <p><strong>Purpose:</strong> Authenticates staff before they enter the admin workspace.</p>
+                <p><strong>Example:</strong> A coordinator signs in first thing in the morning to review new registrations.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /admin-portal</p>
+                <h3 style="margin-top: 0;">Admin Overview</h3>
+                <p><strong>Purpose:</strong> Summarizes metrics, alerts, recent payments, quick actions, and planning calendar activity.</p>
+                <p><strong>Example:</strong> A manager checks alerts and then jumps into the registrations workspace.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /admin-portal/events</p>
+                <h3 style="margin-top: 0;">Events</h3>
+                <p><strong>Purpose:</strong> Creates, edits, filters, hides, and manages registration windows for events.</p>
+                <p><strong>Example:</strong> An admin changes the registration start date and reloads the event catalog.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /admin-portal/newsletters</p>
+                <h3 style="margin-top: 0;">Newsletters</h3>
+                <p><strong>Purpose:</strong> Creates, edits, categorizes, schedules, publishes, and deletes newsletters.</p>
+                <p><strong>Example:</strong> A content lead saves a draft newsletter and assigns it to a category.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /admin-portal/registrations</p>
+                <h3 style="margin-top: 0;">Registrations</h3>
+                <p><strong>Purpose:</strong> Reviews team entries, payment proofs, status, and exportable records.</p>
+                <p><strong>Example:</strong> Finance filters one event, checks the uploaded proof, and confirms payment.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /admin-portal/matches</p>
+                <h3 style="margin-top: 0;">Matches</h3>
+                <p><strong>Purpose:</strong> Manages fixtures, schedules, and generated knockout rounds.</p>
+                <p><strong>Example:</strong> Operations generates a knockout bracket after teams are confirmed.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /admin-portal/accounting</p>
+                <h3 style="margin-top: 0;">Accounting</h3>
+                <p><strong>Purpose:</strong> Records income and expenses, reviews the ledger, and manages finance categories.</p>
+                <p><strong>Example:</strong> Accounts enters a venue expense with a payment mode and reference number.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /admin-portal/reports</p>
+                <h3 style="margin-top: 0;">Reports</h3>
+                <p><strong>Purpose:</strong> Opens overview, finance, activity, and alerts reporting views.</p>
+                <p><strong>Example:</strong> Leadership reviews event profitability and recent security alerts for the week.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /admin-portal/users</p>
+                <h3 style="margin-top: 0;">Users</h3>
+                <p><strong>Purpose:</strong> Manages admin access, audience users, and campaign workflows.</p>
+                <p><strong>Example:</strong> A super admin creates a restricted role for a registrations-only staff member.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /admin-portal/settings</p>
+                <h3 style="margin-top: 0;">Settings</h3>
+                <p><strong>Purpose:</strong> Configures contact routing, email, payments, website content, backups, calendar sync, and OTP security.</p>
+                <p><strong>Example:</strong> A super admin updates the payment proof recipient email and runs a test email.</p>
+              </div>
+              <div class="mini-card">
+                <p class="label">Route: /admin-portal/user-manual</p>
+                <h3 style="margin-top: 0;">User Manual</h3>
+                <p><strong>Purpose:</strong> Keeps the operating guide available inside the portal for onboarding and refresher training.</p>
+                <p><strong>Example:</strong> A new staff member leaves this page open while learning the registration review flow.</p>
+              </div>
             </div>
           </section>
 

@@ -15,6 +15,8 @@ import {
   FALLBACK_PAGE_SEO_KEYWORDS,
   HOME_PAGE_SEO_KEYWORDS,
   LEGAL_PAGE_SEO_KEYWORDS,
+  NEWSLETTER_DETAIL_PAGE_SEO_KEYWORDS,
+  NEWSLETTERS_PAGE_SEO_KEYWORDS,
   SPONSORSHIP_PAGE_SEO_KEYWORDS
 } from '../../seo/publicSeo.js';
 
@@ -71,6 +73,15 @@ export default function MainLayout() {
       };
     }
 
+    if (pathname === '/newsletters') {
+      return {
+        title: 'TriCore Newsletters and Updates | Bangalore Events',
+        description:
+          'Read TriCore newsletter updates featuring event highlights, announcements, recaps, and category-based stories from Bangalore corporate and sports event experiences.',
+        keywords: NEWSLETTERS_PAGE_SEO_KEYWORDS
+      };
+    }
+
     if (pathname.startsWith('/events/') && pathname.endsWith('/payment')) {
       return {
         title: 'Event Payment | TriCore Events Bangalore',
@@ -86,6 +97,15 @@ export default function MainLayout() {
         description:
           'View TriCore Bangalore event details, registration deadlines, venue information, payment instructions, and participation guidance for the selected tournament.',
         keywords: EVENT_DETAIL_PAGE_SEO_KEYWORDS
+      };
+    }
+
+    if (pathname.startsWith('/newsletters/')) {
+      return {
+        title: 'TriCore Newsletter Detail | Bangalore Event Updates',
+        description:
+          'Read a published TriCore newsletter covering Bangalore event stories, announcements, community highlights, and operational updates.',
+        keywords: NEWSLETTER_DETAIL_PAGE_SEO_KEYWORDS
       };
     }
 

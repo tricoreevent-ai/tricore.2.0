@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import {
   createFreeRegistration,
@@ -24,7 +24,8 @@ const buildInitialState = (event, user) => ({
   phone1: '',
   phone2: '',
   address: '',
-  players: []
+  players: [],
+  termsAccepted: false
 });
 
 const buildFormFromRegistration = (event, user, registration) => ({
@@ -37,7 +38,8 @@ const buildFormFromRegistration = (event, user, registration) => ({
   phone1: registration.phone1 || '',
   phone2: registration.phone2 || '',
   address: registration.address || '',
-  players: Array.isArray(registration.players) ? registration.players : []
+  players: Array.isArray(registration.players) ? registration.players : [],
+  termsAccepted: Boolean(registration.termsAccepted)
 });
 
 const hasPlayerDraftValues = (player) =>
@@ -257,6 +259,10 @@ export default function RegistrationForm({ event, onSuccess }) {
 
     if (players.length > event.playerLimit) {
       return `Player count cannot exceed ${event.playerLimit}.`;
+    }
+
+    if (!existingRegistration && !form.termsAccepted) {
+      return 'Please accept the Terms & Conditions and fair-play rules before registering.';
     }
 
     return '';
@@ -654,6 +660,27 @@ export default function RegistrationForm({ event, onSuccess }) {
                 No players added yet. Add players one by one to build the team list.
               </div>
             )}
+          </div>
+        ) : null}
+
+        {!existingRegistration ? (
+          <div className="rounded-3xl border border-[rgba(212,175,55,0.18)] bg-[rgba(212,175,55,0.08)] p-4">
+            <label className="flex items-start gap-3">
+              <input
+                checked={form.termsAccepted}
+                className="mt-1 h-5 w-5 rounded border border-white/20 bg-[#101010] accent-[#d4af37]"
+                onChange={(eventValue) => updateField('termsAccepted', eventValue.target.checked)}
+                required
+                type="checkbox"
+              />
+              <span className="text-sm leading-7 text-[#f3efe2]">
+                I agree to the{' '}
+                <Link className="font-semibold text-[#f4d67a] underline underline-offset-4" to="/legal">
+                  Terms & Conditions and Privacy Policy
+                </Link>{' '}
+                and confirm that our team will follow TriCore&apos;s fair-play, respectful conduct, and equal-game rules for everyone.
+              </span>
+            </label>
           </div>
         ) : null}
 

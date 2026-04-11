@@ -90,6 +90,7 @@ export const normalizeRegistrationData = (payload) => ({
   phone1: payload.phone1.trim(),
   phone2: payload.phone2.trim(),
   address: payload.address.trim(),
+  termsAccepted: Boolean(payload.termsAccepted),
   players: (payload.players || []).map((player) => ({
     name: player.name.trim(),
     phone: player.phone.trim(),
@@ -97,7 +98,11 @@ export const normalizeRegistrationData = (payload) => ({
   }))
 });
 
-export const validateRegistrationForEvent = (event, registration) => {
+export const validateRegistrationForEvent = (
+  event,
+  registration,
+  { requireTermsAcceptance = true } = {}
+) => {
   const isTeamEvent = event.teamSize > 1;
 
   if (!isTeamEvent && !registration.name) {
@@ -118,6 +123,13 @@ export const validateRegistrationForEvent = (event, registration) => {
     throw new ApiError(
       400,
       `Player count cannot exceed the event limit of ${event.playerLimit}.`
+    );
+  }
+
+  if (requireTermsAcceptance && !registration.termsAccepted) {
+    throw new ApiError(
+      400,
+      'You must accept the Terms & Conditions and fair-play rules before registering.'
     );
   }
 };

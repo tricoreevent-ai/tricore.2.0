@@ -3,10 +3,13 @@ import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
+import { getExistingEnvFilePaths } from './resolve-env-file.mjs';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const rootDir = path.resolve(__dirname, '..');
 const serverDir = path.resolve(__dirname, '../server');
-const watchTargets = [path.join(serverDir, 'src'), path.join(serverDir, '.env')];
+const watchTargets = [path.join(serverDir, 'src'), ...getExistingEnvFilePaths(rootDir)];
 
 let childProcess = null;
 let isStopping = false;
@@ -71,7 +74,11 @@ const startServer = () => {
   childProcess = spawn(process.execPath, ['src/server.js'], {
     cwd: serverDir,
     stdio: 'inherit',
-    env: process.env
+    env: {
+      ...process.env,
+      NODE_ENV: process.env.NODE_ENV || 'development',
+      MONGODB_ALLOW_MEMORY_FALLBACK: process.env.MONGODB_ALLOW_MEMORY_FALLBACK || 'true'
+    }
   });
 
   childProcess.once('exit', (code, signal) => {

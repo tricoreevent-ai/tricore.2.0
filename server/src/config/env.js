@@ -2,8 +2,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import dotenv from 'dotenv';
+import { resolveEnvFilePath } from '../../../scripts/resolve-env-file.mjs';
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
+const rootDir = path.resolve(currentDir, '../../..');
 
 const splitCsv = (value) =>
   (value || '')
@@ -11,25 +13,68 @@ const splitCsv = (value) =>
     .map((entry) => entry.trim())
     .filter(Boolean);
 
-dotenv.config({
-  path: path.resolve(currentDir, '../../.env')
-});
+const hasPlaceholderToken = (value, tokens) => {
+  const normalizedValue = String(value || '').trim().toLowerCase();
+
+  if (!normalizedValue) {
+    return false;
+  }
+
+  return tokens.some((token) => normalizedValue.includes(token.toLowerCase()));
+};
+
+const readConfiguredValue = (value, placeholderTokens = []) => {
+  const normalizedValue = String(value || '').trim();
+
+  if (!normalizedValue) {
+    return '';
+  }
+
+  return hasPlaceholderToken(normalizedValue, placeholderTokens) ? '' : normalizedValue;
+};
+
+const envFilePath = resolveEnvFilePath(rootDir);
+
+if (envFilePath) {
+  dotenv.config({
+    path: envFilePath
+  });
+}
 
 const googleClientIds = Array.from(
-  new Set(splitCsv([process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_IDS].filter(Boolean).join(',')))
+  new Set(
+    splitCsv([process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_IDS].filter(Boolean).join(',')).filter(
+      (clientId) => !hasPlaceholderToken(clientId, ['your-google-client-id'])
+    )
+  )
 );
 
+const nodeEnv = process.env.NODE_ENV || 'development';
+const defaultLocalClientUrls = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:5000',
+  'http://127.0.0.1:5000'
+];
+const configuredClientUrls = splitCsv(process.env.CLIENT_URL);
+const clientUrl =
+  nodeEnv === 'production'
+    ? configuredClientUrls.join(',') || 'http://localhost:5173'
+    : Array.from(new Set([...defaultLocalClientUrls, ...configuredClientUrls])).join(',');
+
 export const env = {
-  nodeEnv: process.env.NODE_ENV || 'development',
+  nodeEnv,
   host: process.env.HOST || '0.0.0.0',
   // Hostinger typically proxies to PORT 3000; default to 3000 when not set.
   port: Number(process.env.PORT || 3000),
-  mongoUri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/tricore-events',
+  mongoUri:
+    readConfiguredValue(process.env.MONGODB_URI, ['your_db_user', 'your_db_password', 'your_cluster']) ||
+    'mongodb://127.0.0.1:27017/tricore-events',
   mongoAllowMemoryFallback: process.env.MONGODB_ALLOW_MEMORY_FALLBACK === 'true',
   mongoServerSelectionTimeoutMs: Number(process.env.MONGODB_SERVER_SELECTION_TIMEOUT_MS || 10000),
-  jwtSecret: process.env.JWT_SECRET || 'change-me',
+  jwtSecret: readConfiguredValue(process.env.JWT_SECRET, ['replace_with_']) || 'change-me',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
-  clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
+  clientUrl,
   googleClientId: googleClientIds[0] || '',
   googleClientIds,
   contactForwardEmails: splitCsv(process.env.CONTACT_FORWARD_EMAILS),

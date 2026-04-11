@@ -146,6 +146,11 @@ export default function EventPaymentPage() {
       return;
     }
 
+    if (!draft.termsAccepted) {
+      setError('Please return to the event page and accept the Terms & Conditions and fair-play rules before payment.');
+      return;
+    }
+
     if (!paymentSettings?.manualPaymentEnabled) {
       setError('Manual payment is not enabled for this application right now.');
       return;

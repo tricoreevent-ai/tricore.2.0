@@ -8,6 +8,17 @@ const playerSchema = z.object({
   address: z.string().trim().min(5, 'Player address is required.')
 });
 
+const requireTermsAcceptance = (schema) =>
+  schema.superRefine((value, context) => {
+    if (!value.termsAccepted) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'You must accept the Terms & Conditions and fair-play rules before registering.',
+        path: ['termsAccepted']
+      });
+    }
+  });
+
 export const registrationPayloadSchema = z.object({
   name: optionalTextSchema,
   teamName: optionalTextSchema,
@@ -16,22 +27,27 @@ export const registrationPayloadSchema = z.object({
   phone1: z.string().trim().min(8, 'Primary phone is required.'),
   phone2: z.string().trim().min(8, 'Secondary phone is required.'),
   address: z.string().trim().min(5, 'Address is required.'),
-  players: z.array(playerSchema).optional().default([])
+  players: z.array(playerSchema).optional().default([]),
+  termsAccepted: z.boolean().optional().default(false)
 });
 
 export const createRegistrationSchema = z.object({
-  body: registrationPayloadSchema.extend({
-    eventId: objectIdSchema
-  })
+  body: requireTermsAcceptance(
+    registrationPayloadSchema.extend({
+      eventId: objectIdSchema
+    })
+  )
 });
 
 export const createManualRegistrationSchema = z.object({
-  body: registrationPayloadSchema.extend({
-    eventId: objectIdSchema,
-    manualReference: optionalTextSchema,
-    receiptDataUrl: optionalTextSchema,
-    receiptFilename: optionalTextSchema
-  })
+  body: requireTermsAcceptance(
+    registrationPayloadSchema.extend({
+      eventId: objectIdSchema,
+      manualReference: optionalTextSchema,
+      receiptDataUrl: optionalTextSchema,
+      receiptFilename: optionalTextSchema
+    })
+  )
 });
 
 export const registrationsQuerySchema = z.object({

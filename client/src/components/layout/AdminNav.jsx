@@ -12,6 +12,12 @@ const adminLinks = [
   { to: '/admin-portal', label: 'Dashboard', icon: 'overview', permissions: [adminPermissions.overview] },
   { to: '/admin-portal/events', label: 'Events', icon: 'events', permissions: [adminPermissions.events] },
   {
+    to: '/admin-portal/newsletters',
+    label: 'Newsletters',
+    icon: 'mail',
+    permissions: [adminPermissions.events]
+  },
+  {
     to: '/admin-portal/registrations',
     label: 'Registrations',
     icon: 'registrations',
