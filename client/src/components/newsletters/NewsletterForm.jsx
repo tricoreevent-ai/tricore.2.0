@@ -5,13 +5,19 @@ import FormAlert from '../common/FormAlert.jsx';
 import RichTextEditor from './RichTextEditor.jsx';
 import { readFileAsDataUrl } from '../../utils/readFileAsDataUrl.js';
 
+const getTodayDateInputValue = () => {
+  const now = new Date();
+  const timezoneOffsetMs = now.getTimezoneOffset() * 60 * 1000;
+  return new Date(now.getTime() - timezoneOffsetMs).toISOString().slice(0, 10);
+};
+
 const defaultState = {
   title: '',
   summary: '',
   featuredImage: '',
   categoryIds: [],
   status: 'draft',
-  publicationDate: '',
+  publicationDate: getTodayDateInputValue(),
   content: '<p></p>'
 };
 
@@ -53,7 +59,7 @@ const normalizeInitialValues = (initialValues) => ({
   categoryIds: Array.isArray(initialValues?.categoryIds)
     ? initialValues.categoryIds
     : [],
-  publicationDate: initialValues?.publicationDate?.slice(0, 10) || ''
+  publicationDate: initialValues?.publicationDate?.slice(0, 10) || getTodayDateInputValue()
 });
 
 export default function NewsletterForm({
@@ -224,9 +230,17 @@ export default function NewsletterForm({
         </div>
       ) : null}
 
-      <div className="grid gap-4 xl:grid-cols-2">
-        <div className="xl:col-span-2">
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.85fr)]">
+        <section className="space-y-4 rounded-[1.5rem] border border-white/10 bg-[rgba(255,255,255,0.03)] p-5">
+          <div>
+            <p className="label mb-2">Article Details</p>
+            <p className="text-sm leading-7 text-[#b8b8b8]">
+              Use a clear headline and an optional SEO summary. The summary supports search
+              previews and listing snippets, but it is not repeated above the full article body.
+            </p>
+          </div>
           <FloatingLabelField
+            dark
             error={errors.title}
             id="newsletterTitle"
             inputRef={titleInputRef}
@@ -236,11 +250,10 @@ export default function NewsletterForm({
             required
             value={form.title}
           />
-        </div>
-        <div className="xl:col-span-2">
           <FloatingLabelField
+            dark
             error={errors.summary}
-            helper="Optional. Leave blank to auto-generate a summary from the newsletter content."
+            helper="Optional. Used for SEO snippets and newsletter cards. Leave blank to auto-generate one from the article."
             id="newsletterSummary"
             label="Summary / Excerpt"
             name="summary"
@@ -248,28 +261,38 @@ export default function NewsletterForm({
             textarea
             value={form.summary}
           />
-        </div>
-        <div>
-          <label className="label" htmlFor="newsletterStatus">
-            Status
-          </label>
-          <select
-            className="input"
-            id="newsletterStatus"
-            name="status"
-            onChange={handleFieldChange}
-            value={form.status}
-          >
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-          </select>
-          <p className="mt-2 text-xs text-[#8a8a8a]">
-            Published newsletters without a date use the current date automatically.
-          </p>
-        </div>
-        <div>
+        </section>
+
+        <section className="space-y-4 rounded-[1.5rem] border border-white/10 bg-[rgba(255,255,255,0.03)] p-5">
+          <div>
+            <p className="label mb-2">Publication Settings</p>
+            <p className="text-sm leading-7 text-[#b8b8b8]">
+              The date starts at today by default, and you can move it to any past or future date
+              before publishing.
+            </p>
+          </div>
+          <div>
+            <label className="label" htmlFor="newsletterStatus">
+              Status
+            </label>
+            <select
+              className="input newsletter-admin-select"
+              id="newsletterStatus"
+              name="status"
+              onChange={handleFieldChange}
+              value={form.status}
+            >
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </select>
+            <p className="mt-2 text-xs text-[#b8b8b8]">
+              Drafts stay hidden. Published newsletters appear on the website and in search
+              discovery links.
+            </p>
+          </div>
           <FloatingLabelField
-            helper="Optional. If blank and the status is Published, the current date is used."
+            dark
+            helper="Starts with today by default. Change it any time."
             id="newsletterPublicationDate"
             label="Publication Date"
             name="publicationDate"
@@ -277,9 +300,20 @@ export default function NewsletterForm({
             type="date"
             value={form.publicationDate}
           />
+        </section>
+      </div>
+
+      <section className="space-y-4 rounded-[1.5rem] border border-white/10 bg-[rgba(255,255,255,0.03)] p-5">
+        <div>
+          <p className="label mb-2">Featured Media</p>
+          <p className="text-sm leading-7 text-[#b8b8b8]">
+            A strong cover image improves readability on the public page and makes search and
+            social previews more compelling.
+          </p>
         </div>
-        <div className="xl:col-span-2">
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_280px]">
           <FloatingLabelField
+            dark
             error={errors.featuredImage}
             helper="Paste an external image URL or upload a file. Uploaded files are stored on this server."
             id="newsletterFeaturedImage"
@@ -288,41 +322,41 @@ export default function NewsletterForm({
             onChange={handleFieldChange}
             value={form.featuredImage}
           />
+          <div>
+            <label className="label" htmlFor="newsletterFeaturedImageUpload">
+              Upload Featured Image
+            </label>
+            <input
+              accept="image/*"
+              className="input newsletter-admin-file-input"
+              id="newsletterFeaturedImageUpload"
+              onChange={(event) => {
+                void handleFeaturedImageUpload(event.target.files?.[0]);
+                event.target.value = '';
+              }}
+              type="file"
+            />
+          </div>
         </div>
-        <div className="xl:col-span-2">
-          <label className="label" htmlFor="newsletterFeaturedImageUpload">
-            Upload Featured Image
-          </label>
-          <input
-            accept="image/*"
-            className="input"
-            id="newsletterFeaturedImageUpload"
-            onChange={(event) => {
-              void handleFeaturedImageUpload(event.target.files?.[0]);
-              event.target.value = '';
-            }}
-            type="file"
-          />
-          {form.featuredImage ? (
-            <div className="mt-4 overflow-hidden rounded-[1.75rem] border border-white/10 bg-[rgba(255,255,255,0.04)] p-3">
-              <img
-                alt={form.title || 'Newsletter featured preview'}
-                className="max-h-64 w-full rounded-[1.25rem] object-cover"
-                src={form.featuredImage}
-              />
-            </div>
-          ) : null}
-        </div>
-      </div>
+        {form.featuredImage ? (
+          <div className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-[rgba(255,255,255,0.04)] p-3">
+            <img
+              alt={form.title || 'Newsletter featured preview'}
+              className="max-h-72 w-full rounded-[1.25rem] object-cover"
+              src={form.featuredImage}
+            />
+          </div>
+        ) : null}
+      </section>
 
-      <div>
+      <section className="space-y-4 rounded-[1.5rem] border border-white/10 bg-[rgba(255,255,255,0.03)] p-5">
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="label mb-1">Categories</p>
-            <p className="text-xs text-[#8a8a8a]">
+            <p className="text-sm leading-7 text-[#b8b8b8]">
               {selectedCategoryCount
                 ? `${selectedCategoryCount} categories selected`
-                : 'Choose one or more categories.'}
+                : 'Choose one or more categories to group the article for readers and search engines.'}
             </p>
           </div>
         </div>
@@ -355,21 +389,30 @@ export default function NewsletterForm({
           ))}
         </div>
         {errors.categoryIds ? <FormAlert message={errors.categoryIds} /> : null}
-      </div>
+      </section>
 
-      <RichTextEditor
-        error={errors.content}
-        helper="Supports bold, italic, underline, strikethrough, alignment, font controls, colors, lists, links, undo/redo, and inline images."
-        id="newsletterContent"
-        label="Content"
-        onChange={(nextValue) =>
-          setForm((current) => ({
-            ...current,
-            content: nextValue
-          }))
-        }
-        value={form.content}
-      />
+      <section className="space-y-4 rounded-[1.5rem] border border-white/10 bg-[rgba(255,255,255,0.03)] p-5">
+        <div>
+          <p className="label mb-2">Article Body</p>
+          <p className="text-sm leading-7 text-[#b8b8b8]">
+            Keep the body readable with strong headings, short paragraphs, and one clear story per
+            newsletter so the page stays useful for readers and search engines.
+          </p>
+        </div>
+        <RichTextEditor
+          error={errors.content}
+          helper="Supports bold, italic, underline, strikethrough, alignment, font controls, colors, lists, links, undo/redo, and inline images."
+          id="newsletterContent"
+          label="Content"
+          onChange={(nextValue) =>
+            setForm((current) => ({
+              ...current,
+              content: nextValue
+            }))
+          }
+          value={form.content}
+        />
+      </section>
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <button

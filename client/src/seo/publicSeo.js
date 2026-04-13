@@ -1,6 +1,10 @@
 export const BANGALORE_LOCATION_LABEL = 'Bangalore, Karnataka, India';
 
 const cleanKeyword = (value) => String(value || '').trim();
+const normalizeSnippetText = (value) =>
+  String(value || '')
+    .replace(/\s+/g, ' ')
+    .trim();
 
 export const mergeSeoKeywords = (...groups) =>
   Array.from(
@@ -139,6 +143,23 @@ export const FALLBACK_PAGE_SEO_KEYWORDS = mergeSeoKeywords(BANGALORE_CORE_KEYWOR
   'Bangalore event services'
 ]);
 
+export const buildSeoDescriptionFromText = (value, maxLength = 165) => {
+  const text = normalizeSnippetText(value);
+
+  if (!text) {
+    return '';
+  }
+
+  if (text.length <= maxLength) {
+    return text;
+  }
+
+  const clipped = text.slice(0, maxLength);
+  const lastSpaceIndex = clipped.lastIndexOf(' ');
+
+  return `${(lastSpaceIndex > 100 ? clipped.slice(0, lastSpaceIndex) : clipped).trim()}...`;
+};
+
 export const buildEventSeoKeywords = (event) =>
   mergeSeoKeywords(EVENT_DETAIL_PAGE_SEO_KEYWORDS, [
     event?.name,
@@ -151,5 +172,12 @@ export const buildNewsletterSeoKeywords = (newsletter) =>
   mergeSeoKeywords(NEWSLETTER_DETAIL_PAGE_SEO_KEYWORDS, [
     newsletter?.title,
     ...(newsletter?.categories || []).map((category) => category?.name),
-    newsletter?.summary
+    newsletter?.summary || newsletter?.contentText
   ]);
+
+export const buildNewsletterSeoDescription = (newsletter) =>
+  buildSeoDescriptionFromText(
+    newsletter?.summary ||
+      newsletter?.contentText ||
+      'Read TriCore newsletter updates, event stories, announcements, and published highlights.'
+  );

@@ -5,7 +5,10 @@ import { getPublicNewsletterBySlug } from '../../api/newsletterApi.js';
 import LoadingSpinner from '../../components/common/LoadingSpinner.jsx';
 import SeoMetadata from '../../components/common/SeoMetadata.jsx';
 import { contactContent } from '../../data/siteContent.js';
-import { buildNewsletterSeoKeywords } from '../../seo/publicSeo.js';
+import {
+  buildNewsletterSeoDescription,
+  buildNewsletterSeoKeywords
+} from '../../seo/publicSeo.js';
 import { getApiErrorMessage } from '../../utils/apiErrors.js';
 import { formatDate } from '../../utils/formatters.js';
 
@@ -13,6 +16,20 @@ const normalizeBaseUrl = (value) =>
   String(value || '')
     .trim()
     .replace(/\/+$/, '');
+
+const toAbsoluteUrl = (baseUrl, value) => {
+  const normalized = String(value || '').trim();
+
+  if (!normalized) {
+    return '';
+  }
+
+  if (/^https?:\/\//i.test(normalized)) {
+    return normalized;
+  }
+
+  return `${baseUrl}${normalized.startsWith('/') ? normalized : `/${normalized}`}`;
+};
 
 export default function NewsletterDetailPage() {
   const { slug } = useParams();
@@ -63,10 +80,61 @@ export default function NewsletterDetailPage() {
   const seoTitle = item?.title
     ? `${item.title} | TriCore Newsletter`
     : 'TriCore Newsletter | News and Updates';
-  const seoDescription = item?.summary
-    ? item.summary
-    : 'Read TriCore newsletter updates, event stories, announcements, and published highlights.';
+  const seoDescription = useMemo(() => buildNewsletterSeoDescription(item), [item]);
   const seoKeywords = useMemo(() => buildNewsletterSeoKeywords(item), [item]);
+  const publishedTime = item?.publicationDate ? new Date(item.publicationDate).toISOString() : '';
+  const modifiedTime = item?.updatedAt ? new Date(item.updatedAt).toISOString() : publishedTime;
+  const absoluteImageUrl = toAbsoluteUrl(baseUrl, item?.featuredImage);
+  const structuredData = useMemo(() => {
+    if (!item) {
+      return [];
+    }
+
+    return [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: item.title,
+        description: seoDescription,
+        datePublished: publishedTime,
+        dateModified: modifiedTime,
+        image: absoluteImageUrl ? [absoluteImageUrl] : undefined,
+        articleSection: (item.categories || []).map((category) => category.name).filter(Boolean),
+        mainEntityOfPage: canonicalUrl,
+        author: {
+          '@type': 'Organization',
+          name: 'TriCore Events'
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: 'TriCore Events',
+          url: baseUrl,
+          logo: {
+            '@type': 'ImageObject',
+            url: `${baseUrl}/tricore-logo.png`
+          }
+        }
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Newsletters',
+            item: `${baseUrl}/newsletters`
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: item.title,
+            item: canonicalUrl
+          }
+        ]
+      }
+    ];
+  }, [absoluteImageUrl, baseUrl, canonicalUrl, item, modifiedTime, publishedTime, seoDescription]);
 
   if (loading) {
     return (
@@ -116,10 +184,14 @@ export default function NewsletterDetailPage() {
   return (
     <>
       <SeoMetadata
+        author="TriCore Events"
         canonicalUrl={canonicalUrl}
         description={seoDescription}
-        image={item.featuredImage}
+        image={absoluteImageUrl}
         keywords={seoKeywords}
+        modifiedTime={modifiedTime}
+        publishedTime={publishedTime}
+        structuredData={structuredData}
         title={seoTitle}
         type="article"
         url={canonicalUrl}
@@ -146,25 +218,36 @@ export default function NewsletterDetailPage() {
                   </span>
                 ))}
               </div>
-              <p className="public-meta mt-4">{formatDate(item.publicationDate)}</p>
-              <h1 className="mt-4 text-3xl font-extrabold text-white sm:text-4xl">{item.title}</h1>
-              {item.summary ? (
-                <p className="mt-4 max-w-3xl text-sm leading-7 text-[#d9d9d9] sm:text-base">
-                  {item.summary}
-                </p>
-              ) : null}
+              <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-[#c9cdd2]">
+                <p className="public-meta text-[#c9cdd2]">{formatDate(item.publicationDate)}</p>
+                {item.updatedAt ? (
+                  <p className="text-sm font-medium text-[#aeb5bd]">
+                    Updated {formatDate(item.updatedAt)}
+                  </p>
+                ) : null}
+              </div>
+              <h1 className="mt-5 max-w-4xl text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-5xl">
+                {item.title}
+              </h1>
             </div>
 
-            <div
-              className="newsletter-content px-6 py-6 sm:px-8 sm:py-8"
-              dangerouslySetInnerHTML={{ __html: item.content }}
-            />
+            <div className="px-6 py-6 sm:px-8 sm:py-8">
+              <div
+                className="newsletter-content max-w-4xl"
+                dangerouslySetInnerHTML={{ __html: item.content }}
+              />
+            </div>
           </article>
 
           <aside className="space-y-5">
             <div className="public-panel-soft p-5">
               <p className="public-label">Published</p>
               <p className="mt-3 text-lg font-bold text-white">{formatDate(item.publicationDate)}</p>
+              {item.summary ? (
+                <p className="mt-4 text-sm leading-7 text-[#c9cdd2]">
+                  Search snippet: {seoDescription}
+                </p>
+              ) : null}
               <div className="mt-5 space-y-2">
                 {(item.categories || []).map((category) => (
                   <div

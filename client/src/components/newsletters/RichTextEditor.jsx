@@ -20,8 +20,9 @@ import FormAlert from '../common/FormAlert.jsx';
 import { readFileAsDataUrl } from '../../utils/readFileAsDataUrl.js';
 
 const fontFamilyOptions = [
-  { label: 'Default Font', value: '' },
-  { label: 'Arial', value: 'Arial' },
+  { label: 'Theme Font', value: '' },
+  { label: 'Space Grotesk', value: 'Space Grotesk' },
+  { label: 'Sora', value: 'Sora' },
   { label: 'Georgia', value: 'Georgia' },
   { label: 'Tahoma', value: 'Tahoma' },
   { label: 'Trebuchet', value: 'Trebuchet MS' },
@@ -30,11 +31,11 @@ const fontFamilyOptions = [
 ];
 
 const fontSizeOptions = [
-  { label: 'Default Size', value: '' },
-  { label: '12 px', value: '12px' },
+  { label: 'Theme Size', value: '' },
   { label: '14 px', value: '14px' },
   { label: '16 px', value: '16px' },
   { label: '18 px', value: '18px' },
+  { label: '20 px', value: '20px' },
   { label: '24 px', value: '24px' },
   { label: '32 px', value: '32px' },
   { label: '40 px', value: '40px' }
@@ -198,6 +199,9 @@ export default function RichTextEditor({
 
   const currentFontFamily = editor?.getAttributes('textStyle')?.fontFamily || '';
   const currentFontSize = editor?.getAttributes('textStyle')?.fontSize || '';
+  const currentTextColor = editor?.getAttributes('textStyle')?.color || '#f8fafc';
+  const currentHighlightColor =
+    editor?.getAttributes('textStyle')?.backgroundColor || '#d4af37';
 
   return (
     <div>
@@ -367,7 +371,7 @@ export default function RichTextEditor({
               <input
                 onChange={(event) => editor?.chain().focus().setColor(event.target.value).run()}
                 type="color"
-                value={editor?.getAttributes('textStyle')?.color || '#ffffff'}
+                value={currentTextColor}
               />
             </label>
             <label className="newsletter-editor-color-field">
@@ -377,7 +381,7 @@ export default function RichTextEditor({
                   editor?.chain().focus().setBackgroundColor(event.target.value).run()
                 }
                 type="color"
-                value={editor?.getAttributes('textStyle')?.backgroundColor || '#d4af37'}
+                value={currentHighlightColor}
               />
             </label>
           </ToolbarGroup>

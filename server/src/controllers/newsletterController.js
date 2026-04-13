@@ -125,6 +125,55 @@ const ensureCategoryIdsExist = async (categoryIds = [], { requireAtLeastOne = fa
   return normalizedIds;
 };
 
+const ensureNewsletterUniqueness = async ({ title, contentText, excludeId = null }) => {
+  const normalizedTitle = normalizeText(title);
+  const normalizedContentText = normalizeText(contentText).replace(/\s+/g, ' ');
+  const duplicateConditions = [];
+
+  if (normalizedTitle) {
+    duplicateConditions.push({
+      title: new RegExp(`^${escapeRegex(normalizedTitle)}$`, 'i')
+    });
+  }
+
+  if (normalizedContentText) {
+    duplicateConditions.push({
+      contentText: normalizedContentText
+    });
+  }
+
+  if (!duplicateConditions.length) {
+    return;
+  }
+
+  const duplicate = await Newsletter.findOne({
+    ...(excludeId ? { _id: { $ne: new mongoose.Types.ObjectId(excludeId) } } : {}),
+    $or: duplicateConditions
+  })
+    .select('title contentText')
+    .lean();
+
+  if (!duplicate) {
+    return;
+  }
+
+  const duplicateTitleMatches =
+    normalizedTitle &&
+    normalizeText(duplicate.title).toLowerCase() === normalizedTitle.toLowerCase();
+
+  if (duplicateTitleMatches) {
+    throw new ApiError(
+      409,
+      'A newsletter with this title already exists. Update the existing article instead of creating a duplicate.'
+    );
+  }
+
+  throw new ApiError(
+    409,
+    'A newsletter with the same content already exists. Revise the article so readers and search engines see a unique update.'
+  );
+};
+
 const buildCategorySlug = (name) => slugifyNewsletterValue(name).replace(/-/g, '-') || 'newsletter-category';
 
 const ensureUniqueCategorySlug = async (name, excludeId = null) => {
@@ -272,6 +321,10 @@ export const createNewsletter = asyncHandler(async (req, res) => {
   await ensureCategoryIdsExist(payload.categoryIds, {
     requireAtLeastOne: payload.status === 'published'
   });
+  await ensureNewsletterUniqueness({
+    title: payload.title,
+    contentText: payload.contentText
+  });
   const newsletter = await Newsletter.create({
     ...payload,
     createdBy: req.user?._id || null,
@@ -306,6 +359,11 @@ export const updateNewsletter = asyncHandler(async (req, res) => {
   const preparedPayload = await prepareNewsletterPayload(req.body, existingNewsletter);
   await ensureCategoryIdsExist(preparedPayload.categoryIds, {
     requireAtLeastOne: preparedPayload.status === 'published'
+  });
+  await ensureNewsletterUniqueness({
+    title: preparedPayload.title,
+    contentText: preparedPayload.contentText,
+    excludeId: existingNewsletter._id
   });
   const updatePayload = {
     ...preparedPayload,

@@ -60,10 +60,13 @@ const upsertLinkTag = ({ href, rel }) => {
 };
 
 export default function SeoMetadata({
+  author = '',
   canonicalUrl = '',
   description = '',
   image = '',
   keywords = '',
+  modifiedTime = '',
+  publishedTime = '',
   robots = 'index,follow,max-image-preview:large',
   structuredData = [],
   title = '',
@@ -82,6 +85,11 @@ export default function SeoMetadata({
       cleanups.push(upsertMetaTag({ name: 'description' }, description));
       cleanups.push(upsertMetaTag({ property: 'og:description' }, description));
       cleanups.push(upsertMetaTag({ name: 'twitter:description' }, description));
+    }
+
+    if (author) {
+      cleanups.push(upsertMetaTag({ name: 'author' }, author));
+      cleanups.push(upsertMetaTag({ property: 'article:author' }, author));
     }
 
     if (keywords) {
@@ -115,6 +123,14 @@ export default function SeoMetadata({
       cleanups.push(upsertMetaTag({ name: 'twitter:image' }, image));
     }
 
+    if (publishedTime) {
+      cleanups.push(upsertMetaTag({ property: 'article:published_time' }, publishedTime));
+    }
+
+    if (modifiedTime) {
+      cleanups.push(upsertMetaTag({ property: 'article:modified_time' }, modifiedTime));
+    }
+
     const normalizedStructuredData = Array.isArray(structuredData)
       ? structuredData.filter(Boolean)
       : structuredData
@@ -134,7 +150,20 @@ export default function SeoMetadata({
       structuredTags.forEach((tag) => tag.remove());
       cleanups.reverse().forEach((cleanup) => cleanup());
     };
-  }, [canonicalUrl, description, image, keywords, robots, structuredData, title, type, url]);
+  }, [
+    author,
+    canonicalUrl,
+    description,
+    image,
+    keywords,
+    modifiedTime,
+    publishedTime,
+    robots,
+    structuredData,
+    title,
+    type,
+    url
+  ]);
 
   return null;
 }

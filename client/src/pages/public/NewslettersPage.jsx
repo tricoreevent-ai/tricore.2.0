@@ -4,10 +4,16 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { getPublicNewsletters } from '../../api/newsletterApi.js';
 import AppIcon from '../../components/common/AppIcon.jsx';
 import LoadingSpinner from '../../components/common/LoadingSpinner.jsx';
+import SeoMetadata from '../../components/common/SeoMetadata.jsx';
+import { contactContent } from '../../data/siteContent.js';
 import { getApiErrorMessage } from '../../utils/apiErrors.js';
 import { formatDate } from '../../utils/formatters.js';
 
 const buildCategoryParam = (categorySlugs) => categorySlugs.join(',');
+const normalizeBaseUrl = (value) =>
+  String(value || '')
+    .trim()
+    .replace(/\/+$/, '');
 
 const parseCategoryParam = (value) =>
   String(value || '')
@@ -30,6 +36,37 @@ export default function NewslettersPage() {
     () => parseCategoryParam(searchParams.get('categories')),
     [searchParams]
   );
+  const baseUrl = normalizeBaseUrl(
+    contactContent.website ||
+      (typeof window !== 'undefined' ? window.location.origin : 'https://www.tricoreevents.online')
+  );
+  const canonicalUrl = `${baseUrl}/newsletters`;
+  const structuredData = useMemo(() => {
+    const itemList = (data.items || []).slice(0, 12).map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      url: `${baseUrl}/newsletters/${item.slug}`,
+      name: item.title
+    }));
+
+    return [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: 'TriCore Newsletters and Updates',
+        description:
+          'Browse published TriCore newsletters, stories, recaps, and operational updates.',
+        url: canonicalUrl
+      },
+      itemList.length
+        ? {
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            itemListElement: itemList
+          }
+        : null
+    ].filter(Boolean);
+  }, [baseUrl, canonicalUrl, data.items]);
 
   useEffect(() => {
     setSearchInput(searchParams.get('q') || '');
@@ -115,6 +152,14 @@ export default function NewslettersPage() {
 
   return (
     <div className="pb-20">
+      <SeoMetadata
+        canonicalUrl={canonicalUrl}
+        description="Browse published TriCore newsletters, stories, recaps, and event updates."
+        structuredData={structuredData}
+        title="TriCore Newsletters and Updates | Bangalore Events"
+        url={canonicalUrl}
+      />
+
       <section className="border-b border-[rgba(212,175,55,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0))]">
         <div className="container-shell py-14 sm:py-18 lg:py-20">
           <div className="max-w-4xl">
@@ -182,8 +227,7 @@ export default function NewslettersPage() {
                         ))}
                       </div>
                       <p className="public-meta">{formatDate(item.publicationDate)}</p>
-                      <h2 className="text-2xl font-extrabold text-white">{item.title}</h2>
-                      <p className="text-sm leading-7 text-[#a0a0a0]">{item.summary}</p>
+                      <h2 className="public-title-card text-white">{item.title}</h2>
                       <Link className="public-btn-primary w-full sm:w-auto" to={`/newsletters/${item.slug}`}>
                         Read Newsletter
                       </Link>

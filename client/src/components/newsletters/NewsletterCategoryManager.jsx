@@ -76,6 +76,7 @@ export default function NewsletterCategoryManager({
 
       <form className="space-y-4" onSubmit={handleSubmit}>
         <FloatingLabelField
+          dark
           error={errors.name}
           id="newsletterCategoryName"
           label="Category Name"
@@ -84,6 +85,7 @@ export default function NewsletterCategoryManager({
           value={form.name}
         />
         <FloatingLabelField
+          dark
           id="newsletterCategoryDescription"
           label="Description"
           name="description"
