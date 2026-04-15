@@ -290,12 +290,12 @@ export const aboutHighlights = {
     'TriCore Events works with experienced organizers who contribute practical planning skill, calm execution, and on-ground decision-making to every project they support.',
   organizers: [
     {
-      name: 'Sagar Mohamad',
+      name: 'Sagar Mohammad',
       role: 'Experienced event organizer'
     },
     {
       name: 'Sarath KS',
-      role: 'Experienced event organizer'
+      role: 'Experienced sports organizer'
     }
   ],
   organizersClosing:

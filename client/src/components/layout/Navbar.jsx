@@ -90,16 +90,6 @@ export default function Navbar({ marketing = false }) {
           ) : (
             <GoogleLoginButton />
           )}
-          <Link
-            className={
-              marketing
-                ? 'text-xs font-semibold uppercase tracking-[0.2em] text-[#d4af37] hover:text-white'
-                : 'text-sm font-semibold text-brand-blue'
-            }
-            to="/admin-portal/login"
-          >
-            Admin Portal
-          </Link>
         </nav>
 
         <button
@@ -230,16 +220,6 @@ export default function Navbar({ marketing = false }) {
             ) : (
               <GoogleLoginButton />
             )}
-            <Link
-              className={
-                marketing
-                  ? 'block border border-[rgba(212,175,55,0.2)] bg-[rgba(212,175,55,0.08)] px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-[#d4af37]'
-                  : 'block rounded-2xl bg-slate-50 px-4 py-3 text-sm font-semibold text-brand-blue'
-              }
-              to="/admin-portal/login"
-            >
-              Admin Portal
-            </Link>
           </div>
         </div>
       ) : null}
