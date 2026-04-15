@@ -38,8 +38,8 @@ export default function Navbar({ marketing = false }) {
             markClassName="h-12 w-12"
             titleClassName={
               marketing
-                ? 'font-display text-xl font-extrabold uppercase tracking-[0.18em] text-white sm:text-2xl'
-                : 'font-display text-2xl font-bold tracking-tight text-slate-950 sm:text-[1.85rem]'
+                ? 'font-display text-lg font-extrabold uppercase leading-tight tracking-[0.18em] text-white sm:text-xl'
+                : 'font-display text-xl font-bold leading-tight tracking-tight text-slate-950 sm:text-2xl'
             }
             subtitleClassName={
               marketing

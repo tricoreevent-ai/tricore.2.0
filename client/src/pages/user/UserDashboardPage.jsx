@@ -4,6 +4,7 @@ import { updatePayoutDetails } from '../../api/authApi.js';
 import { getUserDashboard } from '../../api/dashboardApi.js';
 import FormAlert from '../../components/common/FormAlert.jsx';
 import LoadingSpinner from '../../components/common/LoadingSpinner.jsx';
+import PageVectorArt from '../../components/common/PageVectorArt.jsx';
 import useAuth from '../../hooks/useAuth.js';
 import { getApiErrorMessage } from '../../utils/apiErrors.js';
 import { formatCurrency, formatDate, formatDateTime } from '../../utils/formatters.js';
@@ -93,14 +94,17 @@ export default function UserDashboardPage() {
 
   return (
     <div className="container-shell py-16">
-      <div className="mb-10">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-orange">User dashboard</p>
-        <h1 className="mt-3 text-4xl font-bold">Registrations, payments, and payout settings</h1>
+      <div className="mb-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-center">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-orange">User dashboard</p>
+          <h1 className="mt-3 text-3xl font-bold">Registrations, payments, and payout settings</h1>
+        </div>
+        <PageVectorArt className="lg:justify-self-end" tone="light" variant="user" />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="panel p-6">
-          <h2 className="text-2xl font-bold">Registered Events</h2>
+          <h2 className="text-xl font-bold">Registered Events</h2>
           <div className="mt-6 overflow-x-auto">
             <table className="min-w-full text-left text-sm">
               <thead>
@@ -152,7 +156,7 @@ export default function UserDashboardPage() {
         </section>
 
         <section className="panel p-6">
-          <h2 className="text-2xl font-bold">Upcoming Matches</h2>
+          <h2 className="text-xl font-bold">Upcoming Matches</h2>
           <div className="mt-6 space-y-4">
             {dashboard.matches.length ? (
               dashboard.matches.map((match) => (
@@ -175,7 +179,7 @@ export default function UserDashboardPage() {
 
       <form className="panel mt-6 space-y-6 p-6" onSubmit={handleProfileSubmit}>
         <div>
-          <h2 className="text-2xl font-bold">Refund / Payout Details</h2>
+          <h2 className="text-xl font-bold">Refund / Payout Details</h2>
           <p className="mt-2 text-sm text-slate-500">
             Save the payment details that TriCore should use if a refund or payout needs to be sent to you.
           </p>

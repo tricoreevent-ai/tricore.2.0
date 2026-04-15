@@ -1,3 +1,4 @@
+import PageVectorArt from '../../components/common/PageVectorArt.jsx';
 import { contactContent } from '../../data/siteContent.js';
 
 const legalEmail = contactContent.email || 'contact@tricoreevents.online';
@@ -295,19 +296,22 @@ export default function LegalPage() {
     <div className="pb-20 pt-12 sm:pt-16">
       <section className="border-b border-[rgba(212,175,55,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0))]">
         <div className="container-shell py-14 sm:py-16">
-          <div className="max-w-5xl">
-            <p className="public-label">TriCore Events Legal Hub</p>
-            <h1 className="public-title-page mt-5">Terms & Conditions and Privacy Policy</h1>
-            <div className="public-accent-line mt-6" />
-            <p className="public-copy mt-6">
-              Effective Date: April 2, 2026 | Last Updated: April 2, 2026
-            </p>
-            <p className="public-copy mt-5 max-w-4xl">
-              This document constitutes a legally binding agreement between TriCore Events,
-              also referred to as TriCore, we, our, or us, and all participants, team
-              representatives, and users. By registering for any event and making payment, you
-              acknowledge that you have read, understood, and agreed to all terms outlined below.
-            </p>
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
+            <div className="max-w-5xl">
+              <p className="public-label">TriCore Events Legal Hub</p>
+              <h1 className="public-title-page mt-5">Terms & Conditions and Privacy Policy</h1>
+              <div className="public-accent-line mt-6" />
+              <p className="public-copy mt-6">
+                Effective Date: April 2, 2026 | Last Updated: April 2, 2026
+              </p>
+              <p className="public-copy mt-5 max-w-4xl">
+                This document constitutes a legally binding agreement between TriCore Events,
+                also referred to as TriCore, we, our, or us, and all participants, team
+                representatives, and users. By registering for any event and making payment, you
+                acknowledge that you have read, understood, and agreed to all terms outlined below.
+              </p>
+            </div>
+            <PageVectorArt className="lg:justify-self-end" variant="legal" />
           </div>
 
           <div className="mt-8 grid gap-4 md:grid-cols-3">

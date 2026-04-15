@@ -6,6 +6,7 @@ import useAdminAuth from '../../hooks/useAdminAuth.js';
 import useAdminTheme from '../../hooks/useAdminTheme.js';
 import { adminPermissions, getAdminRoleLabel } from '../../data/adminAccess.js';
 import AppIcon from '../common/AppIcon.jsx';
+import PageVectorArt from '../common/PageVectorArt.jsx';
 import AdminNav from './AdminNav.jsx';
 import TriCoreLogo from '../common/TriCoreLogo.jsx';
 import { formatDateTime } from '../../utils/formatters.js';
@@ -24,6 +25,32 @@ const getAlertIconName = (alert) => {
   }
 
   return 'security';
+};
+
+const getAdminArtVariant = (title = '') => {
+  const normalizedTitle = title.toLowerCase();
+
+  if (/accounting|payment|ledger|finance|reports/.test(normalizedTitle)) {
+    return 'payment';
+  }
+
+  if (/event|match|schedule|registration/.test(normalizedTitle)) {
+    return 'sports';
+  }
+
+  if (/newsletter/.test(normalizedTitle)) {
+    return 'newsletter';
+  }
+
+  if (/settings|manual/.test(normalizedTitle)) {
+    return 'legal';
+  }
+
+  if (/user/.test(normalizedTitle)) {
+    return 'user';
+  }
+
+  return 'admin';
 };
 
 export default function AdminPageShell({
@@ -232,10 +259,10 @@ export default function AdminPageShell({
 
           <main className="admin-shell py-6 sm:py-8 lg:py-10">
             <section className="admin-panel mb-8 p-6 sm:p-8">
-              <div className="grid gap-6 xl:grid-cols-[1fr_auto] xl:items-end">
+              <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px_auto] xl:items-end">
                 <div>
                   <p className="admin-label">Operations Console</p>
-                  <h1 className="mt-4 text-[42px] font-extrabold tracking-[-1px]">{title}</h1>
+                  <h1 className="mt-4 text-3xl font-extrabold tracking-normal sm:text-[34px]">{title}</h1>
                   {mobileDescription ? (
                     <p className="mt-4 text-sm leading-7 text-[#a0a0a0] sm:hidden">{mobileDescription}</p>
                   ) : null}
@@ -245,6 +272,7 @@ export default function AdminPageShell({
                     </p>
                   ) : null}
                 </div>
+                <PageVectorArt compact tone="admin" variant={getAdminArtVariant(title)} />
                 <div className="grid gap-px bg-[rgba(255,255,255,0.08)] sm:grid-cols-2">
                   <div className="bg-[#141414] px-5 py-4">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#666666]">

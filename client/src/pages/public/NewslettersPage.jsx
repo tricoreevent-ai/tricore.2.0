@@ -4,6 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { getPublicNewsletters } from '../../api/newsletterApi.js';
 import AppIcon from '../../components/common/AppIcon.jsx';
 import LoadingSpinner from '../../components/common/LoadingSpinner.jsx';
+import PageVectorArt from '../../components/common/PageVectorArt.jsx';
 import SeoMetadata from '../../components/common/SeoMetadata.jsx';
 import { contactContent } from '../../data/siteContent.js';
 import { getApiErrorMessage } from '../../utils/apiErrors.js';
@@ -162,14 +163,17 @@ export default function NewslettersPage() {
 
       <section className="border-b border-[rgba(212,175,55,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0))]">
         <div className="container-shell py-14 sm:py-18 lg:py-20">
-          <div className="max-w-4xl">
-            <p className="public-label">Newsletter</p>
-            <h1 className="public-title-page mt-5">Stories, recaps, and updates from TriCore</h1>
-            <div className="public-accent-line mt-6" />
-            <p className="public-copy mt-6 max-w-3xl">
-              Browse published newsletters, search across updates, and explore content by category
-              from the right-hand sidebar on desktop or the stacked filter panel on mobile.
-            </p>
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
+            <div className="max-w-4xl">
+              <p className="public-label">Newsletter</p>
+              <h1 className="public-title-page mt-5">Stories, recaps, and updates from TriCore</h1>
+              <div className="public-accent-line mt-6" />
+              <p className="public-copy mt-6 max-w-3xl">
+                Browse published newsletters, search across updates, and explore content by category
+                from the right-hand sidebar on desktop or the stacked filter panel on mobile.
+              </p>
+            </div>
+            <PageVectorArt className="lg:justify-self-end" variant="newsletter" />
           </div>
         </div>
       </section>

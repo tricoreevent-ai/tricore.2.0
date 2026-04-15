@@ -2,6 +2,7 @@
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import AppIcon from '../../components/common/AppIcon.jsx';
+import PageVectorArt from '../../components/common/PageVectorArt.jsx';
 import TriCoreLogo from '../../components/common/TriCoreLogo.jsx';
 import useAdminAuth from '../../hooks/useAdminAuth.js';
 import { getAdminLoginErrorMessage } from '../../utils/apiErrors.js';
@@ -52,7 +53,7 @@ export default function AdminLoginPage() {
               subtitleClassName="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#d4af37]"
               titleClassName="text-[28px] font-extrabold tracking-[0.18em] uppercase text-white"
             />
-            <h1 className="mt-10 text-[42px] font-extrabold leading-[1.02] tracking-[-1px] text-white xl:text-[52px]">
+            <h1 className="mt-10 text-[34px] font-extrabold leading-[1.08] tracking-normal text-white xl:text-[42px]">
               Manage your events platform from one admin portal
             </h1>
             <div className="mt-8 h-1 w-16 bg-[#d4af37]" />
@@ -60,6 +61,7 @@ export default function AdminLoginPage() {
               Sign in to control events, registrations, schedules, payments, reports, and site
               settings from the same operations console.
             </p>
+            <PageVectorArt className="mt-8" tone="admin" variant="admin" />
           </div>
         </section>
 
@@ -76,7 +78,7 @@ export default function AdminLoginPage() {
               </div>
 
               <p className="admin-label mt-8 lg:mt-0">Admin Login</p>
-              <h1 className="mt-4 text-[28px] font-extrabold tracking-[0.12em] text-white">Sign In</h1>
+              <h1 className="mt-4 text-2xl font-extrabold tracking-normal text-white">Sign In</h1>
               <p className="mt-3 text-sm leading-7 text-[#a0a0a0]">
                 Sign in with local admin credentials. Default bootstrap login is username{' '}
                 <strong className="text-white">tricore</strong> and password{' '}
@@ -85,6 +87,7 @@ export default function AdminLoginPage() {
               <p className="mt-2 text-sm leading-7 text-[#666666]">
                 Change that password immediately from the Users section after logging in.
               </p>
+              <PageVectorArt compact className="mt-6 lg:hidden" tone="admin" variant="admin" />
 
               <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
                 <div>

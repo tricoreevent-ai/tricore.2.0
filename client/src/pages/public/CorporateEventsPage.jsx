@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import AppIcon from '../../components/common/AppIcon.jsx';
+import PageVectorArt from '../../components/common/PageVectorArt.jsx';
 import SeoMetadata from '../../components/common/SeoMetadata.jsx';
 import { contactContent, corporateEventsContent } from '../../data/siteContent.js';
 import {
@@ -117,8 +118,10 @@ export default function CorporateEventsPage() {
             </div>
           </div>
 
-          <div className="public-panel-soft overflow-hidden text-white">
-            <div className="p-8 sm:p-10">
+          <div className="space-y-5">
+            <PageVectorArt variant="corporate" />
+            <div className="public-panel-soft overflow-hidden text-white">
+              <div className="p-8 sm:p-10">
               <p className="public-label">
                 What we handle
               </p>
@@ -140,6 +143,7 @@ export default function CorporateEventsPage() {
                   </div>
                 ))}
               </div>
+            </div>
             </div>
           </div>
         </div>

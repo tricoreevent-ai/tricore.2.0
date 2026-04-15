@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import AppIcon from '../common/AppIcon.jsx';
+import PageVectorArt from '../common/PageVectorArt.jsx';
 
 const AUTO_ADVANCE_MS = 6000;
 
@@ -217,6 +218,9 @@ export default function HomeBannerCarousel({ banners, expertiseItems, trustIndic
         </div>
 
         <aside className="public-panel overflow-hidden">
+          <div className="border-b border-[rgba(212,175,55,0.16)] p-5 sm:p-6">
+            <PageVectorArt compact className="mx-auto border-0 bg-transparent p-0" variant="sports" />
+          </div>
           {currentBanner.badge || currentBanner.description ? (
             <div className="border-b border-[rgba(212,175,55,0.16)] px-6 py-5 sm:px-8">
               {currentBanner.badge ? <p className="public-label">{currentBanner.badge}</p> : null}

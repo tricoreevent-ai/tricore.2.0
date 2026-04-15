@@ -5,6 +5,7 @@ import { getMatchesByEvent } from '../../api/dashboardApi.js';
 import { getEventById } from '../../api/eventsApi.js';
 import GoogleLoginButton from '../../components/auth/GoogleLoginButton.jsx';
 import LoadingSpinner from '../../components/common/LoadingSpinner.jsx';
+import PageVectorArt from '../../components/common/PageVectorArt.jsx';
 import SeoMetadata from '../../components/common/SeoMetadata.jsx';
 import NotifyInterestPanel from '../../components/events/NotifyInterestPanel.jsx';
 import RegistrationForm from '../../components/dashboards/RegistrationForm.jsx';
@@ -186,7 +187,7 @@ export default function EventDetailPage() {
                 <span className="public-chip-neutral">
                   {previewEvent?.sportType || 'Event access'}
                 </span>
-                <h1 className="mt-4 text-3xl font-bold text-white sm:text-4xl">
+                <h1 className="mt-4 text-2xl font-bold text-white sm:text-3xl">
                   {previewEvent?.name || 'Sign in to view this event'}
                 </h1>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-[#d9d9d9] sm:text-base">
@@ -213,10 +214,11 @@ export default function EventDetailPage() {
             </section>
 
             <aside className="public-panel-soft p-5 sm:p-6">
+              <PageVectorArt compact className="mb-5" variant="sports" />
               <span className={`inline-flex items-center border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${registrationStatusClasses[lockedStatus] || registrationStatusClasses.closed}`}>
                 {registrationStatusLabels[lockedStatus] || registrationStatusLabels.closed}
               </span>
-              <h2 className="mt-4 text-2xl font-bold text-white">Unlock event details</h2>
+              <h2 className="mt-4 text-xl font-bold text-white">Unlock event details</h2>
               <p className="mt-3 text-sm leading-7 text-[#a0a0a0]">
                 Sign in with Google to see the full event page, review the schedule, confirm your
                 account email, and register from the same screen.
@@ -258,7 +260,7 @@ export default function EventDetailPage() {
         {seoMetadata}
         <div className="container-shell py-8 sm:py-10">
           <div className="public-panel p-6 text-center sm:p-8">
-            <h1 className="text-2xl font-bold text-white sm:text-3xl">Unable to load event</h1>
+            <h1 className="text-xl font-bold text-white sm:text-2xl">Unable to load event</h1>
             <p className="mt-3 text-sm text-red-300">{error}</p>
           </div>
         </div>
@@ -272,7 +274,7 @@ export default function EventDetailPage() {
         {seoMetadata}
         <div className="container-shell py-8 sm:py-10">
           <div className="public-panel p-6 text-center sm:p-8">
-            <h1 className="text-2xl font-bold text-white sm:text-3xl">Event not found</h1>
+            <h1 className="text-xl font-bold text-white sm:text-2xl">Event not found</h1>
           </div>
         </div>
       </>
@@ -290,10 +292,10 @@ export default function EventDetailPage() {
           <section className="space-y-5">
             <div className="public-panel overflow-hidden">
               <div className="border-b border-[rgba(212,175,55,0.16)] bg-[rgba(212,175,55,0.08)] p-5 text-white sm:p-8">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
                   <div>
                     <span className="public-chip-neutral">{event.sportType}</span>
-                    <h1 className="mt-4 text-3xl font-bold text-white sm:text-4xl">{event.name}</h1>
+                    <h1 className="mt-4 text-2xl font-bold text-white sm:text-3xl">{event.name}</h1>
                     {event.description ? (
                       <p className="mt-4 max-w-2xl text-sm leading-7 text-[#d9d9d9] sm:text-base">
                         {event.description}
@@ -303,6 +305,7 @@ export default function EventDetailPage() {
                   <span className={`inline-flex w-fit items-center border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${registrationStatusClasses[registrationStatus] || registrationStatusClasses.closed}`}>
                     {registrationStatusLabels[registrationStatus] || registrationStatusLabels.closed}
                   </span>
+                  <PageVectorArt compact className="w-full shrink-0 lg:max-w-xs" variant="sports" />
                 </div>
               </div>
 
@@ -320,7 +323,7 @@ export default function EventDetailPage() {
 
             <div className="public-panel p-4 sm:p-6">
               <div className="mb-5">
-                <h2 className="text-2xl font-bold text-white">Match Schedule</h2>
+                <h2 className="text-xl font-bold text-white">Match Schedule</h2>
                 <p className="mt-2 text-sm text-[#a0a0a0]">
                   Participants can review the published fixtures for this event.
                 </p>

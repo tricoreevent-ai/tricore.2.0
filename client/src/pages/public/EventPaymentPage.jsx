@@ -6,6 +6,7 @@ import { getEventById } from '../../api/eventsApi.js';
 import { getPublicPaymentSettings } from '../../api/publicSettingsApi.js';
 import FormAlert from '../../components/common/FormAlert.jsx';
 import LoadingSpinner from '../../components/common/LoadingSpinner.jsx';
+import PageVectorArt from '../../components/common/PageVectorArt.jsx';
 import SeoMetadata from '../../components/common/SeoMetadata.jsx';
 import { contactContent } from '../../data/siteContent.js';
 import { EVENT_PAYMENT_PAGE_SEO_KEYWORDS, mergeSeoKeywords } from '../../seo/publicSeo.js';
@@ -199,7 +200,7 @@ export default function EventPaymentPage() {
         {seoMetadata}
         <div className="container-shell py-16">
           <div className="panel p-8 text-center">
-            <h1 className="text-3xl font-bold">Payment screen unavailable</h1>
+            <h1 className="text-2xl font-bold">Payment screen unavailable</h1>
           </div>
         </div>
       </>
@@ -213,14 +214,19 @@ export default function EventPaymentPage() {
         <div className="mx-auto max-w-6xl space-y-6 sm:space-y-8">
           <div className="panel overflow-hidden">
             <div className="bg-gradient-to-br from-brand-blue via-brand-navy to-sky-500 p-5 text-white sm:p-8">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-100">
-                Payment Workflow
-              </p>
-              <h1 className="mt-3 text-3xl font-bold sm:text-4xl">Complete Payment for {event.name}</h1>
-              <p className="mt-4 max-w-3xl text-sm leading-7 text-blue-100 sm:text-base">
-                Your registration details are saved. Use any configured payment method below,
-                then upload the payment screenshot for admin confirmation.
-              </p>
+              <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-center">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-100">
+                    Payment Workflow
+                  </p>
+                  <h1 className="mt-3 text-2xl font-bold sm:text-3xl">Complete Payment for {event.name}</h1>
+                  <p className="mt-4 max-w-3xl text-sm leading-7 text-blue-100 sm:text-base">
+                    Your registration details are saved. Use any configured payment method below,
+                    then upload the payment screenshot for admin confirmation.
+                  </p>
+                </div>
+                <PageVectorArt compact className="lg:justify-self-end" tone="brand" variant="payment" />
+              </div>
             </div>
             <div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-6 xl:grid-cols-3">
               <div className="rounded-3xl bg-slate-50 p-5">
@@ -257,7 +263,7 @@ export default function EventPaymentPage() {
             <div className="grid gap-8 xl:grid-cols-[1.1fr_0.9fr]">
               <section className="panel space-y-6 p-4 sm:p-6">
                 <div>
-                  <h2 className="text-2xl font-bold">Configured Payment Methods</h2>
+                  <h2 className="text-xl font-bold">Configured Payment Methods</h2>
                   <p className="mt-2 text-sm text-slate-500">
                     Only the methods enabled in admin settings are shown here.
                   </p>
@@ -334,7 +340,7 @@ export default function EventPaymentPage() {
 
               <form className="panel space-y-6 p-4 sm:p-6" onSubmit={handleSubmit}>
               <div>
-                <h2 className="text-2xl font-bold">Upload Payment Proof</h2>
+                <h2 className="text-xl font-bold">Upload Payment Proof</h2>
                 <p className="mt-2 text-sm text-slate-500">
                   Upload the screenshot after payment. The image will be emailed to the admin-configured recipient for review.
                 </p>

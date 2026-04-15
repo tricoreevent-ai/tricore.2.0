@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { getPublicHomePageContent } from '../../api/publicSettingsApi.js';
+import PageVectorArt from '../../components/common/PageVectorArt.jsx';
 import { homePageContentFallback } from '../../data/siteContent.js';
 import { sponsorshipTiers } from '../../data/sponsorshipTiers.js';
 
@@ -170,10 +171,16 @@ export default function SponsorshipPage() {
               }}
             >
               <div>
+                <PageVectorArt
+                  compact
+                  className="mb-8 border-white/20 bg-black/15"
+                  tone="brand"
+                  variant="sponsor"
+                />
                 <p className="public-label">
                   Event Snapshot
                 </p>
-                <h2 className="mt-4 text-3xl font-extrabold leading-tight">{eventName}</h2>
+                <h2 className="mt-4 text-2xl font-extrabold leading-tight">{eventName}</h2>
                 <p className="mt-5 text-sm leading-7 text-white/80">
                   Designed to bring together corporate teams, cricket enthusiasts, and community-led
                   audiences in one professionally managed sporting environment.

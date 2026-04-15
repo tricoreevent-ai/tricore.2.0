@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+import PageVectorArt from '../../components/common/PageVectorArt.jsx';
 import SeoMetadata from '../../components/common/SeoMetadata.jsx';
 import { contactContent } from '../../data/siteContent.js';
 import { FALLBACK_PAGE_SEO_KEYWORDS } from '../../seo/publicSeo.js';
@@ -58,6 +59,7 @@ export default function NotFoundPage() {
             </div>
 
             <div className="public-panel-soft p-6 sm:p-8">
+              <PageVectorArt compact className="mb-6" variant="notFound" />
               <p className="public-label">
                 Helpful links
               </p>

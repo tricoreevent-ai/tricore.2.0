@@ -5,6 +5,7 @@ import { getEvents } from '../../api/eventsApi.js';
 import CompactMonthCalendar from '../../components/calendar/CompactMonthCalendar.jsx';
 import AppIcon from '../../components/common/AppIcon.jsx';
 import LoadingSpinner from '../../components/common/LoadingSpinner.jsx';
+import PageVectorArt from '../../components/common/PageVectorArt.jsx';
 import EventCard from '../../components/events/EventCard.jsx';
 import { eventsContent } from '../../data/siteContent.js';
 import { getApiErrorMessage } from '../../utils/apiErrors.js';
@@ -127,7 +128,7 @@ export default function EventsPage() {
 
   return (
     <div className="container-shell py-10 sm:py-14 lg:py-16">
-      <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+      <div className="mb-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end">
         <div>
           <p className="public-label">Events</p>
           <h1 className="public-title-page mt-5">Fueling the spirit of competition</h1>
@@ -138,21 +139,24 @@ export default function EventsPage() {
             competition, smooth operations, and memorable shared moments.
           </p>
         </div>
-        <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-1 lg:mx-0 lg:flex-wrap lg:overflow-visible lg:px-0">
-          {sportTypes.map((sport) => (
-            <button
-              className={`shrink-0 border px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] transition ${
-                selectedSport === sport
-                  ? 'border-[rgba(212,175,55,0.2)] bg-[rgba(212,175,55,0.12)] text-[#d4af37]'
-                  : 'border-white/10 bg-white/5 text-[#a0a0a0] hover:text-white'
-              }`}
-              key={sport}
-              onClick={() => setSelectedSport(sport)}
-              type="button"
-            >
-              {sport}
-            </button>
-          ))}
+        <div className="space-y-4 lg:justify-self-end">
+          <PageVectorArt compact variant="sports" />
+          <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-1 lg:mx-0 lg:flex-wrap lg:overflow-visible lg:px-0">
+            {sportTypes.map((sport) => (
+              <button
+                className={`shrink-0 border px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] transition ${
+                  selectedSport === sport
+                    ? 'border-[rgba(212,175,55,0.2)] bg-[rgba(212,175,55,0.12)] text-[#d4af37]'
+                    : 'border-white/10 bg-white/5 text-[#a0a0a0] hover:text-white'
+                }`}
+                key={sport}
+                onClick={() => setSelectedSport(sport)}
+                type="button"
+              >
+                {sport}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -235,7 +239,7 @@ export default function EventsPage() {
               <div className="flex items-end justify-between gap-3">
                 <div>
                   <p className="public-label">Coming Up</p>
-                  <h2 className="public-title-card mt-3 text-[1.55rem]">Next events</h2>
+                  <h2 className="public-title-card mt-3">Next events</h2>
                 </div>
                 <span className="badge bg-[rgba(255,255,255,0.08)] text-white">
                   {mobileUpcomingEvents.length} event{mobileUpcomingEvents.length === 1 ? '' : 's'}

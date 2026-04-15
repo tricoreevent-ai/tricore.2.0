@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { submitContactInquiry } from '../../api/contactApi.js';
 import AppIcon from '../../components/common/AppIcon.jsx';
 import FormAlert from '../../components/common/FormAlert.jsx';
+import PageVectorArt from '../../components/common/PageVectorArt.jsx';
 import PartnerHighlights from '../../components/common/PartnerHighlights.jsx';
 import { contactContent, partnerHighlights } from '../../data/siteContent.js';
 import { getWhatsAppHref, getTelephoneHref } from '../../utils/contactLinks.js';
@@ -67,6 +68,8 @@ export default function ContactPage() {
                 to turn your brief into a disciplined, high-energy event experience.
               </p>
             </div>
+
+            <PageVectorArt variant="contact" />
 
             <div className="public-panel-soft space-y-5 p-6 sm:p-8">
               <div>

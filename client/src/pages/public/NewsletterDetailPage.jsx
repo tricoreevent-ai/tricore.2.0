@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { getPublicNewsletterBySlug } from '../../api/newsletterApi.js';
 import LoadingSpinner from '../../components/common/LoadingSpinner.jsx';
+import PageVectorArt from '../../components/common/PageVectorArt.jsx';
 import SeoMetadata from '../../components/common/SeoMetadata.jsx';
 import { contactContent } from '../../data/siteContent.js';
 import {
@@ -163,7 +164,7 @@ export default function NewsletterDetailPage() {
         />
         <div className="container-shell py-10">
           <div className="public-panel p-8">
-            <h1 className="text-2xl font-bold text-white">Unable to load newsletter</h1>
+            <h1 className="text-xl font-bold text-white">Unable to load newsletter</h1>
             <p className="mt-3 text-sm text-red-300">{error}</p>
           </div>
         </div>
@@ -175,7 +176,7 @@ export default function NewsletterDetailPage() {
     return (
       <div className="container-shell py-10">
         <div className="public-panel p-8">
-          <h1 className="text-2xl font-bold text-white">Newsletter not found</h1>
+          <h1 className="text-xl font-bold text-white">Newsletter not found</h1>
         </div>
       </div>
     );
@@ -211,24 +212,29 @@ export default function NewsletterDetailPage() {
             ) : null}
 
             <div className="border-b border-[rgba(212,175,55,0.14)] bg-[rgba(212,175,55,0.06)] px-6 py-6 sm:px-8">
-              <div className="flex flex-wrap gap-2">
-                {(item.categories || []).map((category) => (
-                  <span className="public-chip" key={category._id}>
-                    {category.name}
-                  </span>
-                ))}
+              <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-center">
+                <div>
+                  <div className="flex flex-wrap gap-2">
+                    {(item.categories || []).map((category) => (
+                      <span className="public-chip" key={category._id}>
+                        {category.name}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-[#c9cdd2]">
+                    <p className="public-meta text-[#c9cdd2]">{formatDate(item.publicationDate)}</p>
+                    {item.updatedAt ? (
+                      <p className="text-sm font-medium text-[#aeb5bd]">
+                        Updated {formatDate(item.updatedAt)}
+                      </p>
+                    ) : null}
+                  </div>
+                  <h1 className="mt-5 max-w-4xl text-2xl font-extrabold leading-tight text-white sm:text-3xl lg:text-4xl">
+                    {item.title}
+                  </h1>
+                </div>
+                <PageVectorArt compact className="lg:justify-self-end" variant="newsletter" />
               </div>
-              <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-[#c9cdd2]">
-                <p className="public-meta text-[#c9cdd2]">{formatDate(item.publicationDate)}</p>
-                {item.updatedAt ? (
-                  <p className="text-sm font-medium text-[#aeb5bd]">
-                    Updated {formatDate(item.updatedAt)}
-                  </p>
-                ) : null}
-              </div>
-              <h1 className="mt-5 max-w-4xl text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-5xl">
-                {item.title}
-              </h1>
             </div>
 
             <div className="px-6 py-6 sm:px-8 sm:py-8">
