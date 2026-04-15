@@ -494,6 +494,7 @@ export const partnerHighlights = [
     name: 'Sarva Horizon',
     role: 'Event Partner',
     logoUrl: '/partners/sarva-horizon-logo.png',
+    logoPlate: 'light',
     logoAlt: 'Sarva Horizon logo',
     description:
       'A collaboration partner helping strengthen event presentation, business visibility, and partner engagement around TriCore experiences.'
