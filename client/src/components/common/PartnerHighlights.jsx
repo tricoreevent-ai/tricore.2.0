@@ -12,7 +12,7 @@ export default function PartnerHighlights({ description, partners, title = 'Part
   }
 
   return (
-    <section className="container-shell mt-24">
+    <section className="container-shell mt-14">
       <div className="public-panel p-8 sm:p-10">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>

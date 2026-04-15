@@ -18,6 +18,9 @@ const createEmptyBanner = () => ({
   secondaryActionHref: '',
   isActive: true
 });
+const videoMediaPattern = /^(?:data:video\/|.*\.(?:mp4|mpeg|mpg|m4v|mov|ogv|ogg|webm)(?:[?#].*)?$)/i;
+const uploadMediaExtensionPattern = /\.(?:avif|gif|heic|heif|ico|jpe?g|png|svg|webp|mp4|mpeg|mpg|m4v|mov|ogv|ogg|webm)$/i;
+const allowedMediaTypes = /^(?:image|video)\//i;
 
 const sanitizeBanner = (banner) => ({
   id: String(banner.id || '').trim() || createBannerId(),
@@ -32,6 +35,8 @@ const sanitizeBanner = (banner) => ({
   secondaryActionHref: String(banner.secondaryActionHref || '').trim(),
   isActive: Boolean(banner.isActive)
 });
+
+const isVideoMedia = (value) => videoMediaPattern.test(String(value || '').trim());
 
 export default function HomeBannerSettingsPanel({
   config,
@@ -53,7 +58,7 @@ export default function HomeBannerSettingsPanel({
     () => ({
       total: banners.length,
       active: banners.filter((banner) => banner.isActive).length,
-      withImages: banners.filter((banner) => banner.imageUrl).length
+      withMedia: banners.filter((banner) => banner.imageUrl).length
     }),
     [banners]
   );
@@ -72,8 +77,13 @@ export default function HomeBannerSettingsPanel({
     setLocalError('');
   };
 
-  const handleBannerImageUpload = (bannerId, file) => {
+  const handleBannerMediaUpload = (bannerId, file) => {
     if (!file) {
+      return;
+    }
+
+    if (!allowedMediaTypes.test(file.type) && !uploadMediaExtensionPattern.test(file.name || '')) {
+      setLocalError('Upload an image or video file for the homepage banner.');
       return;
     }
 
@@ -162,9 +172,9 @@ export default function HomeBannerSettingsPanel({
           <p className="mt-2 text-sm text-slate-500">Only active banners are shown to visitors on the homepage.</p>
         </div>
         <div className="panel p-6">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-orange">With Images</p>
-          <p className="mt-3 text-3xl font-bold">{summary.withImages}</p>
-          <p className="mt-2 text-sm text-slate-500">Upload banner artwork directly to this server or paste an image URL.</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-orange">With Media</p>
+          <p className="mt-3 text-3xl font-bold">{summary.withMedia}</p>
+          <p className="mt-2 text-sm text-slate-500">Upload images or videos, or paste a direct media URL.</p>
         </div>
       </div>
 
@@ -256,13 +266,13 @@ export default function HomeBannerSettingsPanel({
 
                   <div>
                     <label className="label" htmlFor={`banner-image-alt-${banner.id}`}>
-                      Image Alt Text
+                      Media Alt Text
                     </label>
                     <input
                       className="input"
                       id={`banner-image-alt-${banner.id}`}
                       onChange={(event) => handleBannerFieldChange(banner.id, 'imageAlt', event.target.value)}
-                      placeholder="Describe the banner image"
+                      placeholder="Describe the banner media"
                       value={banner.imageAlt}
                     />
                   </div>
@@ -295,29 +305,29 @@ export default function HomeBannerSettingsPanel({
 
                   <div className="md:col-span-2">
                     <label className="label" htmlFor={`banner-image-url-${banner.id}`}>
-                      Image URL
+                      Media URL
                     </label>
                     <input
                       className="input"
                       id={`banner-image-url-${banner.id}`}
                       onChange={(event) => handleBannerFieldChange(banner.id, 'imageUrl', event.target.value)}
-                      placeholder="https://example.com/banner.jpg"
+                      placeholder="https://example.com/banner.jpg or banner.mp4"
                       value={banner.imageUrl}
                     />
                     <p className="mt-2 text-xs text-slate-500">
-                      You can paste an image URL or upload a file below.
+                      You can paste an image or video URL, or upload a file below.
                     </p>
                   </div>
 
                   <div className="md:col-span-2">
                     <label className="label" htmlFor={`banner-upload-${banner.id}`}>
-                      Upload Banner Image
+                      Upload Banner Media
                     </label>
                     <input
-                      accept="image/*"
+                      accept="image/*,video/mp4,video/mpeg,video/webm,video/ogg,video/quicktime,video/x-m4v"
                       className="input"
                       id={`banner-upload-${banner.id}`}
-                      onChange={(event) => handleBannerImageUpload(banner.id, event.target.files?.[0])}
+                      onChange={(event) => handleBannerMediaUpload(banner.id, event.target.files?.[0])}
                       type="file"
                     />
                   </div>
@@ -386,11 +396,21 @@ export default function HomeBannerSettingsPanel({
                     <div className="md:col-span-2">
                       <div className="rounded-3xl bg-white p-4 shadow-sm">
                         <p className="text-sm font-semibold text-slate-700">Preview</p>
-                        <img
-                          alt={banner.imageAlt || banner.title || `Banner ${index + 1}`}
-                          className="mt-4 max-h-80 w-full rounded-3xl object-cover"
-                          src={banner.imageUrl}
-                        />
+                        {isVideoMedia(banner.imageUrl) ? (
+                          <video
+                            className="mt-4 max-h-80 w-full rounded-3xl object-cover"
+                            controls
+                            muted
+                            playsInline
+                            src={banner.imageUrl}
+                          />
+                        ) : (
+                          <img
+                            alt={banner.imageAlt || banner.title || `Banner ${index + 1}`}
+                            className="mt-4 max-h-80 w-full rounded-3xl object-cover"
+                            src={banner.imageUrl}
+                          />
+                        )}
                       </div>
                     </div>
                   ) : null}

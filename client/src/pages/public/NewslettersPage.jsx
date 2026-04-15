@@ -162,7 +162,7 @@ export default function NewslettersPage() {
       />
 
       <section className="border-b border-[rgba(212,175,55,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0))]">
-        <div className="container-shell py-14 sm:py-18 lg:py-20">
+        <div className="container-shell py-10 sm:py-12 lg:py-14">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
             <div className="max-w-4xl">
               <p className="public-label">Newsletter</p>

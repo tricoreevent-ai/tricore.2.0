@@ -1,12 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import {
-  aboutHighlights,
   contactContent,
-  corporateEventsHomeFeature,
-  corporateTournamentSpotlight,
-  eventsContent,
-  homeCredibilitySignals,
   homeFinalCta,
   homePageContentFallback,
   partnerHighlights,
@@ -62,20 +57,15 @@ export default function HomePageContentSections({ content, events, eventsError, 
   const introDescription = content?.introDescription || homePageContentFallback.introDescription;
   const introActionLabel = content?.introActionLabel || homePageContentFallback.introActionLabel;
   const introActionHref = content?.introActionHref || homePageContentFallback.introActionHref;
-  const highlightsTitle = content?.highlightsTitle || homePageContentFallback.highlightsTitle;
-  const highlightsDescription =
-    content?.highlightsDescription || homePageContentFallback.highlightsDescription;
-
   return (
     <>
-      <section className="container-shell mt-24">
+      <section className="container-shell mt-14">
         <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="public-panel p-8 sm:p-10">
             <p className="public-label">{introBadge}</p>
             <h2 className="public-title-section mt-5 max-w-4xl">{introTitle}</h2>
             <div className="public-accent-line mt-6" />
             <p className="public-copy mt-6">{introDescription}</p>
-            <p className="public-copy mt-5">{aboutHighlights.sportsBelief}</p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link className="public-btn-primary" to={introActionHref}>
                 {introActionLabel}
@@ -87,7 +77,7 @@ export default function HomePageContentSections({ content, events, eventsError, 
           </div>
 
           <div className="public-panel-soft p-8 sm:p-10">
-            <div className="mt-8 grid gap-4">
+            <div className="grid gap-4">
               {whyChooseItems.map((item) => (
                 <div className="public-panel-ghost p-5" key={item.title}>
                   <div className="flex items-start gap-4">
@@ -106,97 +96,7 @@ export default function HomePageContentSections({ content, events, eventsError, 
         </div>
       </section>
 
-      <div className="container-shell">
-        <div className="public-divider" />
-      </div>
-
-      <section className="public-page-alt py-16">
-        <div className="container-shell">
-          <div className="mb-10 max-w-4xl">
-            <h2 className="public-title-section">{highlightsTitle}</h2>
-            <p className="public-copy mt-5">{highlightsDescription}</p>
-          </div>
-          <div className="grid gap-6 lg:grid-cols-3">
-            {homeCredibilitySignals.map((signal, index) => (
-              <article className="public-panel p-7" key={signal.title}>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#d4af37]">
-                  {String(index + 1).padStart(2, '0')}
-                </p>
-                <h3 className="public-title-card mt-4">{signal.title}</h3>
-                <p className="public-copy-small mt-4">{signal.description}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="container-shell mt-24">
-        <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="public-panel p-8 sm:p-10">
-            <p className="public-label">{corporateEventsHomeFeature.badge}</p>
-            <h2 className="public-title-section mt-5">{corporateEventsHomeFeature.title}</h2>
-            <p className="public-copy mt-6">{corporateEventsHomeFeature.description}</p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link className="public-btn-primary" to={corporateEventsHomeFeature.primaryActionHref}>
-                {corporateEventsHomeFeature.primaryActionLabel}
-              </Link>
-              <Link className="public-btn-secondary" to={corporateEventsHomeFeature.secondaryActionHref}>
-                {corporateEventsHomeFeature.secondaryActionLabel}
-              </Link>
-            </div>
-          </div>
-
-          <div className="public-panel-soft p-8 sm:p-10">
-            <div className="mt-8 grid gap-4">
-              {corporateEventsHomeFeature.points.map((item, index) => (
-                <div className="public-panel-ghost p-5" key={item}>
-                  <div className="flex items-start gap-4">
-                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.06)] text-sm font-extrabold text-white">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                    <p className="public-copy-small">{item}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="container-shell mt-24">
-        <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="public-panel p-8 sm:p-10">
-            <p className="public-label">{corporateTournamentSpotlight.badge}</p>
-            <h2 className="public-title-section mt-5">{corporateTournamentSpotlight.title}</h2>
-            <p className="public-copy mt-6">{corporateTournamentSpotlight.description}</p>
-            <p className="public-copy mt-5">{corporateTournamentSpotlight.supportingCopy}</p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link className="public-btn-primary" to={corporateTournamentSpotlight.primaryActionHref}>
-                {corporateTournamentSpotlight.primaryActionLabel}
-              </Link>
-              <Link className="public-btn-secondary" to={corporateTournamentSpotlight.secondaryActionHref}>
-                {corporateTournamentSpotlight.secondaryActionLabel}
-              </Link>
-            </div>
-          </div>
-
-          <div className="public-panel-soft p-8 sm:p-10">
-            <div className="mt-8 space-y-4">
-              {[...eventsContent.sports.slice(0, 2), eventsContent.difference].map((item) => (
-                <div className="public-panel-ghost p-5" key={item}>
-                  <p className="public-copy-small">{item}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="container-shell">
-        <div className="public-divider" />
-      </div>
-
-      <section className="container-shell mt-24">
+      <section className="container-shell mt-14">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="public-label">Upcoming Tournaments</p>
@@ -291,47 +191,6 @@ export default function HomePageContentSections({ content, events, eventsError, 
         )}
       </section>
 
-      <section className="container-shell mt-24">
-        <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="public-panel p-8 sm:p-10">
-            <p className="public-label">What We Organize</p>
-            <h2 className="public-title-card mt-5 max-w-2xl">
-              Structured events for sport, business, and community life
-            </h2>
-            <div className="mt-8 space-y-4">
-              {[...eventsContent.sports.slice(0, 2), ...eventsContent.corporate.slice(0, 2)].map((item) => (
-                <div className="public-panel-ghost p-5" key={item}>
-                  <p className="public-copy-small">{item}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="public-panel-soft p-8 sm:p-10">
-            <p className="public-label">Our Process</p>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              {eventsContent.process.slice(0, 4).map((step, index) => (
-                <div className="public-panel-ghost p-5" key={step.title}>
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#d4af37]">
-                      Step {index + 1}
-                    </p>
-                    <span className="inline-flex h-10 w-10 items-center justify-center border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.05)] text-white">
-                      <AppIcon className="h-4 w-4" name={step.icon} />
-                    </span>
-                  </div>
-                  <h3 className="mt-4 text-lg font-extrabold text-white">{step.title}</h3>
-                  <p className="public-copy-small mt-3">{step.description}</p>
-                </div>
-              ))}
-            </div>
-            <div className="public-panel-ghost mt-4 p-5">
-              <p className="public-copy-small">{eventsContent.difference}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {content?.galleryEnabledHome ? (
         <ImageGallerySection
           description={content.homeGalleryDescription}
@@ -341,7 +200,7 @@ export default function HomePageContentSections({ content, events, eventsError, 
       ) : null}
 
       {content?.testimonialsEnabledHome && visibleTestimonials.length ? (
-        <section className="container-shell mt-24">
+        <section className="container-shell mt-14">
           <div className="mb-10 max-w-4xl">
             <p className="public-label">Testimonials</p>
             <h2 className="public-title-section mt-4">
@@ -387,7 +246,7 @@ export default function HomePageContentSections({ content, events, eventsError, 
         title="Partner Highlights"
       />
 
-      <section className="container-shell mt-24">
+      <section className="container-shell mt-14">
         <div className="public-panel-soft overflow-hidden p-8 sm:p-10">
           <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>

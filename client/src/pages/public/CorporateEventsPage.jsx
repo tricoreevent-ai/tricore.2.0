@@ -81,7 +81,7 @@ export default function CorporateEventsPage() {
         url={canonicalUrl}
       />
 
-      <section className="container-shell py-16">
+      <section className="container-shell py-10 sm:py-12">
         <div className="grid gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
           <div>
             <p className="public-label">

@@ -293,9 +293,9 @@ function LegalSection({ title, paragraphs = [], bullets = [], subsections = [], 
 
 export default function LegalPage() {
   return (
-    <div className="pb-20 pt-12 sm:pt-16">
+    <div className="pb-16 pt-8 sm:pt-10">
       <section className="border-b border-[rgba(212,175,55,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0))]">
-        <div className="container-shell py-14 sm:py-16">
+        <div className="container-shell py-10 sm:py-12">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
             <div className="max-w-5xl">
               <p className="public-label">TriCore Events Legal Hub</p>

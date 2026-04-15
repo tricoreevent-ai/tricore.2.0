@@ -6,7 +6,7 @@ const bannerSchema = z
     badge: z.string().trim().max(80).optional().or(z.literal('')),
     title: z.string().trim().min(1, 'Banner title is required.').max(120),
     description: z.string().trim().max(500).optional().or(z.literal('')),
-    imageUrl: z.string().trim().max(5000000).optional().or(z.literal('')),
+    imageUrl: z.string().trim().max(100000000).optional().or(z.literal('')),
     imageAlt: z.string().trim().max(120).optional().or(z.literal('')),
     primaryActionLabel: z.string().trim().max(40).optional().or(z.literal('')),
     primaryActionHref: z.string().trim().max(500).optional().or(z.literal('')),

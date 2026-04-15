@@ -28,7 +28,7 @@ export default function AboutPage() {
   return (
     <div className="pb-28">
       <section className="border-b border-[rgba(212,175,55,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0))]">
-        <div className="container-shell py-16 sm:py-20">
+        <div className="container-shell py-10 sm:py-12">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
             <div className="max-w-4xl">
               <p className="public-label">About TriCore</p>
@@ -41,7 +41,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <div className="container-shell py-16">
+      <div className="container-shell py-12">
         <div className="mt-12 grid gap-8 lg:grid-cols-2">
           <section className="public-panel p-8">
             <p className="public-label">Vision</p>

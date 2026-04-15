@@ -644,8 +644,8 @@
 
   .public-divider {
     position: relative;
-    margin-top: 5rem;
-    margin-bottom: 5rem;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
     height: 1px;
     background: linear-gradient(
       90deg,

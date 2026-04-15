@@ -50,7 +50,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="pb-28 pt-12 sm:pt-16">
+    <div className="pb-16 pt-8 sm:pt-10">
       <div className="container-shell">
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <section className="space-y-6">

@@ -11,7 +11,6 @@ import HomeBannerCarousel from '../../components/home/HomeBannerCarousel.jsx';
 import HomePageContentSections from '../../components/home/HomePageContentSections.jsx';
 import {
   contactContent,
-  homeExpertise,
   homeHeroFallbackBanners,
   homeHeroTrustIndicators,
   homePageContentFallback
@@ -33,6 +32,7 @@ const DEFAULT_SEO_TITLE =
   'TriCore Events Bangalore - Corporate Events, Sports Tournaments, and Cricket Experiences';
 const DEFAULT_SEO_DESCRIPTION =
   'TriCore Events is a Bangalore-based event management team backed by partners with 20+ years of collective experience across sports tournaments, corporate events, registrations, scheduling, and on-ground execution.';
+const videoMediaPattern = /^(?:data:video\/|.*\.(?:mp4|mpeg|mpg|m4v|mov|ogv|ogg|webm)(?:[?#].*)?$)/i;
 
 const normalizeBaseUrl = (value) =>
   String(value || '')
@@ -62,6 +62,11 @@ const buildEventDescription = (event) =>
 const toIsoDateOrNull = (value) => {
   const date = new Date(value);
   return Number.isFinite(date.getTime()) ? date.toISOString() : null;
+};
+
+const isImageMediaUrl = (value) => {
+  const normalized = String(value || '').trim();
+  return Boolean(normalized) && !videoMediaPattern.test(normalized);
 };
 
 const buildHomePageStructuredData = ({ baseUrl, events, imageUrl }) => {
@@ -252,11 +257,6 @@ export default function HomePage() {
   }, []);
 
   const displayBanners = homeBanners.length ? homeBanners : homeHeroFallbackBanners;
-  const homeTheme = {
-    primaryColor: homePageContent?.themePrimaryColor || homePageContentFallback.themePrimaryColor,
-    secondaryColor: homePageContent?.themeSecondaryColor || homePageContentFallback.themeSecondaryColor,
-    highlightColor: homePageContent?.themeHighlightColor || homePageContentFallback.themeHighlightColor
-  };
   const siteBaseUrl = useMemo(
     () =>
       normalizeBaseUrl(
@@ -268,7 +268,7 @@ export default function HomePage() {
   );
   const seoImageUrl = useMemo(() => {
     const candidateImage =
-      displayBanners.find((banner) => banner?.imageUrl)?.imageUrl ||
+      displayBanners.find((banner) => isImageMediaUrl(banner?.imageUrl))?.imageUrl ||
       events.find((event) => event?.bannerImage)?.bannerImage ||
       '/tricore-logo.png';
 
@@ -280,7 +280,7 @@ export default function HomePage() {
   );
 
   return (
-    <div className="pb-28">
+    <div className="pb-16">
       <SeoMetadata
         canonicalUrl={`${siteBaseUrl}/`}
         description={DEFAULT_SEO_DESCRIPTION}
@@ -292,8 +292,6 @@ export default function HomePage() {
       />
       <HomeBannerCarousel
         banners={displayBanners}
-        expertiseItems={homeExpertise}
-        theme={homeTheme}
         trustIndicators={homeHeroTrustIndicators}
       />
       <HomePageContentSections

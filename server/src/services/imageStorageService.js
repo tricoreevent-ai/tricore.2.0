@@ -7,7 +7,7 @@ import sharp from 'sharp';
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const uploadsRoot = path.resolve(currentDir, '../../uploads');
-const dataUrlPattern = /^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/;
+const dataUrlPattern = /^data:((?:image|video)\/[a-zA-Z0-9.+-]+);base64,(.+)$/;
 
 const extensionMap = {
   'image/avif': 'avif',
@@ -19,7 +19,13 @@ const extensionMap = {
   'image/png': 'png',
   'image/svg+xml': 'svg',
   'image/webp': 'webp',
-  'image/x-icon': 'ico'
+  'image/x-icon': 'ico',
+  'video/mp4': 'mp4',
+  'video/mpeg': 'mpeg',
+  'video/ogg': 'ogv',
+  'video/quicktime': 'mov',
+  'video/webm': 'webm',
+  'video/x-m4v': 'm4v'
 };
 
 const normalizeText = (value) => String(value || '').trim();
@@ -37,8 +43,9 @@ const getFileExtension = (mimeType) =>
   extensionMap[mimeType] || normalizeSegment(mimeType.split('/')[1]?.split('+')[0], 'img');
 
 const isSvgMimeType = (mimeType) => mimeType === 'image/svg+xml';
+const isVideoMimeType = (mimeType) => mimeType.startsWith('video/');
 const shouldKeepOriginalBinary = (mimeType) =>
-  ['image/gif', 'image/svg+xml', 'image/x-icon'].includes(mimeType);
+  isVideoMimeType(mimeType) || ['image/gif', 'image/svg+xml', 'image/x-icon'].includes(mimeType);
 
 const parseDataUrl = (value) => {
   const match = normalizeText(value).match(dataUrlPattern);
@@ -87,7 +94,11 @@ const optimizeRasterImage = async (
   };
 };
 
-export const isImageDataUrl = (value) => Boolean(parseDataUrl(value));
+export const isImageDataUrl = (value) => {
+  const parsed = parseDataUrl(value);
+  return Boolean(parsed && parsed.mimeType.startsWith('image/'));
+};
+export const isMediaDataUrl = (value) => Boolean(parseDataUrl(value));
 export const isUploadPath = (value) => /^\/uploads\//.test(normalizeText(value));
 
 const writeImageFile = async (
@@ -160,3 +171,5 @@ export const persistImageReference = async (
     quality
   });
 };
+
+export const persistMediaReference = persistImageReference;

@@ -21,7 +21,7 @@ export default function ImageGallerySection({ description, images, pageSize = DE
   const hasMore = visibleCount < visibleImages.length;
 
   return (
-    <section className="container-shell mt-24">
+    <section className="container-shell mt-14">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 className="public-title-section">{title}</h2>

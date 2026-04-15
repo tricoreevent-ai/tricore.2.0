@@ -235,6 +235,7 @@ export default function PageVectorArt({
   compact = false,
   description,
   eyebrow,
+  showCaption = false,
   title,
   tone = 'public',
   variant = 'sports'
@@ -247,9 +248,10 @@ export default function PageVectorArt({
     <figure
       aria-label={title || copy.title}
       className={[
-        'overflow-hidden rounded-lg border p-5',
+        'overflow-hidden rounded-lg border',
+        compact ? 'p-3' : 'p-4',
         toneClasses[resolvedTone],
-        compact ? 'max-w-sm' : 'w-full max-w-md',
+        compact ? 'max-w-[15rem]' : 'w-full max-w-xs',
         className
       ]
         .filter(Boolean)
@@ -258,7 +260,7 @@ export default function PageVectorArt({
     >
       <svg
         aria-hidden="true"
-        className="mx-auto h-auto w-full max-w-[15rem]"
+        className="mx-auto h-auto w-full max-w-[12rem]"
         fill="none"
         viewBox="0 0 200 200"
         xmlns="http://www.w3.org/2000/svg"
@@ -268,17 +270,19 @@ export default function PageVectorArt({
         <circle cx="164" cy="162" fill="#38bdf8" opacity="0.16" r="30" />
         <Drawing />
       </svg>
-      <figcaption className={compact ? 'mt-4' : 'mt-5'}>
-        <p
-          className={`text-[10px] font-bold uppercase tracking-[0.18em] ${eyebrowClasses[resolvedTone]}`}
-        >
-          {eyebrow || copy.eyebrow}
-        </p>
-        <p className="mt-2 text-lg font-extrabold leading-6">{title || copy.title}</p>
-        <p className={`mt-2 text-sm leading-6 ${mutedTextClasses[resolvedTone]}`}>
-          {description || copy.description}
-        </p>
-      </figcaption>
+      {showCaption ? (
+        <figcaption className={compact ? 'mt-4' : 'mt-5'}>
+          <p
+            className={`text-[10px] font-bold uppercase tracking-[0.18em] ${eyebrowClasses[resolvedTone]}`}
+          >
+            {eyebrow || copy.eyebrow}
+          </p>
+          <p className="mt-2 text-lg font-extrabold leading-6">{title || copy.title}</p>
+          <p className={`mt-2 text-sm leading-6 ${mutedTextClasses[resolvedTone]}`}>
+            {description || copy.description}
+          </p>
+        </figcaption>
+      ) : null}
     </figure>
   );
 }

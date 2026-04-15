@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
 import { AppSetting } from '../models/AppSetting.js';
-import { isImageDataUrl, persistImageReference } from './imageStorageService.js';
+import { isMediaDataUrl, persistMediaReference } from './imageStorageService.js';
 
 export const HOME_BANNER_SETTINGS_KEY = 'home-banner-config';
 
@@ -28,7 +28,7 @@ const normalizeBoolean = (value, fallback = false) => {
 
 const populateUpdatedBy = (query) => query.populate('updatedBy', 'name username email');
 
-const bannerImageOptions = {
+const bannerMediaOptions = {
   folder: 'home-banners',
   filenamePrefix: 'banner',
   maxWidth: 1600,
@@ -61,7 +61,7 @@ const migrateStoredBannerImages = async (settingDocument) => {
   let hasChanges = false;
   const migratedBanners = await Promise.all(
     storedBanners.map(async (banner, index) => {
-      if (!isImageDataUrl(banner.imageUrl)) {
+      if (!isMediaDataUrl(banner.imageUrl)) {
         return normalizeBanner(banner, index);
       }
 
@@ -70,7 +70,7 @@ const migrateStoredBannerImages = async (settingDocument) => {
       return normalizeBanner(
         {
           ...banner,
-          imageUrl: await persistImageReference(banner.imageUrl, bannerImageOptions)
+          imageUrl: await persistMediaReference(banner.imageUrl, bannerMediaOptions)
         },
         index
       );
@@ -128,7 +128,7 @@ export const updateHomeBannerSettings = async ({ payload, userId }) => {
             normalizeBanner(
               {
                 ...banner,
-                imageUrl: await persistImageReference(banner.imageUrl, bannerImageOptions)
+                imageUrl: await persistMediaReference(banner.imageUrl, bannerMediaOptions)
               },
               index
             )

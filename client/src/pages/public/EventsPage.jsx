@@ -127,7 +127,7 @@ export default function EventsPage() {
   }, [selectedSport]);
 
   return (
-    <div className="container-shell py-10 sm:py-14 lg:py-16">
+    <div className="container-shell py-8 sm:py-10 lg:py-12">
       <div className="mb-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end">
         <div>
           <p className="public-label">Events</p>

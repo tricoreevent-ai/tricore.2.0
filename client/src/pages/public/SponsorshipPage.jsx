@@ -100,8 +100,8 @@ export default function SponsorshipPage() {
     'Corporate Cricket Tournament 2026';
 
   return (
-    <div className="relative overflow-hidden pb-28">
-      <div className="container-shell relative z-10 py-16">
+    <div className="relative overflow-hidden pb-16">
+      <div className="container-shell relative z-10 py-10 sm:py-12">
         <section className="public-panel overflow-hidden">
           <div className="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]">
             <div className="px-8 py-10 sm:px-10 lg:px-12 lg:py-14">
