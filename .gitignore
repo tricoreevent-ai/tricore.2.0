@@ -20,6 +20,9 @@ design-preview/exports/
 
 server/uploads/
 uploads/
+!client/public/uploads/
+!client/public/uploads/gallery/
+!client/public/uploads/gallery/sample-*.svg
 
 npm-debug.log*
 yarn-debug.log*

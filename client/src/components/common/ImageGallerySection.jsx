@@ -2,16 +2,45 @@ import { useEffect, useMemo, useState } from 'react';
 
 const DEFAULT_PAGE_SIZE = 8;
 
+const getImageKey = (image, index) => image.id || `${image.imageUrl}-${index}`;
+
+function GalleryFallback({ caption, label }) {
+  return (
+    <div className="flex h-full min-h-[220px] flex-col justify-end bg-[linear-gradient(145deg,#141414_0%,#1f2933_48%,#101010_100%)] p-5 text-white">
+      <div className="mb-auto grid gap-3">
+        <div className="h-1 w-20 bg-[#d4af37]" />
+        <div className="grid max-w-64 grid-cols-3 gap-2 opacity-70">
+          <span className="h-12 border border-white/20" />
+          <span className="h-12 border border-white/20 bg-[rgba(212,175,55,0.12)]" />
+          <span className="h-12 border border-white/20" />
+        </div>
+        <div className="h-1 w-36 bg-white/20" />
+      </div>
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#d4af37]">
+        TriCore Gallery
+      </p>
+      <p className="mt-3 text-base font-extrabold leading-6">
+        {caption || label || 'Event moment coming soon'}
+      </p>
+    </div>
+  );
+}
+
 export default function ImageGallerySection({ description, images, pageSize = DEFAULT_PAGE_SIZE, title }) {
   const visibleImages = useMemo(
     () => (Array.isArray(images) ? images.filter((image) => image.imageUrl) : []),
     [images]
   );
   const [visibleCount, setVisibleCount] = useState(pageSize);
+  const [failedImages, setFailedImages] = useState(() => new Set());
 
   useEffect(() => {
     setVisibleCount(pageSize);
   }, [pageSize, title, visibleImages.length]);
+
+  useEffect(() => {
+    setFailedImages(new Set());
+  }, [visibleImages]);
 
   if (!visibleImages.length) {
     return null;
@@ -35,29 +64,48 @@ export default function ImageGallerySection({ description, images, pageSize = DE
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:auto-rows-[260px] sm:grid-cols-2 xl:auto-rows-[240px] xl:grid-cols-4">
-        {pagedImages.map((image, index) => (
-          <div
-            className={`public-panel group overflow-hidden ${
-              index % 5 === 0 ? 'sm:col-span-2 sm:row-span-2' : ''
-            }`}
-            key={image.id || `${image.imageUrl}-${index}`}
-          >
-            <div className="relative aspect-[4/3] h-full sm:aspect-auto">
-              <img
-                alt={image.imageAlt || `TriCore gallery image ${index + 1}`}
-                className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                decoding="async"
-                loading="lazy"
-                src={image.imageUrl}
-              />
-              {image.caption ? (
-                <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,transparent,rgba(10,10,10,0.96))] px-5 pb-5 pt-14 text-white">
-                  <p className="text-base font-extrabold sm:text-lg">{image.caption}</p>
-                </div>
-              ) : null}
+        {pagedImages.map((image, index) => {
+          const imageKey = getImageKey(image, index);
+          const imageFailed = failedImages.has(imageKey);
+
+          return (
+            <div
+              className={`public-panel group overflow-hidden ${
+                index % 5 === 0 ? 'sm:col-span-2 sm:row-span-2' : ''
+              }`}
+              key={imageKey}
+            >
+              <div className="relative aspect-[4/3] h-full sm:aspect-auto">
+                {imageFailed ? (
+                  <GalleryFallback
+                    caption={image.caption}
+                    label={image.imageAlt || `TriCore gallery image ${index + 1}`}
+                  />
+                ) : (
+                  <img
+                    alt={image.imageAlt || `TriCore gallery image ${index + 1}`}
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    decoding="async"
+                    loading="lazy"
+                    onError={() =>
+                      setFailedImages((current) => {
+                        const next = new Set(current);
+                        next.add(imageKey);
+                        return next;
+                      })
+                    }
+                    src={image.imageUrl}
+                  />
+                )}
+                {!imageFailed && image.caption ? (
+                  <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,transparent,rgba(10,10,10,0.96))] px-5 pb-5 pt-14 text-white">
+                    <p className="text-base font-extrabold sm:text-lg">{image.caption}</p>
+                  </div>
+                ) : null}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {hasMore ? (
