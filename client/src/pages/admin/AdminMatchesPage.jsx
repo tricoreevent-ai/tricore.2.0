@@ -128,20 +128,23 @@ const readFileAsDataUrl = (file) =>
     reader.readAsDataURL(file);
   });
 
-function WorkspaceTabButton({ active, icon, label, onClick }) {
+function WorkspaceTabButton({ active, disabled = false, icon, label, onClick }) {
   return (
     <button
       className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-semibold transition ${
-        active
+        disabled
+          ? 'cursor-not-allowed bg-slate-50 text-slate-300'
+          : active
           ? 'bg-brand-blue text-white shadow-[0_18px_40px_rgba(37,99,235,0.2)]'
           : 'bg-white text-slate-700 hover:bg-brand-mist'
       }`}
-      onClick={onClick}
+      disabled={disabled}
+      onClick={disabled ? undefined : onClick}
       type="button"
     >
       <span
         className={`flex h-9 w-9 items-center justify-center rounded-full ${
-          active ? 'bg-white/15' : 'bg-slate-100'
+          active && !disabled ? 'bg-white/15' : 'bg-slate-100'
         }`}
       >
         <AppIcon className="h-4 w-4" name={icon} />
@@ -195,6 +198,7 @@ export default function AdminMatchesPage() {
     () => events.find((event) => event._id === selectedEventId) || null,
     [events, selectedEventId]
   );
+  const workspaceReady = Boolean(selectedEventId && selectedEvent);
 
   const syncFixtureAiState = (planResponse, eventRecord, configurationRecord) => {
     const nextPlan = createInitialFixtureAiPlan(planResponse);
@@ -306,10 +310,6 @@ export default function AdminMatchesPage() {
       try {
         const response = await getAdminEvents();
         setEvents(Array.isArray(response) ? response : []);
-
-        if (response?.[0]?._id) {
-          setSelectedEventId(response[0]._id);
-        }
       } catch (requestError) {
         setError(getApiErrorMessage(requestError, 'Unable to load events for scheduling.'));
       } finally {
@@ -405,14 +405,27 @@ export default function AdminMatchesPage() {
   };
 
   const handleEventChange = (eventValue) => {
-    setSelectedEventId(eventValue.target.value);
+    const nextEventId = eventValue.target.value;
+
+    setSelectedEventId(nextEventId);
+    setActiveTab('configuration');
     setSelectedMatchId('');
     setSelectedTeamProfileId('');
     setCalendarTeamFilter('');
+    setConfirmedTeams([]);
+    setMatches([]);
+    setConfiguration(createInitialMatchConfiguration());
+    setForm(createInitialMatchForm(nextEventId));
+    setFixtureBatch(createInitialFixtureBatchForm());
     setFixtureAiPlan(createInitialFixtureAiPlan());
     setFixtureAiForm(createInitialFixtureAiForm());
+    setContextLoading(Boolean(nextEventId));
     setError('');
     setSuccess('');
+
+    if (!nextEventId) {
+      setContextLoading(false);
+    }
   };
 
   const updateConfigurationField = (field, value) => {
@@ -1920,6 +1933,26 @@ export default function AdminMatchesPage() {
   );
 
   const renderActiveTab = () => {
+    if (!workspaceReady) {
+      return (
+        <section className="panel flex min-h-[320px] items-center justify-center p-8 text-center">
+          <div className="max-w-xl">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-brand-mist text-brand-blue">
+              <AppIcon className="h-7 w-7" name="events" />
+            </div>
+            <p className="mt-5 text-xs font-bold uppercase tracking-[0.22em] text-brand-blue">
+              Step 1 required
+            </p>
+            <h3 className="mt-3 text-2xl font-bold text-slate-950">Select an event first</h3>
+            <p className="mt-3 text-sm leading-6 text-slate-500">
+              Match configuration, fixtures, teams, results, and rankings depend on the selected
+              event. Choose the event above to unlock the operations workspace.
+            </p>
+          </div>
+        </section>
+      );
+    }
+
     if (contextLoading) {
       return <LoadingSpinner label="Loading match workspace..." />;
     }
@@ -1961,44 +1994,116 @@ export default function AdminMatchesPage() {
     >
       <div className="space-y-8">
         <div className="panel space-y-5 p-6">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-slate-950">Event Match Operations</h2>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-500">
-                Select an event to unlock its full match workspace, including format setup, live fixture generation, an experimental AI planning lab, team and player records, results entry, and rankings.
-              </p>
-            </div>
-            <TypeaheadSelect className="max-w-sm" disabled={eventsLoading} onChange={handleEventChange} options={eventOptions} placeholder="Select event" searchPlaceholder="Search events" value={selectedEventId} />
+          <div>
+            <h2 className="text-2xl font-bold text-slate-950">Event Match Operations</h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-500">
+              Start by selecting the event. Every match operation below uses that event context for
+              format setup, fixture generation, team records, result entry, and rankings.
+            </p>
           </div>
+
+          <div
+            className={`rounded-3xl border p-5 ${
+              workspaceReady
+                ? 'border-emerald-200 bg-emerald-50/70'
+                : 'border-brand-blue/30 bg-brand-mist'
+            }`}
+          >
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex gap-4">
+                <span
+                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-lg font-black ${
+                    workspaceReady
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-brand-blue text-white'
+                  }`}
+                >
+                  1
+                </span>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.22em] text-brand-blue">
+                    Required first step
+                  </p>
+                  <h3 className="mt-2 text-xl font-bold text-slate-950">Selection of Event</h3>
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+                    Choose the event before opening configuration, fixtures, teams, players,
+                    results, standings, or finals setup.
+                  </p>
+                  {workspaceReady ? (
+                    <p className="mt-3 inline-flex rounded-full bg-white px-3 py-1 text-xs font-bold text-emerald-700">
+                      Active event: {selectedEvent.name}
+                    </p>
+                  ) : (
+                    <p className="mt-3 inline-flex rounded-full bg-white px-3 py-1 text-xs font-bold text-brand-blue">
+                      Operations are locked until this is selected
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="w-full lg:max-w-md">
+                <label
+                  className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-slate-500"
+                  htmlFor="match-event-selector"
+                >
+                  Select event to continue
+                </label>
+                <TypeaheadSelect
+                  className="bg-white"
+                  disabled={eventsLoading}
+                  id="match-event-selector"
+                  onChange={handleEventChange}
+                  options={eventOptions}
+                  placeholder={eventsLoading ? 'Loading events' : 'Select event'}
+                  searchPlaceholder="Search events"
+                  value={selectedEventId}
+                />
+              </div>
+            </div>
+          </div>
+
+          {workspaceReady ? (
+            <div className="grid gap-4 md:grid-cols-4">
+              <div className="rounded-3xl bg-slate-50 p-4">
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Selected Event</p>
+                <p className="mt-3 text-lg font-bold text-slate-950">{selectedEvent.name}</p>
+              </div>
+              <div className="rounded-3xl bg-slate-50 p-4">
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Confirmed Teams</p>
+                <p className="mt-3 text-2xl font-bold text-slate-950">{confirmedTeams.length}</p>
+              </div>
+              <div className="rounded-3xl bg-slate-50 p-4">
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Fixtures Created</p>
+                <p className="mt-3 text-2xl font-bold text-slate-950">{matches.length}</p>
+              </div>
+              <div className="rounded-3xl bg-slate-50 p-4">
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Sport</p>
+                <p className="mt-3 text-2xl font-bold text-slate-950">{configuration.sportType || selectedEvent.sportType || 'Not set'}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-5 py-6 text-sm font-semibold text-slate-500">
+              Select an event above to load event details, confirmed teams, fixtures, and sport
+              setup.
+            </div>
+          )}
 
           <FormAlert message={error} />
           <FormAlert message={success} type="success" />
-
-          <div className="grid gap-4 md:grid-cols-4">
-            <div className="rounded-3xl bg-slate-50 p-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Selected Event</p>
-              <p className="mt-3 text-lg font-bold text-slate-950">{selectedEvent?.name || 'No event selected'}</p>
-            </div>
-            <div className="rounded-3xl bg-slate-50 p-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Confirmed Teams</p>
-              <p className="mt-3 text-2xl font-bold text-slate-950">{confirmedTeams.length}</p>
-            </div>
-            <div className="rounded-3xl bg-slate-50 p-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Fixtures Created</p>
-              <p className="mt-3 text-2xl font-bold text-slate-950">{matches.length}</p>
-            </div>
-            <div className="rounded-3xl bg-slate-50 p-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Sport</p>
-              <p className="mt-3 text-2xl font-bold text-slate-950">{configuration.sportType || selectedEvent?.sportType || 'Not set'}</p>
-            </div>
-          </div>
         </div>
 
         <div className="grid gap-6 xl:grid-cols-[280px_minmax(0,1fr)]">
           <aside className="panel p-3">
             <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
               {matchWorkspaceTabs.map((tab) => (
-                <WorkspaceTabButton active={activeTab === tab.key} icon={tab.icon} key={tab.key} label={tab.label} onClick={() => setActiveTab(tab.key)} />
+                <WorkspaceTabButton
+                  active={activeTab === tab.key}
+                  disabled={!workspaceReady}
+                  icon={tab.icon}
+                  key={tab.key}
+                  label={tab.label}
+                  onClick={() => setActiveTab(tab.key)}
+                />
               ))}
             </div>
           </aside>
