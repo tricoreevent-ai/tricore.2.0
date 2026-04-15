@@ -159,8 +159,8 @@ export default function HomeBannerCarousel({ banners, trustIndicators = [] }) {
       ) : null}
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,10,0.86)_0%,rgba(10,10,10,0.52)_46%,rgba(10,10,10,0.9)_100%)]" />
 
-      <div className="container-shell pointer-events-auto relative z-10 py-14 sm:py-16 lg:min-h-[34rem] lg:py-20">
-        <div className="max-w-4xl">
+      <div className="container-shell pointer-events-auto relative z-10 py-12 sm:py-14 lg:min-h-[30rem] lg:py-16">
+        <div className="max-w-5xl">
           <div className="flex flex-wrap items-center gap-3">
             {currentBanner.badge ? <span className="public-chip-neutral">{currentBanner.badge}</span> : null}
             {hasMultipleBanners ? (
@@ -191,9 +191,9 @@ export default function HomeBannerCarousel({ banners, trustIndicators = [] }) {
           </div>
 
           {trustIndicators.length ? (
-            <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:max-w-3xl">
+            <div className="mt-8 grid gap-px bg-[rgba(212,175,55,0.16)] sm:grid-cols-3 xl:max-w-4xl">
               {trustIndicators.map((item) => (
-                <div className="public-panel-ghost p-4" key={item.title}>
+                <div className="bg-[rgba(20,20,20,0.82)] p-4" key={item.title}>
                   <p className="text-base font-semibold text-white">{item.title}</p>
                   <p className="public-copy-small mt-2">{item.description}</p>
                 </div>
